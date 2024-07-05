@@ -1,6 +1,96 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>Cloudflare + MailChannels 使用 DKIM 发送电子邮件</title>
+    <url>/2024/07/05/Cloudflare%20+%20MailChannels%20%E4%BD%BF%E7%94%A8%20DKIM%20%E5%8F%91%E9%80%81%E7%94%B5%E5%AD%90%E9%82%AE%E4%BB%B6/</url>
+    <content><![CDATA[<blockquote>
+<p>独立开发者必看，cloudflare worker 其实也能发邮件，而且是比较优雅地发邮件</p>
+</blockquote>
+<p><a href="https://web.okjike.com/originalPost/65203d2205145f31e56e0707">https://web.okjike.com/originalPost/65203d2205145f31e56e0707</a></p>
+<h3 id="什么是-DKIM-？"><a href="#什么是-DKIM-？" class="headerlink" title="什么是 DKIM ？"></a>什么是 DKIM ？</h3><p><a href="https://www.cloudflare.com/zh-cn/learning/dns/dns-records/dns-dkim-record/">https://www.cloudflare.com/zh-cn/learning/dns/dns-records/dns-dkim-record/</a></p>
+<ul>
+<li><p>参考1</p>
+<p>  Cloudflare Email Routing 免费邮件发送服务</p>
+<p>  <a href="https://eleduck.com/posts/4lfxE0">https://eleduck.com/posts/4lfxE0</a></p>
+</li>
+<li><p>参考2</p>
+<p>  Cloudflare Email Routing 免费邮件发送（作为 Service 服务）用于 Workers&#x2F;Pages 项目中。****</p>
+<p>  <a href="https://github.com/willin/cloudflare-send-email-service">https://github.com/willin/cloudflare-send-email-service</a></p>
+</li>
+<li><p>参考3</p>
+<p>  <strong>Cloudflare + MailChannels 使用 DKIM 发送电子邮件</strong></p>
+<p>  <a href="https://github.com/r0n9/mail">https://github.com/r0n9/mail</a></p>
+</li>
+</ul>
+<h3 id="终于搞定！！！记录一下步骤，如下："><a href="#终于搞定！！！记录一下步骤，如下：" class="headerlink" title="终于搞定！！！记录一下步骤，如下："></a>终于搞定！！！记录一下步骤，如下：</h3><span id="more"></span>
+
+<h4 id="1-CloudFlare-添加域名-yourdomain-com"><a href="#1-CloudFlare-添加域名-yourdomain-com" class="headerlink" title="1. CloudFlare 添加域名 yourdomain.com"></a>1. CloudFlare 添加域名 <code>yourdomain.com</code></h4><h4 id="2-启用Email路由："><a href="#2-启用Email路由：" class="headerlink" title="2. 启用Email路由："></a>2. 启用Email路由：</h4><pre><code>[Enable Email Routing · Cloudflare Email Routing docs](https://developers.cloudflare.com/email-routing/get-started/enable-email-routing/)
+</code></pre>
+<h4 id="3-本地安装-wrangler-以部署-cf-worker。注意-node-版本。"><a href="#3-本地安装-wrangler-以部署-cf-worker。注意-node-版本。" class="headerlink" title="3. 本地安装 wrangler 以部署 cf worker。注意 node 版本。"></a>3. 本地安装 <code>wrangler</code> 以部署 cf worker。注意 node 版本。</h4><pre><code><figure class="highlight jsx"><table><tr><td class="code"><pre><span class="line">sudo npm install wrangler@latest -g</span><br></pre></td></tr></table></figure>
+
+在开始之前，请确保按照此处的说明设置 Wrangler。 [here](https://developers.cloudflare.com/workers/wrangler/get-started/)
+</code></pre>
+<h4 id="4-生成私钥-Generate-the-Private-Key"><a href="#4-生成私钥-Generate-the-Private-Key" class="headerlink" title="4. 生成私钥 Generate the Private Key"></a>4. 生成私钥 <strong>Generate the Private Key</strong></h4><pre><code><figure class="highlight jsx"><table><tr><td class="code"><pre><span class="line">openssl genrsa <span class="number">2048</span> | tee priv_key.<span class="property">pem</span> | openssl rsa -outform der | openssl base64 -A | wrangler secret put <span class="variable constant_">DKIM_PRIVATE_KEY</span></span><br></pre></td></tr></table></figure>
+
+此命令的各个部分：
+
+- `openssl genrsa 2048` 生成 2048 位 RSA 密钥
+- `tee priv_key.pem` 将密钥写入 `priv_key.pem` 文件
+- `openssl rsa -outform der | openssl base 64 -A` 将密钥从 PEM 格式转换为 DER 格式，然后对其进行 base64 编码（这实质上是从 PEM 格式的密钥中删除标头）
+- `wrangler secret put DKIM_PRIVATE_KEY` 将它作为秘密添加到我们的 Cloudflare Worker 中
+</code></pre>
+<h4 id="5-CloudFalare-DNS-管理页面，创建-4-个-DNS-TXT-记录"><a href="#5-CloudFalare-DNS-管理页面，创建-4-个-DNS-TXT-记录" class="headerlink" title="5. CloudFalare DNS 管理页面，创建 4 个 DNS TXT 记录"></a>5. CloudFalare DNS 管理页面，创建 4 个 DNS TXT 记录</h4><pre><code>![Untitled](./images/dkim3.png)
+
+- 创建第一个 `TXT` 解析记录
+    
+    运行以下命令，这将从私钥 `priv_key.pem` 创建一个公钥，编码为 base64，最后将其写入 `record.txt` 文件。
+    
+    <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">echo</span> -n <span class="string">&quot;v=DKIM1;p=&quot;</span> &gt; record.txt &amp;&amp; openssl rsa -<span class="keyword">in</span> priv_key.pem -pubout -outform der | openssl <span class="built_in">base64</span> -A &gt;&gt; record.txt</span><br></pre></td></tr></table></figure>
+    
+    复制 `record.txt` 文件的内容，并将其作为 `TXT` 记录添加到您的域中。 
+    
+    - Name: `mailchannels._domainkey`
+    
+    ![Untitled](./images/dkim2.png)
+    
+- 创建第二个 `TXT` 解析记录
+    - Name: `yourdomain.com`
+    - Value: `v=spf1 a mx include:relay.mailchannels.net ~all`
+- 创建第三个 `TXT` 解析记录，设置`cfid`，否则会报无权限调用。
+    
+    参考：[**Secure your domain name against spoofing with Domain Lockdown™**](https://support.mailchannels.com/hc/en-us/articles/16918954360845-Secure-your-domain-name-against-spoofing-with-Domain-Lockdown-)
+    
+    - Name: `_mailchannels.yourdomain.com`
+    - Value: `v=mc1 cfid=yourdomain.workers.dev`
+    
+    &gt; `cfid` 会在你测试的报错信息中看到，注意不是workder全url，而是子域名。解析后等待生效大约需要半天
+    &gt; 
+- 创建第四个 `TXT` 解析记录，`DMARC` 记录来强制使用DKIM签名
+    
+    参考：[**Adding a DKIM Signature**](https://support.mailchannels.com/hc/en-us/articles/7122849237389-Adding-a-DKIM-Signature)
+    
+    - Name: `_dmarc.yourdomain.com`
+    - Value: `v=DMARC1; p=reject; adkim=s; aspf=s; rua=mailto:YYY; ruf=mailto:YYY pct=100; fo=1;`
+</code></pre>
+<h4 id="6-验证DKIM解析，有可能需要等待几个小时，DNS-记录才会更新。-https-dmarcly-com-tools-dkim-record-checker"><a href="#6-验证DKIM解析，有可能需要等待几个小时，DNS-记录才会更新。-https-dmarcly-com-tools-dkim-record-checker" class="headerlink" title="6. 验证DKIM解析，有可能需要等待几个小时，DNS 记录才会更新。 https://dmarcly.com/tools/dkim-record-checker"></a>6. 验证DKIM解析，有可能需要等待几个小时，DNS 记录才会更新。 <a href="https://dmarcly.com/tools/dkim-record-checker">https://dmarcly.com/tools/dkim-record-checker</a></h4><pre><code>正常显示如下：
+
+![dkim1](./images/dkim1.png)
+</code></pre>
+<h4 id="7-代码解压，wrangler-部署到-cf-worker"><a href="#7-代码解压，wrangler-部署到-cf-worker" class="headerlink" title="7. 代码解压，wrangler 部署到 cf worker"></a>7. 代码解压，wrangler 部署到 cf worker</h4><p><a href="./images/cloudflare-send-email-service.zip">cloudflare-send-email-service.zip</a></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">wrangler deploy --name mail</span><br></pre></td></tr></table></figure>
+
+<h4 id="8-验证，邮件发送成功，返回状态码-202"><a href="#8-验证，邮件发送成功，返回状态码-202" class="headerlink" title="8. 验证，邮件发送成功，返回状态码 202"></a>8. 验证，邮件发送成功，返回状态码 <code>202</code></h4><pre><code><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">curl --location <span class="string">&#x27;https://mail.yourdomain.workers.dev&#x27;</span> \</span><br><span class="line">--header <span class="string">&#x27;Content-Type: application/x-www-form-urlencoded&#x27;</span> \</span><br><span class="line">--data-urlencode <span class="string">&#x27;sender_email=admin@yourdomain.com&#x27;</span> \</span><br><span class="line">--data-urlencode <span class="string">&#x27;sender_name=xxx&#x27;</span> \</span><br><span class="line">--data-urlencode <span class="string">&#x27;recipient_email=xxx@gmail.com&#x27;</span> \</span><br><span class="line">--data-urlencode <span class="string">&#x27;subject=测试&#x27;</span> \</span><br><span class="line">--data-urlencode <span class="string">&#x27;message=111&#x27;</span> \</span><br><span class="line">--data-urlencode <span class="string">&#x27;recipient_name=user&#x27;</span></span><br></pre></td></tr></table></figure>
+</code></pre>
+]]></content>
+      <categories>
+        <category>技术</category>
+      </categories>
+      <tags>
+        <tag>Cloudflare</tag>
+        <tag>电子邮件</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Airclipbd.com 隔空剪切板</title>
     <url>/2024/07/05/airclipbd-0705/</url>
     <content><![CDATA[<p>Snapdrop + Clipboard &#x3D; 隔空剪贴板 AirClipboard</p>
@@ -17,6 +107,8 @@
 <li>限制粘贴内容最大20MB，每个剪切板空间暂存最新20条记录。</li>
 <li>暂存6小时</li>
 </ul>
+<span id="more"></span>
+
 <p><img src="/./images/airclipbd_20240705.png" alt="image info"></p>
 ]]></content>
       <categories>
@@ -24,109 +116,6 @@
       </categories>
       <tags>
         <tag>隔空剪贴板</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Cloudflare + MailChannels 使用 DKIM 发送电子邮件</title>
-    <url>/2024/07/05/Cloudflare%20+%20MailChannels%20%E4%BD%BF%E7%94%A8%20DKIM%20%E5%8F%91%E9%80%81%E7%94%B5%E5%AD%90%E9%82%AE%E4%BB%B6/</url>
-    <content><![CDATA[<p>独立开发者必看，cloudflare worker 其实也能发邮件，而且是比较优雅地发邮件</p>
-<p><a href="https://web.okjike.com/originalPost/65203d2205145f31e56e0707">https://web.okjike.com/originalPost/65203d2205145f31e56e0707</a></p>
-<p><strong>什么是 DKIM？</strong></p>
-<p><a href="https://www.cloudflare.com/zh-cn/learning/dns/dns-records/dns-dkim-record/">https://www.cloudflare.com/zh-cn/learning/dns/dns-records/dns-dkim-record/</a></p>
-<ul>
-<li><p>参考1</p>
-<p>  <strong>Cloudflare Email Routing 免费邮件发送服务</strong></p>
-<p>  <a href="https://eleduck.com/posts/4lfxE0">https://eleduck.com/posts/4lfxE0</a></p>
-</li>
-<li><p>参考2</p>
-<p>  Cloudflare Email Routing 免费邮件发送（作为 Service 服务）用于 Workers&#x2F;Pages 项目中。****</p>
-<p>  <a href="https://github.com/willin/cloudflare-send-email-service">https://github.com/willin/cloudflare-send-email-service</a></p>
-</li>
-<li><p>参考3</p>
-<p>  <strong>Cloudflare + MailChannels 使用 DKIM 发送电子邮件</strong></p>
-<p>  <a href="https://github.com/r0n9/mail">https://github.com/r0n9/mail</a></p>
-</li>
-</ul>
-<p>终于搞定！！！记录一下步骤，如下：</p>
-<ol>
-<li><p>CloudFlare 添加域名 <code>yourdomain.com</code></p>
-</li>
-<li><p>启用Email路由：</p>
-<p> <a href="https://developers.cloudflare.com/email-routing/get-started/enable-email-routing/">Enable Email Routing · Cloudflare Email Routing docs</a></p>
-</li>
-<li><p>本地安装 <code>wrangler</code> 以部署 cf worker。注意 node 版本。</p>
- <figure class="highlight jsx"><table><tr><td class="code"><pre><span class="line">sudo npm install wrangler@latest -g</span><br></pre></td></tr></table></figure>
-<p> 在开始之前，请确保按照此处的说明设置 Wrangler。 <a href="https://developers.cloudflare.com/workers/wrangler/get-started/">here</a></p>
-</li>
-<li><p>生成私钥 <strong>Generate the Private Key</strong></p>
- <figure class="highlight jsx"><table><tr><td class="code"><pre><span class="line">openssl genrsa <span class="number">2048</span> | tee priv_key.<span class="property">pem</span> | openssl rsa -outform der | openssl base64 -A | wrangler secret put <span class="variable constant_">DKIM_PRIVATE_KEY</span></span><br></pre></td></tr></table></figure>
-<p> 此命令的各个部分：</p>
-<ul>
-<li><code>openssl genrsa 2048</code> 生成 2048 位 RSA 密钥</li>
-<li><code>tee priv_key.pem</code> 将密钥写入 <code>priv_key.pem</code> 文件</li>
-<li><code>openssl rsa -outform der | openssl base 64 -A</code> 将密钥从 PEM 格式转换为 DER 格式，然后对其进行 base64 编码（这实质上是从 PEM 格式的密钥中删除标头）</li>
-<li><code>wrangler secret put DKIM_PRIVATE_KEY</code> 将它作为秘密添加到我们的 Cloudflare Worker 中</li>
-</ul>
-</li>
-<li><p>CloudFalare DNS 管理页面，创建 4 个 DNS  TXT 记录</p>
-<p> <img src="/./images/dkim3.png" alt="Untitled"></p>
-<ul>
-<li><p>创建第一个 <code>TXT</code> 解析记录</p>
-<p>  运行以下命令，这将从私钥 <code>priv_key.pem</code> 创建一个公钥，编码为 base64，最后将其写入 <code>record.txt</code> 文件。</p>
-  <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">echo</span> -n <span class="string">&quot;v=DKIM1;p=&quot;</span> &gt; record.txt &amp;&amp; openssl rsa -<span class="keyword">in</span> priv_key.pem -pubout -outform der | openssl <span class="built_in">base64</span> -A &gt;&gt; record.txt</span><br></pre></td></tr></table></figure>
-<p>  复制 <code>record.txt</code> 文件的内容，并将其作为 <code>TXT</code> 记录添加到您的域中。 </p>
-<ul>
-<li>Name: <code>mailchannels._domainkey</code></li>
-</ul>
-<p>  <img src="/./images/dkim2.png" alt="Untitled">
-  </p>
-</li>
-<li><p>创建第二个 <code>TXT</code> 解析记录</p>
-<ul>
-<li>Name: <code>yourdomain.com</code></li>
-<li>Value: <code>v=spf1 a mx include:relay.mailchannels.net ~all</code></li>
-</ul>
-</li>
-<li><p>创建第三个 <code>TXT</code> 解析记录，设置<code>cfid</code>，否则会报无权限调用。</p>
-<p>  参考：<a href="https://support.mailchannels.com/hc/en-us/articles/16918954360845-Secure-your-domain-name-against-spoofing-with-Domain-Lockdown-"><strong>Secure your domain name against spoofing with Domain Lockdown™</strong></a></p>
-<ul>
-<li>Name: <code>_mailchannels.yourdomain.com</code></li>
-<li>Value: <code>v=mc1 cfid=yourdomain.workers.dev</code></li>
-</ul>
-<blockquote>
-<p><code>cfid</code> 会在你测试的报错信息中看到，注意不是workder全url，而是子域名。解析后等待生效大约需要半天</p>
-</blockquote>
-</li>
-<li><p>创建第四个 <code>TXT</code> 解析记录，<code>DMARC</code> 记录来强制使用DKIM签名</p>
-<p>  参考：<a href="https://support.mailchannels.com/hc/en-us/articles/7122849237389-Adding-a-DKIM-Signature"><strong>Adding a DKIM Signature</strong></a></p>
-<ul>
-<li>Name: <code>_dmarc.yourdomain.com</code></li>
-<li>Value: <code>v=DMARC1; p=reject; adkim=s; aspf=s; rua=mailto:YYY; ruf=mailto:YYY pct=100; fo=1;</code></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><p>验证DKIM解析，有可能需要等待几个小时，DNS 记录才会更新。 <a href="https://dmarcly.com/tools/dkim-record-checker">https://dmarcly.com/tools/dkim-record-checker</a></p>
-<p> 正常显示如下：</p>
-<p> <img src="/./images/dkim1.png" alt="dkim1"></p>
-</li>
-<li><p>代码解压，wrangler 部署到 cf worker</p>
-</li>
-</ol>
-<p><a href="./images/cloudflare-send-email-service.zip">cloudflare-send-email-service.zip</a></p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">wrangler deploy --name mail</span><br></pre></td></tr></table></figure>
-
-<ol>
-<li><p>验证，邮件发送成功，返回状态码 <code>202</code></p>
- <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">curl --location <span class="string">&#x27;https://mail.yourdomain.workers.dev&#x27;</span> \</span><br><span class="line">--header <span class="string">&#x27;Content-Type: application/x-www-form-urlencoded&#x27;</span> \</span><br><span class="line">--data-urlencode <span class="string">&#x27;sender_email=admin@yourdomain.com&#x27;</span> \</span><br><span class="line">--data-urlencode <span class="string">&#x27;sender_name=xxx&#x27;</span> \</span><br><span class="line">--data-urlencode <span class="string">&#x27;recipient_email=xxx@gmail.com&#x27;</span> \</span><br><span class="line">--data-urlencode <span class="string">&#x27;subject=测试&#x27;</span> \</span><br><span class="line">--data-urlencode <span class="string">&#x27;message=111&#x27;</span> \</span><br><span class="line">--data-urlencode <span class="string">&#x27;recipient_name=user&#x27;</span></span><br></pre></td></tr></table></figure></li>
-</ol>
-]]></content>
-      <categories>
-        <category>技术</category>
-      </categories>
-      <tags>
-        <tag>Cloudflare</tag>
-        <tag>电子邮件</tag>
       </tags>
   </entry>
 </search>
