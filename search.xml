@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search>
+  <entry>
+    <title>Airclipbd.com 隔空剪切板</title>
+    <url>/2024/07/05/airclipbd-0705/</url>
+    <content><![CDATA[<p>Snapdrop + Clipboard &#x3D; 隔空剪贴板 AirClipboard</p>
+<h3 id="1-SnapDrop"><a href="#1-SnapDrop" class="headerlink" title="1. SnapDrop"></a>1. SnapDrop</h3><p>Snapdrop: local file sharing in your browser. Inspired by Apple’s Airdrop.</p>
+<p><a href="https://github.com/RobinLinus/snapdrop">https://github.com/RobinLinus/snapdrop</a></p>
+<ul>
+<li>同一网络内设备自动发现</li>
+<li>设备间文件点对点传输 Peer2Peer</li>
+</ul>
+<h3 id="2-在线剪切板-Clipboard"><a href="#2-在线剪切板-Clipboard" class="headerlink" title="2. 在线剪切板 Clipboard"></a>2. 在线剪切板 Clipboard</h3><ul>
+<li>支持剪切板空间 <code>/$&#123;board_name&#125;</code></li>
+<li>公开读写，寄存简单方便</li>
+<li>剪贴板复制内容直接粘贴，支持文字、图片、各种文件。</li>
+<li>限制粘贴内容最大20MB，每个剪切板空间暂存最新20条记录。</li>
+<li>暂存6小时</li>
+</ul>
+<p><img src="/./images/airclipbd_20240705.png" alt="image info"></p>
+]]></content>
+      <categories>
+        <category>隔空剪贴板</category>
+      </categories>
+      <tags>
+        <tag>隔空剪贴板</tag>
+        <tag>AirClipboard</tag>
+      </tags>
+  </entry>
+</search>
