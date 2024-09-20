@@ -20,20 +20,20 @@
     var CONFIG = {"hostname":"blog.airclipbd.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":3,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="背景当使用 expect 登入你的虚拟主机的时候，你会发现使用 vim，会经常出现行错乱的问题。 原因expect 脚本自动 ssh 登陆，当终端窗口发生变化时，默认 expect 不会将终端窗口大小改变的信号传送到远程的服务器上，因此在使用上会出现很不方便的地方，比如 vim 打开文件时出现串行，要是含有中文的文件可能根本无法编辑。 解决12345678#!&#x2F;usr&#x2F;bin&#x2F;env expect">
+  <meta name="description" content="AI正在污染互联网内容近年来，AI生成的内容在互联网上迅速扩展，从图像、视频到文章，几乎覆盖了所有领域。尤其是在技术领域，AI生成的文章数量激增，导致信息质量下降，严重影响了用户体验。 AI生成内容的泛滥随着AI技术的发展，各类平台开始利用AI批量生成内容。许多技术教程、产品文档甚至科普文章，看似详尽，但实则存在大量错误或过时的信息。例如，一些AI生成的技术文章引用了并不存在的API或使用了错误的">
 <meta property="og:type" content="article">
-<meta property="og:title" content="通过expect登录linux, vim行错乱问题解决方案">
-<meta property="og:url" content="https://blog.airclipbd.com/2024/09/03/%E9%80%9A%E8%BF%87expect%E7%99%BB%E5%BD%95linux,%20vim%E8%A1%8C%E9%94%99%E4%B9%B1%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/index.html">
+<meta property="og:title" content="AI 正在污染互联网内容">
+<meta property="og:url" content="https://blog.airclipbd.com/2024/09/20/AI%20%E6%AD%A3%E5%9C%A8%E6%B1%A1%E6%9F%93%E4%BA%92%E8%81%94%E7%BD%91%E5%86%85%E5%AE%B9/index.html">
 <meta property="og:site_name" content="隔空剪切板-技术博客">
-<meta property="og:description" content="背景当使用 expect 登入你的虚拟主机的时候，你会发现使用 vim，会经常出现行错乱的问题。 原因expect 脚本自动 ssh 登陆，当终端窗口发生变化时，默认 expect 不会将终端窗口大小改变的信号传送到远程的服务器上，因此在使用上会出现很不方便的地方，比如 vim 打开文件时出现串行，要是含有中文的文件可能根本无法编辑。 解决12345678#!&#x2F;usr&#x2F;bin&#x2F;env expect">
+<meta property="og:description" content="AI正在污染互联网内容近年来，AI生成的内容在互联网上迅速扩展，从图像、视频到文章，几乎覆盖了所有领域。尤其是在技术领域，AI生成的文章数量激增，导致信息质量下降，严重影响了用户体验。 AI生成内容的泛滥随着AI技术的发展，各类平台开始利用AI批量生成内容。许多技术教程、产品文档甚至科普文章，看似详尽，但实则存在大量错误或过时的信息。例如，一些AI生成的技术文章引用了并不存在的API或使用了错误的">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2024-09-03T02:57:50.840Z">
-<meta property="article:modified_time" content="2024-09-03T02:59:34.731Z">
+<meta property="article:published_time" content="2024-09-20T09:23:58.441Z">
+<meta property="article:modified_time" content="2024-09-20T09:29:23.984Z">
 <meta property="article:author" content="R0n9">
-<meta property="article:tag" content="ssh">
+<meta property="article:tag" content="AI">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="https://blog.airclipbd.com/2024/09/03/%E9%80%9A%E8%BF%87expect%E7%99%BB%E5%BD%95linux,%20vim%E8%A1%8C%E9%94%99%E4%B9%B1%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/">
+<link rel="canonical" href="https://blog.airclipbd.com/2024/09/20/AI%20%E6%AD%A3%E5%9C%A8%E6%B1%A1%E6%9F%93%E4%BA%92%E8%81%94%E7%BD%91%E5%86%85%E5%AE%B9/">
 
 
 <script id="page-configurations">
@@ -46,7 +46,7 @@
   };
 </script>
 
-  <title>通过expect登录linux, vim行错乱问题解决方案 | 隔空剪切板-技术博客</title>
+  <title>AI 正在污染互联网内容 | 隔空剪切板-技术博客</title>
   
 
 
@@ -195,7 +195,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://blog.airclipbd.com/2024/09/03/%E9%80%9A%E8%BF%87expect%E7%99%BB%E5%BD%95linux,%20vim%E8%A1%8C%E9%94%99%E4%B9%B1%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/">
+    <link itemprop="mainEntityOfPage" href="https://blog.airclipbd.com/2024/09/20/AI%20%E6%AD%A3%E5%9C%A8%E6%B1%A1%E6%9F%93%E4%BA%92%E8%81%94%E7%BD%91%E5%86%85%E5%AE%B9/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -208,7 +208,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          通过expect登录linux, vim行错乱问题解决方案
+          AI 正在污染互联网内容
         </h1>
 
         <div class="post-meta">
@@ -219,7 +219,7 @@
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2024-09-03 10:57:50 / 修改时间：10:59:34" itemprop="dateCreated datePublished" datetime="2024-09-03T10:57:50+08:00">2024-09-03</time>
+              <time title="创建时间：2024-09-20 17:23:58 / 修改时间：17:29:23" itemprop="dateCreated datePublished" datetime="2024-09-20T17:23:58+08:00">2024-09-20</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -231,7 +231,7 @@
                 </span>
                   ，
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E6%8A%80%E6%9C%AF/%E5%BC%80%E5%8F%91/" itemprop="url" rel="index"><span itemprop="name">开发</span></a>
+                  <a href="/categories/%E6%8A%80%E6%9C%AF/AI/" itemprop="url" rel="index"><span itemprop="name">AI</span></a>
                 </span>
             </span>
 
@@ -246,11 +246,17 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><p>当使用 expect 登入你的虚拟主机的时候，你会发现使用 vim，会经常出现行错乱的问题。</p>
-<h3 id="原因"><a href="#原因" class="headerlink" title="原因"></a>原因</h3><p>expect 脚本自动 ssh 登陆，当终端窗口发生变化时，默认 expect 不会将终端窗口大小改变的信号传送到远程的服务器上，因此在使用上会出现很不方便的地方，比如 vim 打开文件时出现串行，要是含有中文的文件可能根本无法编辑。</p>
-<h3 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/usr/bin/env expect </span></span><br><span class="line"><span class="comment">#trap sigwinch spawned</span></span><br><span class="line"><span class="built_in">trap</span> &#123;</span><br><span class="line"> <span class="built_in">set</span> rows [<span class="built_in">stty</span> rows]</span><br><span class="line"> <span class="built_in">set</span> cols [<span class="built_in">stty</span> columns]</span><br><span class="line"> <span class="built_in">stty</span> rows <span class="variable">$rows</span> columns <span class="variable">$cols</span> &lt; <span class="variable">$spawn_out</span>(slave,name)</span><br><span class="line">&#125; WINCH</span><br><span class="line"><span class="comment">#...</span></span><br></pre></td></tr></table></figure>
-
-<p>结果你发现完全OK ，不再乱行了</p>
+        <h2 id="AI正在污染互联网内容"><a href="#AI正在污染互联网内容" class="headerlink" title="AI正在污染互联网内容"></a>AI正在污染互联网内容</h2><p>近年来，AI生成的内容在互联网上迅速扩展，从图像、视频到文章，几乎覆盖了所有领域。尤其是在技术领域，AI生成的文章数量激增，导致信息质量下降，严重影响了用户体验。</p>
+<h3 id="AI生成内容的泛滥"><a href="#AI生成内容的泛滥" class="headerlink" title="AI生成内容的泛滥"></a>AI生成内容的泛滥</h3><p>随着AI技术的发展，各类平台开始利用AI批量生成内容。许多技术教程、产品文档甚至科普文章，看似详尽，但实则存在大量错误或过时的信息。例如，一些AI生成的技术文章引用了并不存在的API或使用了错误的配置方法，给读者带来了极大的困惑。这类内容通过SEO优化获得了更多曝光，尽管阅读量高，但其质量远远达不到用户的期望。</p>
+<p>这一现象不仅出现在技术领域，其他类型的内容，如情感、生活建议等，也被大量AI生成的低质文章所充斥。这种现象让获取高质量、有价值的信息变得越来越困难。</p>
+<h3 id="AI幻觉与错误信息的扩散"><a href="#AI幻觉与错误信息的扩散" class="headerlink" title="AI幻觉与错误信息的扩散"></a>AI幻觉与错误信息的扩散</h3><p>AI生成内容的另一个问题是所谓的“AI幻觉”。AI在生成内容时，有时会凭空创造出错误的或不真实的信息，而这些错误信息很难被一眼识别。例如，某些文章可能基于过时的文档生成，而这些内容在最新的技术版本中早已不适用。AI幻觉不仅误导用户，还会让AI模型进一步使用这些低质数据进行训练，形成恶性循环。</p>
+<p>这种循环一旦形成，未来的AI系统将更加难以避免这种污染，造成更大范围的信息失真与混乱。</p>
+<h3 id="流量至上与内容农场的兴起"><a href="#流量至上与内容农场的兴起" class="headerlink" title="流量至上与内容农场的兴起"></a>流量至上与内容农场的兴起</h3><p>AI生成内容在某些平台上的泛滥，背后是流量经济的驱动。一些平台通过大规模生成文章来提高活跃度与阅读量，从而增加广告收入。平台追求文章数量的同时，忽略了内容的准确性与质量。尤其是在中文互联网中，许多平台上充斥着质量参差不齐的AI生成文章，使得搜索引擎的结果充满了低质量信息。</p>
+<p>这种内容农场式的策略虽然短期内能为平台带来流量增长，但从长远来看，严重影响了用户的信任和互联网生态。</p>
+<h3 id="如何应对AI内容污染？"><a href="#如何应对AI内容污染？" class="headerlink" title="如何应对AI内容污染？"></a>如何应对AI内容污染？</h3><p>尽管AI内容污染问题日益严重，但仍有一些措施可以减缓这一趋势。首先，平台可以加强对内容的审核和过滤，避免低质量的AI生成文章泛滥。构建合理的信息筛选机制，如优质内容推荐系统，可以有效对抗劣质内容的扩散。</p>
+<p>其次，技术开发者可以优化AI模型的训练数据，避免将AI生成的错误内容作为训练数据的一部分。通过更加严格的训练标准与数据筛选，AI可以在生成内容时减少错误的发生。</p>
+<p>最后，用户需要提高自身的辨别能力。在面对大量AI生成的内容时，应多方核实信息，特别是在技术类内容上，避免盲目信任。</p>
+<h3 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h3><p>AI技术的应用给内容生产带来了新的可能，但也引发了内容污染问题。在流量驱动的背景下，AI生成的低质文章大量涌现，影响了信息获取的质量。通过合理的机制、内容审核以及用户自我防范，仍有可能缓解AI带来的信息污染问题，维护互联网的健康发展。</p>
 
     </div>
 
@@ -260,7 +266,7 @@
 
       <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/ssh/" rel="tag"># ssh</a>
+              <a href="/tags/AI/" rel="tag"># AI</a>
           </div>
 
         
@@ -269,13 +275,10 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2024/07/15/%E5%85%B3%E4%BA%8EWebRTC%E7%9A%84%E4%B8%80%E4%BA%9B%E6%8A%80%E6%9C%AF%E6%80%BB%E7%BB%93%E5%92%8C%E8%AE%B0%E5%BD%95/" rel="prev" title="关于WebRTC的一些技术总结和记录">
-      <i class="fa fa-chevron-left"></i> 关于WebRTC的一些技术总结和记录
+    <a href="/2024/09/03/%E9%80%9A%E8%BF%87expect%E7%99%BB%E5%BD%95linux,%20vim%E8%A1%8C%E9%94%99%E4%B9%B1%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/" rel="prev" title="通过expect登录linux, vim行错乱问题解决方案">
+      <i class="fa fa-chevron-left"></i> 通过expect登录linux, vim行错乱问题解决方案
     </a></div>
-      <div class="post-nav-item">
-    <a href="/2024/09/20/AI%20%E6%AD%A3%E5%9C%A8%E6%B1%A1%E6%9F%93%E4%BA%92%E8%81%94%E7%BD%91%E5%86%85%E5%AE%B9/" rel="next" title="AI 正在污染互联网内容">
-      AI 正在污染互联网内容 <i class="fa fa-chevron-right"></i>
-    </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -334,7 +337,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%83%8C%E6%99%AF"><span class="nav-number">1.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8E%9F%E5%9B%A0"><span class="nav-number">2.</span> <span class="nav-text">原因</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%A3%E5%86%B3"><span class="nav-number">3.</span> <span class="nav-text">解决</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#AI%E6%AD%A3%E5%9C%A8%E6%B1%A1%E6%9F%93%E4%BA%92%E8%81%94%E7%BD%91%E5%86%85%E5%AE%B9"><span class="nav-number">1.</span> <span class="nav-text">AI正在污染互联网内容</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#AI%E7%94%9F%E6%88%90%E5%86%85%E5%AE%B9%E7%9A%84%E6%B3%9B%E6%BB%A5"><span class="nav-number">1.1.</span> <span class="nav-text">AI生成内容的泛滥</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#AI%E5%B9%BB%E8%A7%89%E4%B8%8E%E9%94%99%E8%AF%AF%E4%BF%A1%E6%81%AF%E7%9A%84%E6%89%A9%E6%95%A3"><span class="nav-number">1.2.</span> <span class="nav-text">AI幻觉与错误信息的扩散</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B5%81%E9%87%8F%E8%87%B3%E4%B8%8A%E4%B8%8E%E5%86%85%E5%AE%B9%E5%86%9C%E5%9C%BA%E7%9A%84%E5%85%B4%E8%B5%B7"><span class="nav-number">1.3.</span> <span class="nav-text">流量至上与内容农场的兴起</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E5%BA%94%E5%AF%B9AI%E5%86%85%E5%AE%B9%E6%B1%A1%E6%9F%93%EF%BC%9F"><span class="nav-number">1.4.</span> <span class="nav-text">如何应对AI内容污染？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%93%E8%AF%AD"><span class="nav-number">1.5.</span> <span class="nav-text">结语</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
