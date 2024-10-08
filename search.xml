@@ -1,6 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>AI 正在污染互联网内容</title>
+    <url>/2024/09/20/AI%20%E6%AD%A3%E5%9C%A8%E6%B1%A1%E6%9F%93%E4%BA%92%E8%81%94%E7%BD%91%E5%86%85%E5%AE%B9/</url>
+    <content><![CDATA[<h2 id="AI正在污染互联网内容"><a href="#AI正在污染互联网内容" class="headerlink" title="AI正在污染互联网内容"></a>AI正在污染互联网内容</h2><p>近年来，AI生成的内容在互联网上迅速扩展，从图像、视频到文章，几乎覆盖了所有领域。尤其是在技术领域，AI生成的文章数量激增，导致信息质量下降，严重影响了用户体验。</p>
+<h3 id="AI生成内容的泛滥"><a href="#AI生成内容的泛滥" class="headerlink" title="AI生成内容的泛滥"></a>AI生成内容的泛滥</h3><p>随着AI技术的发展，各类平台开始利用AI批量生成内容。许多技术教程、产品文档甚至科普文章，看似详尽，但实则存在大量错误或过时的信息。例如，一些AI生成的技术文章引用了并不存在的API或使用了错误的配置方法，给读者带来了极大的困惑。这类内容通过SEO优化获得了更多曝光，尽管阅读量高，但其质量远远达不到用户的期望。</p>
+<p>这一现象不仅出现在技术领域，其他类型的内容，如情感、生活建议等，也被大量AI生成的低质文章所充斥。这种现象让获取高质量、有价值的信息变得越来越困难。</p>
+<h3 id="AI幻觉与错误信息的扩散"><a href="#AI幻觉与错误信息的扩散" class="headerlink" title="AI幻觉与错误信息的扩散"></a>AI幻觉与错误信息的扩散</h3><p>AI生成内容的另一个问题是所谓的“AI幻觉”。AI在生成内容时，有时会凭空创造出错误的或不真实的信息，而这些错误信息很难被一眼识别。例如，某些文章可能基于过时的文档生成，而这些内容在最新的技术版本中早已不适用。AI幻觉不仅误导用户，还会让AI模型进一步使用这些低质数据进行训练，形成恶性循环。</p>
+<p>这种循环一旦形成，未来的AI系统将更加难以避免这种污染，造成更大范围的信息失真与混乱。</p>
+<h3 id="流量至上与内容农场的兴起"><a href="#流量至上与内容农场的兴起" class="headerlink" title="流量至上与内容农场的兴起"></a>流量至上与内容农场的兴起</h3><p>AI生成内容在某些平台上的泛滥，背后是流量经济的驱动。一些平台通过大规模生成文章来提高活跃度与阅读量，从而增加广告收入。平台追求文章数量的同时，忽略了内容的准确性与质量。尤其是在中文互联网中，许多平台上充斥着质量参差不齐的AI生成文章，使得搜索引擎的结果充满了低质量信息。</p>
+<p>这种内容农场式的策略虽然短期内能为平台带来流量增长，但从长远来看，严重影响了用户的信任和互联网生态。</p>
+<h3 id="如何应对AI内容污染？"><a href="#如何应对AI内容污染？" class="headerlink" title="如何应对AI内容污染？"></a>如何应对AI内容污染？</h3><p>尽管AI内容污染问题日益严重，但仍有一些措施可以减缓这一趋势。首先，平台可以加强对内容的审核和过滤，避免低质量的AI生成文章泛滥。构建合理的信息筛选机制，如优质内容推荐系统，可以有效对抗劣质内容的扩散。</p>
+<p>其次，技术开发者可以优化AI模型的训练数据，避免将AI生成的错误内容作为训练数据的一部分。通过更加严格的训练标准与数据筛选，AI可以在生成内容时减少错误的发生。</p>
+<p>最后，用户需要提高自身的辨别能力。在面对大量AI生成的内容时，应多方核实信息，特别是在技术类内容上，避免盲目信任。</p>
+<h3 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h3><p>AI技术的应用给内容生产带来了新的可能，但也引发了内容污染问题。在流量驱动的背景下，AI生成的低质文章大量涌现，影响了信息获取的质量。通过合理的机制、内容审核以及用户自我防范，仍有可能缓解AI带来的信息污染问题，维护互联网的健康发展。</p>
+]]></content>
+      <categories>
+        <category>技术</category>
+        <category>AI</category>
+      </categories>
+      <tags>
+        <tag>AI</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Cloudflare + MailChannels 使用 DKIM 发送电子邮件</title>
     <url>/2024/07/05/Cloudflare%20+%20MailChannels%20%E4%BD%BF%E7%94%A8%20DKIM%20%E5%8F%91%E9%80%81%E7%94%B5%E5%AD%90%E9%82%AE%E4%BB%B6/</url>
     <content><![CDATA[<blockquote>
@@ -92,6 +115,37 @@
       </tags>
   </entry>
   <entry>
+    <title>Airclipbd 隔空剪贴板 v2.3.1-20240926 版本更新</title>
+    <url>/2024/09/26/airclipbd-0926/</url>
+    <content><![CDATA[<h3 id="v2-3-1-20240926-版本更新"><a href="#v2-3-1-20240926-版本更新" class="headerlink" title="v2.3.1-20240926 版本更新"></a>v2.3.1-20240926 版本更新</h3><p>Changelog</p>
+<ul>
+<li><p>移除了客户端离线时消息的显示。</p>
+<p>Removed the display of messages when the client is offline.</p>
+</li>
+<li><p>修复了部分剪贴板ID异常获取的问题。</p>
+<p>  Fixed issues with abnormal retrieval of some board IDs.</p>
+</li>
+<li><p>区分了大屏与小屏的显示适配，突出了点对点传输功能。</p>
+<p>  Differentiated the display adaptation for large and small screens, highlighting the point-to-point transmission feature.</p>
+</li>
+<li><p>大屏显示现支持折叠与展开功能。</p>
+<p>  Large screen display now supports collapse and expand functionality.</p>
+</li>
+</ul>
+<p>大屏展示</p>
+<p><img src="/./images/%E6%88%AA%E5%B1%8F2024-09-26.20.47.21.png" alt="大屏展示"></p>
+<p>小屏展示</p>
+<p><img src="/./images/IMG_1928.PNG" alt="小屏展示"></p>
+]]></content>
+      <categories>
+        <category>技术</category>
+        <category>AirClipboard</category>
+      </categories>
+      <tags>
+        <tag>AirClipboard</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Airclipbd.com 隔空剪贴板</title>
     <url>/2024/07/05/airclipbd-0705/</url>
     <content><![CDATA[<blockquote>
@@ -127,34 +181,20 @@
       </tags>
   </entry>
   <entry>
-    <title>Airclipbd 隔空剪贴板 v2.3.1-20240926 版本更新</title>
-    <url>/2024/09/26/airclipbd-0926/</url>
-    <content><![CDATA[<h3 id="v2-3-1-20240926-版本更新"><a href="#v2-3-1-20240926-版本更新" class="headerlink" title="v2.3.1-20240926 版本更新"></a>v2.3.1-20240926 版本更新</h3><p>Changelog</p>
-<ul>
-<li><p>移除了客户端离线时消息的显示。</p>
-<p>Removed the display of messages when the client is offline.</p>
-</li>
-<li><p>修复了部分剪贴板ID异常获取的问题。</p>
-<p>  Fixed issues with abnormal retrieval of some board IDs.</p>
-</li>
-<li><p>区分了大屏与小屏的显示适配，突出了点对点传输功能。</p>
-<p>  Differentiated the display adaptation for large and small screens, highlighting the point-to-point transmission feature.</p>
-</li>
-<li><p>大屏显示现支持折叠与展开功能。</p>
-<p>  Large screen display now supports collapse and expand functionality.</p>
-</li>
-</ul>
-<p>大屏展示</p>
-<p><img src="/./images/%E6%88%AA%E5%B1%8F2024-09-26.20.47.21.png" alt="大屏展示"></p>
-<p>小屏展示</p>
-<p><img src="/./images/IMG_1928.PNG" alt="小屏展示"></p>
+    <title>通过expect登录linux, vim行错乱问题解决方案</title>
+    <url>/2024/09/03/%E9%80%9A%E8%BF%87expect%E7%99%BB%E5%BD%95linux,%20vim%E8%A1%8C%E9%94%99%E4%B9%B1%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/</url>
+    <content><![CDATA[<h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><p>当使用 expect 登入你的虚拟主机的时候，你会发现使用 vim，会经常出现行错乱的问题。</p>
+<h3 id="原因"><a href="#原因" class="headerlink" title="原因"></a>原因</h3><p>expect 脚本自动 ssh 登陆，当终端窗口发生变化时，默认 expect 不会将终端窗口大小改变的信号传送到远程的服务器上，因此在使用上会出现很不方便的地方，比如 vim 打开文件时出现串行，要是含有中文的文件可能根本无法编辑。</p>
+<h3 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="meta">#!/usr/bin/env expect </span></span><br><span class="line"><span class="comment">#trap sigwinch spawned</span></span><br><span class="line"><span class="built_in">trap</span> &#123;</span><br><span class="line"> <span class="built_in">set</span> rows [<span class="built_in">stty</span> rows]</span><br><span class="line"> <span class="built_in">set</span> cols [<span class="built_in">stty</span> columns]</span><br><span class="line"> <span class="built_in">stty</span> rows <span class="variable">$rows</span> columns <span class="variable">$cols</span> &lt; <span class="variable">$spawn_out</span>(slave,name)</span><br><span class="line">&#125; WINCH</span><br><span class="line"><span class="comment">#...</span></span><br></pre></td></tr></table></figure>
+
+<p>结果你发现完全OK ，不再乱行了</p>
 ]]></content>
       <categories>
         <category>技术</category>
-        <category>AirClipboard</category>
+        <category>开发</category>
       </categories>
       <tags>
-        <tag>AirClipboard</tag>
+        <tag>ssh</tag>
       </tags>
   </entry>
   <entry>
@@ -260,46 +300,6 @@
         <tag>WebRTC</tag>
         <tag>NAT穿透</tag>
         <tag>视频通话</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>AI 正在污染互联网内容</title>
-    <url>/2024/09/20/AI%20%E6%AD%A3%E5%9C%A8%E6%B1%A1%E6%9F%93%E4%BA%92%E8%81%94%E7%BD%91%E5%86%85%E5%AE%B9/</url>
-    <content><![CDATA[<h2 id="AI正在污染互联网内容"><a href="#AI正在污染互联网内容" class="headerlink" title="AI正在污染互联网内容"></a>AI正在污染互联网内容</h2><p>近年来，AI生成的内容在互联网上迅速扩展，从图像、视频到文章，几乎覆盖了所有领域。尤其是在技术领域，AI生成的文章数量激增，导致信息质量下降，严重影响了用户体验。</p>
-<h3 id="AI生成内容的泛滥"><a href="#AI生成内容的泛滥" class="headerlink" title="AI生成内容的泛滥"></a>AI生成内容的泛滥</h3><p>随着AI技术的发展，各类平台开始利用AI批量生成内容。许多技术教程、产品文档甚至科普文章，看似详尽，但实则存在大量错误或过时的信息。例如，一些AI生成的技术文章引用了并不存在的API或使用了错误的配置方法，给读者带来了极大的困惑。这类内容通过SEO优化获得了更多曝光，尽管阅读量高，但其质量远远达不到用户的期望。</p>
-<p>这一现象不仅出现在技术领域，其他类型的内容，如情感、生活建议等，也被大量AI生成的低质文章所充斥。这种现象让获取高质量、有价值的信息变得越来越困难。</p>
-<h3 id="AI幻觉与错误信息的扩散"><a href="#AI幻觉与错误信息的扩散" class="headerlink" title="AI幻觉与错误信息的扩散"></a>AI幻觉与错误信息的扩散</h3><p>AI生成内容的另一个问题是所谓的“AI幻觉”。AI在生成内容时，有时会凭空创造出错误的或不真实的信息，而这些错误信息很难被一眼识别。例如，某些文章可能基于过时的文档生成，而这些内容在最新的技术版本中早已不适用。AI幻觉不仅误导用户，还会让AI模型进一步使用这些低质数据进行训练，形成恶性循环。</p>
-<p>这种循环一旦形成，未来的AI系统将更加难以避免这种污染，造成更大范围的信息失真与混乱。</p>
-<h3 id="流量至上与内容农场的兴起"><a href="#流量至上与内容农场的兴起" class="headerlink" title="流量至上与内容农场的兴起"></a>流量至上与内容农场的兴起</h3><p>AI生成内容在某些平台上的泛滥，背后是流量经济的驱动。一些平台通过大规模生成文章来提高活跃度与阅读量，从而增加广告收入。平台追求文章数量的同时，忽略了内容的准确性与质量。尤其是在中文互联网中，许多平台上充斥着质量参差不齐的AI生成文章，使得搜索引擎的结果充满了低质量信息。</p>
-<p>这种内容农场式的策略虽然短期内能为平台带来流量增长，但从长远来看，严重影响了用户的信任和互联网生态。</p>
-<h3 id="如何应对AI内容污染？"><a href="#如何应对AI内容污染？" class="headerlink" title="如何应对AI内容污染？"></a>如何应对AI内容污染？</h3><p>尽管AI内容污染问题日益严重，但仍有一些措施可以减缓这一趋势。首先，平台可以加强对内容的审核和过滤，避免低质量的AI生成文章泛滥。构建合理的信息筛选机制，如优质内容推荐系统，可以有效对抗劣质内容的扩散。</p>
-<p>其次，技术开发者可以优化AI模型的训练数据，避免将AI生成的错误内容作为训练数据的一部分。通过更加严格的训练标准与数据筛选，AI可以在生成内容时减少错误的发生。</p>
-<p>最后，用户需要提高自身的辨别能力。在面对大量AI生成的内容时，应多方核实信息，特别是在技术类内容上，避免盲目信任。</p>
-<h3 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h3><p>AI技术的应用给内容生产带来了新的可能，但也引发了内容污染问题。在流量驱动的背景下，AI生成的低质文章大量涌现，影响了信息获取的质量。通过合理的机制、内容审核以及用户自我防范，仍有可能缓解AI带来的信息污染问题，维护互联网的健康发展。</p>
-]]></content>
-      <categories>
-        <category>技术</category>
-        <category>AI</category>
-      </categories>
-      <tags>
-        <tag>AI</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>通过expect登录linux, vim行错乱问题解决方案</title>
-    <url>/2024/09/03/%E9%80%9A%E8%BF%87expect%E7%99%BB%E5%BD%95linux,%20vim%E8%A1%8C%E9%94%99%E4%B9%B1%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/</url>
-    <content><![CDATA[<h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><p>当使用 expect 登入你的虚拟主机的时候，你会发现使用 vim，会经常出现行错乱的问题。</p>
-<h3 id="原因"><a href="#原因" class="headerlink" title="原因"></a>原因</h3><p>expect 脚本自动 ssh 登陆，当终端窗口发生变化时，默认 expect 不会将终端窗口大小改变的信号传送到远程的服务器上，因此在使用上会出现很不方便的地方，比如 vim 打开文件时出现串行，要是含有中文的文件可能根本无法编辑。</p>
-<h3 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="meta">#!/usr/bin/env expect </span></span><br><span class="line"><span class="comment">#trap sigwinch spawned</span></span><br><span class="line"><span class="built_in">trap</span> &#123;</span><br><span class="line"> <span class="built_in">set</span> rows [<span class="built_in">stty</span> rows]</span><br><span class="line"> <span class="built_in">set</span> cols [<span class="built_in">stty</span> columns]</span><br><span class="line"> <span class="built_in">stty</span> rows <span class="variable">$rows</span> columns <span class="variable">$cols</span> &lt; <span class="variable">$spawn_out</span>(slave,name)</span><br><span class="line">&#125; WINCH</span><br><span class="line"><span class="comment">#...</span></span><br></pre></td></tr></table></figure>
-
-<p>结果你发现完全OK ，不再乱行了</p>
-]]></content>
-      <categories>
-        <category>技术</category>
-        <category>开发</category>
-      </categories>
-      <tags>
-        <tag>ssh</tag>
       </tags>
   </entry>
 </search>
