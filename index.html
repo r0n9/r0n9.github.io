@@ -190,6 +190,101 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://blog.airclipbd.com/2025/02/27/ios%20swift%20%E5%BC%80%E5%8F%91%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%9A%E5%85%B3%E4%BA%8EShare%20Extension%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98%E8%AE%B0%E5%BD%95/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="R0n9">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="隔空剪贴板-技术博客">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2025/02/27/ios%20swift%20%E5%BC%80%E5%8F%91%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%9A%E5%85%B3%E4%BA%8EShare%20Extension%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98%E8%AE%B0%E5%BD%95/" class="post-title-link" itemprop="url">iOS swift 开发学习笔记：关于Share Extension遇到的问题记录</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2025-02-27 09:49:23 / 修改时间：10:48:02" itemprop="dateCreated datePublished" datetime="2025-02-27T09:49:23+08:00">2025-02-27</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%8A%80%E6%9C%AF/%E5%BC%80%E5%8F%91/" itemprop="url" rel="index"><span itemprop="name">开发</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="Share-Extension-分享扩展"><a href="#Share-Extension-分享扩展" class="headerlink" title="Share Extension 分享扩展"></a>Share Extension 分享扩展</h2><p>在项目中添加新的 Share Extension target<br>![Share Extension](.&#x2F;images&#x2F;截屏2025-02-27 09.53.01.png)</p>
+<h2 id="NSExtensionActivationRule"><a href="#NSExtensionActivationRule" class="headerlink" title="NSExtensionActivationRule"></a>NSExtensionActivationRule</h2><p>扩展的 Info.plist</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&lt;key&gt;NSExtensionAttributes&lt;/key&gt;</span><br><span class="line">&lt;dict&gt;</span><br><span class="line">    &lt;key&gt;NSExtensionActivationRule&lt;/key&gt;</span><br><span class="line">    &lt;dict&gt;</span><br><span class="line">        &lt;key&gt;NSExtensionActivationSupportsText&lt;/key&gt;</span><br><span class="line">        &lt;true/&gt;</span><br><span class="line">        &lt;key&gt;NSExtensionActivationSupportsImageWithMaxCount&lt;/key&gt;</span><br><span class="line">        &lt;integer&gt;9&lt;/integer&gt;</span><br><span class="line">        &lt;key&gt;NSExtensionActivationSupportsWebURLWithMaxCount&lt;/key&gt;</span><br><span class="line">        &lt;integer&gt;1&lt;/integer&gt;</span><br><span class="line">    &lt;/dict&gt;</span><br><span class="line">&lt;/dict&gt;</span><br></pre></td></tr></table></figure>
+
+<h2 id="Share-Extension-分享扩展，分享发布后直接跳转主应用APP"><a href="#Share-Extension-分享扩展，分享发布后直接跳转主应用APP" class="headerlink" title="Share Extension 分享扩展，分享发布后直接跳转主应用APP"></a>Share Extension 分享扩展，分享发布后直接跳转主应用APP</h2><p>class ShareViewController: SLComposeServiceViewController</p>
+<p>didSelectPost 方法实现，点击默认的发布按钮后的处理<br><img src="/./images/share_ext1.jpeg" alt="Share Extension"></p>
+<p>原本打算尝试点击发布后，打开主应用app，这里一直失败。<br>主应用URL设置，涉及 <code>URL Types</code> in <code>Info.plist</code>，这里不展开。<br>排除了主应用的URL错误，尝试在safari中输入url，例如”testProject:&#x2F;&#x2F;“，可以打开主应用。</p>
+<p>通过URL打开应用代码，直接使用extension的open方法：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">if let url = URL(string: &quot;testProject://&quot;) &#123;</span><br><span class="line">    print(&quot;URL: \(url)&quot;)</span><br><span class="line">    self.extensionContext?.open(url) &#123; success in</span><br><span class="line">        print(&quot;URL \(success ? &quot;opened&quot; : &quot;failed to open&quot;)&quot;)</span><br><span class="line">        self.extensionContext?.completeRequest(returningItems: [], completionHandler: nil)</span><br><span class="line">    &#125;</span><br><span class="line">&#125; else &#123;</span><br><span class="line">    print(&quot;URL 格式错误&quot;)</span><br><span class="line">    return</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>问题原因：<br><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/24297273/openurl-not-work-in-action-extension">https://stackoverflow.com/questions/24297273/openurl-not-work-in-action-extension</a></p>
+<blockquote>
+<p>NSExtensionContext only support openURL function in today extension ,this is described in apple’s documents about NSExtensionContext.The original words is “Each extension point determines whether to support this method, or under which conditions to support this method. In iOS 8.0, only the Today extension point supports this method.”</p>
+</blockquote>
+<p>译: 在 iOS 中，NSExtensionContext 的 openURL:completionHandler: 方法仅在 Today 扩展中可用。 根据苹果官方文档的描述：“每个扩展点决定是否支持此方法，或在何种条件下支持此方法。在 iOS 8.0 中，只有 Today 扩展点支持此方法。” 这意味着，除 Today 扩展外，其他类型的扩展（如 Share、Action 等）无法使用 openURL:completionHandler: 方法来打开 URL。 因此，您需要根据扩展的类型，选择适合的方式来处理 URL 打开操作。</p>
+<p>因此，想通过扩展组件，直接打开某个APP，应该是做不到了，出于安全考虑吧。</p>
+<p>参考了一下其他APP的做法，有大致思路了：</p>
+<p><strong>放弃在分享发布后打开主应用APP，在 Share Extension 中直接实现功能，也就是修改 Share Extension 中默认的分享页面实现。</strong></p>
+<h2 id="使用-App-Group-通过-UserDefaults-实现数据共享"><a href="#使用-App-Group-通过-UserDefaults-实现数据共享" class="headerlink" title="使用 App Group 通过 UserDefaults 实现数据共享"></a>使用 App Group 通过 UserDefaults 实现数据共享</h2><p>为了在主App和Share Extension之间共享数据，需要启用 App Groups：</p>
+<ul>
+<li>在Xcode中，选择主App和Share Extension的Target。</li>
+<li>在 Signing &amp; Capabilities 中，点击 “+” 添加 App Groups。</li>
+<li>设置一个唯一的App Group ID，例如group.com.yourcompany.app，并在两个Target中启用。</li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://blog.airclipbd.com/2024/10/10/Firewalld%E9%98%B2%E7%81%AB%E5%A2%99%E7%9A%84%E8%A7%84%E5%88%99%E6%97%A0%E6%B3%95%E6%8E%A7%E5%88%B6Docker%E7%AB%AF%E5%8F%A3%E7%9A%84%E9%97%AE%E9%A2%98/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -901,7 +996,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">7</span>
+          <span class="site-state-item-count">8</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -914,7 +1009,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-count">14</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -956,7 +1051,7 @@
 <div class="copyright">
   
   &copy; 
-  <span itemprop="copyrightYear">2024</span>
+  <span itemprop="copyrightYear">2025</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>

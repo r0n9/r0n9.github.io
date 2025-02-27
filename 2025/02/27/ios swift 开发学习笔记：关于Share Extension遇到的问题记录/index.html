@@ -20,20 +20,24 @@
     var CONFIG = {"hostname":"blog.airclipbd.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":3,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="AI正在污染互联网内容近年来，AI生成的内容在互联网上迅速扩展，从图像、视频到文章，几乎覆盖了所有领域。尤其是在技术领域，AI生成的文章数量激增，导致信息质量下降，严重影响了用户体验。 AI生成内容的泛滥随着AI技术的发展，各类平台开始利用AI批量生成内容。许多技术教程、产品文档甚至科普文章，看似详尽，但实则存在大量错误或过时的信息。例如，一些AI生成的技术文章引用了并不存在的API或使用了错误的">
+  <meta name="description" content="Share Extension 分享扩展在项目中添加新的 Share Extension target![Share Extension](.&#x2F;images&#x2F;截屏2025-02-27 09.53.01.png) NSExtensionActivationRule扩展的 Info.plist 123456789101112&lt;key&gt;NSExtensionAttribu">
 <meta property="og:type" content="article">
-<meta property="og:title" content="AI 正在污染互联网内容">
-<meta property="og:url" content="https://blog.airclipbd.com/2024/09/20/AI%20%E6%AD%A3%E5%9C%A8%E6%B1%A1%E6%9F%93%E4%BA%92%E8%81%94%E7%BD%91%E5%86%85%E5%AE%B9/index.html">
+<meta property="og:title" content="iOS swift 开发学习笔记：关于Share Extension遇到的问题记录">
+<meta property="og:url" content="https://blog.airclipbd.com/2025/02/27/ios%20swift%20%E5%BC%80%E5%8F%91%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%9A%E5%85%B3%E4%BA%8EShare%20Extension%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98%E8%AE%B0%E5%BD%95/index.html">
 <meta property="og:site_name" content="隔空剪贴板-技术博客">
-<meta property="og:description" content="AI正在污染互联网内容近年来，AI生成的内容在互联网上迅速扩展，从图像、视频到文章，几乎覆盖了所有领域。尤其是在技术领域，AI生成的文章数量激增，导致信息质量下降，严重影响了用户体验。 AI生成内容的泛滥随着AI技术的发展，各类平台开始利用AI批量生成内容。许多技术教程、产品文档甚至科普文章，看似详尽，但实则存在大量错误或过时的信息。例如，一些AI生成的技术文章引用了并不存在的API或使用了错误的">
+<meta property="og:description" content="Share Extension 分享扩展在项目中添加新的 Share Extension target![Share Extension](.&#x2F;images&#x2F;截屏2025-02-27 09.53.01.png) NSExtensionActivationRule扩展的 Info.plist 123456789101112&lt;key&gt;NSExtensionAttribu">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2024-09-20T09:23:58.441Z">
-<meta property="article:modified_time" content="2024-09-20T09:29:23.984Z">
+<meta property="og:image" content="https://blog.airclipbd.com/images/share_ext1.jpeg">
+<meta property="article:published_time" content="2025-02-27T01:49:23.998Z">
+<meta property="article:modified_time" content="2025-02-27T02:48:02.198Z">
 <meta property="article:author" content="R0n9">
-<meta property="article:tag" content="AI">
+<meta property="article:tag" content="iOS">
+<meta property="article:tag" content="swift">
+<meta property="article:tag" content="app">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://blog.airclipbd.com/images/share_ext1.jpeg">
 
-<link rel="canonical" href="https://blog.airclipbd.com/2024/09/20/AI%20%E6%AD%A3%E5%9C%A8%E6%B1%A1%E6%9F%93%E4%BA%92%E8%81%94%E7%BD%91%E5%86%85%E5%AE%B9/">
+<link rel="canonical" href="https://blog.airclipbd.com/2025/02/27/ios%20swift%20%E5%BC%80%E5%8F%91%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%9A%E5%85%B3%E4%BA%8EShare%20Extension%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98%E8%AE%B0%E5%BD%95/">
 
 
 <script id="page-configurations">
@@ -46,7 +50,7 @@
   };
 </script>
 
-  <title>AI 正在污染互联网内容 | 隔空剪贴板-技术博客</title>
+  <title>iOS swift 开发学习笔记：关于Share Extension遇到的问题记录 | 隔空剪贴板-技术博客</title>
   
 
 
@@ -195,7 +199,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://blog.airclipbd.com/2024/09/20/AI%20%E6%AD%A3%E5%9C%A8%E6%B1%A1%E6%9F%93%E4%BA%92%E8%81%94%E7%BD%91%E5%86%85%E5%AE%B9/">
+    <link itemprop="mainEntityOfPage" href="https://blog.airclipbd.com/2025/02/27/ios%20swift%20%E5%BC%80%E5%8F%91%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%9A%E5%85%B3%E4%BA%8EShare%20Extension%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98%E8%AE%B0%E5%BD%95/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -208,7 +212,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          AI 正在污染互联网内容
+          iOS swift 开发学习笔记：关于Share Extension遇到的问题记录
         </h1>
 
         <div class="post-meta">
@@ -219,7 +223,7 @@
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2024-09-20 17:23:58 / 修改时间：17:29:23" itemprop="dateCreated datePublished" datetime="2024-09-20T17:23:58+08:00">2024-09-20</time>
+              <time title="创建时间：2025-02-27 09:49:23 / 修改时间：10:48:02" itemprop="dateCreated datePublished" datetime="2025-02-27T09:49:23+08:00">2025-02-27</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -231,7 +235,7 @@
                 </span>
                   ，
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E6%8A%80%E6%9C%AF/AI/" itemprop="url" rel="index"><span itemprop="name">AI</span></a>
+                  <a href="/categories/%E6%8A%80%E6%9C%AF/%E5%BC%80%E5%8F%91/" itemprop="url" rel="index"><span itemprop="name">开发</span></a>
                 </span>
             </span>
 
@@ -246,17 +250,30 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h2 id="AI正在污染互联网内容"><a href="#AI正在污染互联网内容" class="headerlink" title="AI正在污染互联网内容"></a>AI正在污染互联网内容</h2><p>近年来，AI生成的内容在互联网上迅速扩展，从图像、视频到文章，几乎覆盖了所有领域。尤其是在技术领域，AI生成的文章数量激增，导致信息质量下降，严重影响了用户体验。</p>
-<h3 id="AI生成内容的泛滥"><a href="#AI生成内容的泛滥" class="headerlink" title="AI生成内容的泛滥"></a>AI生成内容的泛滥</h3><p>随着AI技术的发展，各类平台开始利用AI批量生成内容。许多技术教程、产品文档甚至科普文章，看似详尽，但实则存在大量错误或过时的信息。例如，一些AI生成的技术文章引用了并不存在的API或使用了错误的配置方法，给读者带来了极大的困惑。这类内容通过SEO优化获得了更多曝光，尽管阅读量高，但其质量远远达不到用户的期望。</p>
-<p>这一现象不仅出现在技术领域，其他类型的内容，如情感、生活建议等，也被大量AI生成的低质文章所充斥。这种现象让获取高质量、有价值的信息变得越来越困难。</p>
-<h3 id="AI幻觉与错误信息的扩散"><a href="#AI幻觉与错误信息的扩散" class="headerlink" title="AI幻觉与错误信息的扩散"></a>AI幻觉与错误信息的扩散</h3><p>AI生成内容的另一个问题是所谓的“AI幻觉”。AI在生成内容时，有时会凭空创造出错误的或不真实的信息，而这些错误信息很难被一眼识别。例如，某些文章可能基于过时的文档生成，而这些内容在最新的技术版本中早已不适用。AI幻觉不仅误导用户，还会让AI模型进一步使用这些低质数据进行训练，形成恶性循环。</p>
-<p>这种循环一旦形成，未来的AI系统将更加难以避免这种污染，造成更大范围的信息失真与混乱。</p>
-<h3 id="流量至上与内容农场的兴起"><a href="#流量至上与内容农场的兴起" class="headerlink" title="流量至上与内容农场的兴起"></a>流量至上与内容农场的兴起</h3><p>AI生成内容在某些平台上的泛滥，背后是流量经济的驱动。一些平台通过大规模生成文章来提高活跃度与阅读量，从而增加广告收入。平台追求文章数量的同时，忽略了内容的准确性与质量。尤其是在中文互联网中，许多平台上充斥着质量参差不齐的AI生成文章，使得搜索引擎的结果充满了低质量信息。</p>
-<p>这种内容农场式的策略虽然短期内能为平台带来流量增长，但从长远来看，严重影响了用户的信任和互联网生态。</p>
-<h3 id="如何应对AI内容污染？"><a href="#如何应对AI内容污染？" class="headerlink" title="如何应对AI内容污染？"></a>如何应对AI内容污染？</h3><p>尽管AI内容污染问题日益严重，但仍有一些措施可以减缓这一趋势。首先，平台可以加强对内容的审核和过滤，避免低质量的AI生成文章泛滥。构建合理的信息筛选机制，如优质内容推荐系统，可以有效对抗劣质内容的扩散。</p>
-<p>其次，技术开发者可以优化AI模型的训练数据，避免将AI生成的错误内容作为训练数据的一部分。通过更加严格的训练标准与数据筛选，AI可以在生成内容时减少错误的发生。</p>
-<p>最后，用户需要提高自身的辨别能力。在面对大量AI生成的内容时，应多方核实信息，特别是在技术类内容上，避免盲目信任。</p>
-<h3 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h3><p>AI技术的应用给内容生产带来了新的可能，但也引发了内容污染问题。在流量驱动的背景下，AI生成的低质文章大量涌现，影响了信息获取的质量。通过合理的机制、内容审核以及用户自我防范，仍有可能缓解AI带来的信息污染问题，维护互联网的健康发展。</p>
+        <h2 id="Share-Extension-分享扩展"><a href="#Share-Extension-分享扩展" class="headerlink" title="Share Extension 分享扩展"></a>Share Extension 分享扩展</h2><p>在项目中添加新的 Share Extension target<br>![Share Extension](.&#x2F;images&#x2F;截屏2025-02-27 09.53.01.png)</p>
+<h2 id="NSExtensionActivationRule"><a href="#NSExtensionActivationRule" class="headerlink" title="NSExtensionActivationRule"></a>NSExtensionActivationRule</h2><p>扩展的 Info.plist</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&lt;key&gt;NSExtensionAttributes&lt;/key&gt;</span><br><span class="line">&lt;dict&gt;</span><br><span class="line">    &lt;key&gt;NSExtensionActivationRule&lt;/key&gt;</span><br><span class="line">    &lt;dict&gt;</span><br><span class="line">        &lt;key&gt;NSExtensionActivationSupportsText&lt;/key&gt;</span><br><span class="line">        &lt;true/&gt;</span><br><span class="line">        &lt;key&gt;NSExtensionActivationSupportsImageWithMaxCount&lt;/key&gt;</span><br><span class="line">        &lt;integer&gt;9&lt;/integer&gt;</span><br><span class="line">        &lt;key&gt;NSExtensionActivationSupportsWebURLWithMaxCount&lt;/key&gt;</span><br><span class="line">        &lt;integer&gt;1&lt;/integer&gt;</span><br><span class="line">    &lt;/dict&gt;</span><br><span class="line">&lt;/dict&gt;</span><br></pre></td></tr></table></figure>
+
+<h2 id="Share-Extension-分享扩展，分享发布后直接跳转主应用APP"><a href="#Share-Extension-分享扩展，分享发布后直接跳转主应用APP" class="headerlink" title="Share Extension 分享扩展，分享发布后直接跳转主应用APP"></a>Share Extension 分享扩展，分享发布后直接跳转主应用APP</h2><p>class ShareViewController: SLComposeServiceViewController</p>
+<p>didSelectPost 方法实现，点击默认的发布按钮后的处理<br><img src="/./images/share_ext1.jpeg" alt="Share Extension"></p>
+<p>原本打算尝试点击发布后，打开主应用app，这里一直失败。<br>主应用URL设置，涉及 <code>URL Types</code> in <code>Info.plist</code>，这里不展开。<br>排除了主应用的URL错误，尝试在safari中输入url，例如”testProject:&#x2F;&#x2F;“，可以打开主应用。</p>
+<p>通过URL打开应用代码，直接使用extension的open方法：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">if let url = URL(string: &quot;testProject://&quot;) &#123;</span><br><span class="line">    print(&quot;URL: \(url)&quot;)</span><br><span class="line">    self.extensionContext?.open(url) &#123; success in</span><br><span class="line">        print(&quot;URL \(success ? &quot;opened&quot; : &quot;failed to open&quot;)&quot;)</span><br><span class="line">        self.extensionContext?.completeRequest(returningItems: [], completionHandler: nil)</span><br><span class="line">    &#125;</span><br><span class="line">&#125; else &#123;</span><br><span class="line">    print(&quot;URL 格式错误&quot;)</span><br><span class="line">    return</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>问题原因：<br><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/24297273/openurl-not-work-in-action-extension">https://stackoverflow.com/questions/24297273/openurl-not-work-in-action-extension</a></p>
+<blockquote>
+<p>NSExtensionContext only support openURL function in today extension ,this is described in apple’s documents about NSExtensionContext.The original words is “Each extension point determines whether to support this method, or under which conditions to support this method. In iOS 8.0, only the Today extension point supports this method.”</p>
+</blockquote>
+<p>译: 在 iOS 中，NSExtensionContext 的 openURL:completionHandler: 方法仅在 Today 扩展中可用。 根据苹果官方文档的描述：“每个扩展点决定是否支持此方法，或在何种条件下支持此方法。在 iOS 8.0 中，只有 Today 扩展点支持此方法。” 这意味着，除 Today 扩展外，其他类型的扩展（如 Share、Action 等）无法使用 openURL:completionHandler: 方法来打开 URL。 因此，您需要根据扩展的类型，选择适合的方式来处理 URL 打开操作。</p>
+<p>因此，想通过扩展组件，直接打开某个APP，应该是做不到了，出于安全考虑吧。</p>
+<p>参考了一下其他APP的做法，有大致思路了：</p>
+<p><strong>放弃在分享发布后打开主应用APP，在 Share Extension 中直接实现功能，也就是修改 Share Extension 中默认的分享页面实现。</strong></p>
+<h2 id="使用-App-Group-通过-UserDefaults-实现数据共享"><a href="#使用-App-Group-通过-UserDefaults-实现数据共享" class="headerlink" title="使用 App Group 通过 UserDefaults 实现数据共享"></a>使用 App Group 通过 UserDefaults 实现数据共享</h2><p>为了在主App和Share Extension之间共享数据，需要启用 App Groups：</p>
+<ul>
+<li>在Xcode中，选择主App和Share Extension的Target。</li>
+<li>在 Signing &amp; Capabilities 中，点击 “+” 添加 App Groups。</li>
+<li>设置一个唯一的App Group ID，例如group.com.yourcompany.app，并在两个Target中启用。</li>
+</ul>
 
     </div>
 
@@ -266,7 +283,9 @@
 
       <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/AI/" rel="tag"># AI</a>
+              <a href="/tags/iOS/" rel="tag"># iOS</a>
+              <a href="/tags/swift/" rel="tag"># swift</a>
+              <a href="/tags/app/" rel="tag"># app</a>
           </div>
 
         
@@ -275,13 +294,10 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2024/09/03/%E9%80%9A%E8%BF%87expect%E7%99%BB%E5%BD%95linux,%20vim%E8%A1%8C%E9%94%99%E4%B9%B1%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/" rel="prev" title="通过expect登录linux, vim行错乱问题解决方案">
-      <i class="fa fa-chevron-left"></i> 通过expect登录linux, vim行错乱问题解决方案
+    <a href="/2024/10/10/Firewalld%E9%98%B2%E7%81%AB%E5%A2%99%E7%9A%84%E8%A7%84%E5%88%99%E6%97%A0%E6%B3%95%E6%8E%A7%E5%88%B6Docker%E7%AB%AF%E5%8F%A3%E7%9A%84%E9%97%AE%E9%A2%98/" rel="prev" title="Firewalld防火墙的规则无法控制Docker端口的问题">
+      <i class="fa fa-chevron-left"></i> Firewalld防火墙的规则无法控制Docker端口的问题
     </a></div>
-      <div class="post-nav-item">
-    <a href="/2024/09/26/airclipbd-0926/" rel="next" title="Airclipbd 隔空剪贴板 v2.3.1-20240926 版本更新">
-      Airclipbd 隔空剪贴板 v2.3.1-20240926 版本更新 <i class="fa fa-chevron-right"></i>
-    </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -340,7 +356,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#AI%E6%AD%A3%E5%9C%A8%E6%B1%A1%E6%9F%93%E4%BA%92%E8%81%94%E7%BD%91%E5%86%85%E5%AE%B9"><span class="nav-number">1.</span> <span class="nav-text">AI正在污染互联网内容</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#AI%E7%94%9F%E6%88%90%E5%86%85%E5%AE%B9%E7%9A%84%E6%B3%9B%E6%BB%A5"><span class="nav-number">1.1.</span> <span class="nav-text">AI生成内容的泛滥</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#AI%E5%B9%BB%E8%A7%89%E4%B8%8E%E9%94%99%E8%AF%AF%E4%BF%A1%E6%81%AF%E7%9A%84%E6%89%A9%E6%95%A3"><span class="nav-number">1.2.</span> <span class="nav-text">AI幻觉与错误信息的扩散</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B5%81%E9%87%8F%E8%87%B3%E4%B8%8A%E4%B8%8E%E5%86%85%E5%AE%B9%E5%86%9C%E5%9C%BA%E7%9A%84%E5%85%B4%E8%B5%B7"><span class="nav-number">1.3.</span> <span class="nav-text">流量至上与内容农场的兴起</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E5%BA%94%E5%AF%B9AI%E5%86%85%E5%AE%B9%E6%B1%A1%E6%9F%93%EF%BC%9F"><span class="nav-number">1.4.</span> <span class="nav-text">如何应对AI内容污染？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%93%E8%AF%AD"><span class="nav-number">1.5.</span> <span class="nav-text">结语</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Share-Extension-%E5%88%86%E4%BA%AB%E6%89%A9%E5%B1%95"><span class="nav-number">1.</span> <span class="nav-text">Share Extension 分享扩展</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#NSExtensionActivationRule"><span class="nav-number">2.</span> <span class="nav-text">NSExtensionActivationRule</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Share-Extension-%E5%88%86%E4%BA%AB%E6%89%A9%E5%B1%95%EF%BC%8C%E5%88%86%E4%BA%AB%E5%8F%91%E5%B8%83%E5%90%8E%E7%9B%B4%E6%8E%A5%E8%B7%B3%E8%BD%AC%E4%B8%BB%E5%BA%94%E7%94%A8APP"><span class="nav-number">3.</span> <span class="nav-text">Share Extension 分享扩展，分享发布后直接跳转主应用APP</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8-App-Group-%E9%80%9A%E8%BF%87-UserDefaults-%E5%AE%9E%E7%8E%B0%E6%95%B0%E6%8D%AE%E5%85%B1%E4%BA%AB"><span class="nav-number">4.</span> <span class="nav-text">使用 App Group 通过 UserDefaults 实现数据共享</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
