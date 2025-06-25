@@ -1,26 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>AI 正在污染互联网内容</title>
-    <url>/2024/09/20/AI%20%E6%AD%A3%E5%9C%A8%E6%B1%A1%E6%9F%93%E4%BA%92%E8%81%94%E7%BD%91%E5%86%85%E5%AE%B9/</url>
-    <content><![CDATA[<h2 id="AI正在污染互联网内容"><a href="#AI正在污染互联网内容" class="headerlink" title="AI正在污染互联网内容"></a>AI正在污染互联网内容</h2><p>近年来，AI生成的内容在互联网上迅速扩展，从图像、视频到文章，几乎覆盖了所有领域。尤其是在技术领域，AI生成的文章数量激增，导致信息质量下降，严重影响了用户体验。</p>
-<h3 id="AI生成内容的泛滥"><a href="#AI生成内容的泛滥" class="headerlink" title="AI生成内容的泛滥"></a>AI生成内容的泛滥</h3><p>随着AI技术的发展，各类平台开始利用AI批量生成内容。许多技术教程、产品文档甚至科普文章，看似详尽，但实则存在大量错误或过时的信息。例如，一些AI生成的技术文章引用了并不存在的API或使用了错误的配置方法，给读者带来了极大的困惑。这类内容通过SEO优化获得了更多曝光，尽管阅读量高，但其质量远远达不到用户的期望。</p>
-<p>这一现象不仅出现在技术领域，其他类型的内容，如情感、生活建议等，也被大量AI生成的低质文章所充斥。这种现象让获取高质量、有价值的信息变得越来越困难。</p>
-<h3 id="AI幻觉与错误信息的扩散"><a href="#AI幻觉与错误信息的扩散" class="headerlink" title="AI幻觉与错误信息的扩散"></a>AI幻觉与错误信息的扩散</h3><p>AI生成内容的另一个问题是所谓的“AI幻觉”。AI在生成内容时，有时会凭空创造出错误的或不真实的信息，而这些错误信息很难被一眼识别。例如，某些文章可能基于过时的文档生成，而这些内容在最新的技术版本中早已不适用。AI幻觉不仅误导用户，还会让AI模型进一步使用这些低质数据进行训练，形成恶性循环。</p>
-<p>这种循环一旦形成，未来的AI系统将更加难以避免这种污染，造成更大范围的信息失真与混乱。</p>
-<h3 id="流量至上与内容农场的兴起"><a href="#流量至上与内容农场的兴起" class="headerlink" title="流量至上与内容农场的兴起"></a>流量至上与内容农场的兴起</h3><p>AI生成内容在某些平台上的泛滥，背后是流量经济的驱动。一些平台通过大规模生成文章来提高活跃度与阅读量，从而增加广告收入。平台追求文章数量的同时，忽略了内容的准确性与质量。尤其是在中文互联网中，许多平台上充斥着质量参差不齐的AI生成文章，使得搜索引擎的结果充满了低质量信息。</p>
-<p>这种内容农场式的策略虽然短期内能为平台带来流量增长，但从长远来看，严重影响了用户的信任和互联网生态。</p>
-<h3 id="如何应对AI内容污染？"><a href="#如何应对AI内容污染？" class="headerlink" title="如何应对AI内容污染？"></a>如何应对AI内容污染？</h3><p>尽管AI内容污染问题日益严重，但仍有一些措施可以减缓这一趋势。首先，平台可以加强对内容的审核和过滤，避免低质量的AI生成文章泛滥。构建合理的信息筛选机制，如优质内容推荐系统，可以有效对抗劣质内容的扩散。</p>
-<p>其次，技术开发者可以优化AI模型的训练数据，避免将AI生成的错误内容作为训练数据的一部分。通过更加严格的训练标准与数据筛选，AI可以在生成内容时减少错误的发生。</p>
-<p>最后，用户需要提高自身的辨别能力。在面对大量AI生成的内容时，应多方核实信息，特别是在技术类内容上，避免盲目信任。</p>
-<h3 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h3><p>AI技术的应用给内容生产带来了新的可能，但也引发了内容污染问题。在流量驱动的背景下，AI生成的低质文章大量涌现，影响了信息获取的质量。通过合理的机制、内容审核以及用户自我防范，仍有可能缓解AI带来的信息污染问题，维护互联网的健康发展。</p>
+    <title>Airclipbd.com 隔空剪贴板</title>
+    <url>/2024/07/05/airclipbd-0705/</url>
+    <content><![CDATA[<blockquote>
+<p>Snapdrop + Clipboard + ChatGPT &#x3D; Airclipbd.com 隔空剪贴板</p>
+</blockquote>
+<h3 id="SnapDrop-局域网内点对点传输"><a href="#SnapDrop-局域网内点对点传输" class="headerlink" title="SnapDrop 局域网内点对点传输"></a>SnapDrop 局域网内点对点传输</h3><p>Snapdrop: local file sharing in your browser. Inspired by Apple’s Airdrop.</p>
+<p><a href="https://github.com/RobinLinus/snapdrop">https://github.com/RobinLinus/snapdrop</a></p>
+<ul>
+<li>同一网络内设备自动发现</li>
+<li>设备间文件点对点传输 Peer2Peer</li>
+</ul>
+<h3 id="Clipboard-在线剪切板"><a href="#Clipboard-在线剪切板" class="headerlink" title="Clipboard 在线剪切板"></a>Clipboard 在线剪切板</h3><ul>
+<li>支持剪切板空间 <code>/$&#123;board_name&#125;</code></li>
+<li>公开读写，寄存简单方便</li>
+<li>剪贴板复制内容直接粘贴，支持文字、图片、各种文件。</li>
+<li>限制粘贴内容最大20MB，每个剪切板空间暂存最新20条记录。</li>
+<li>暂存6小时</li>
+</ul>
+<h3 id="ChatGPT-提供强大的技术支持"><a href="#ChatGPT-提供强大的技术支持" class="headerlink" title="ChatGPT 提供强大的技术支持"></a>ChatGPT 提供强大的技术支持</h3><ul>
+<li>前端支持 HTML, CSS, Javascript</li>
+<li>后端支持 Golang, Gin, Redis, Websocket</li>
+</ul>
+<h3 id="开发过程与当前进展-2024-07-05"><a href="#开发过程与当前进展-2024-07-05" class="headerlink" title="开发过程与当前进展 2024&#x2F;07&#x2F;05"></a>开发过程与当前进展 2024&#x2F;07&#x2F;05</h3><span id="more"></span>
+
+<p><img src="/./images/airclipbd_20240705.png" alt="image info"></p>
 ]]></content>
       <categories>
         <category>技术</category>
-        <category>AI</category>
+        <category>AirClipboard</category>
       </categories>
       <tags>
-        <tag>AI</tag>
+        <tag>AirClipboard</tag>
       </tags>
   </entry>
   <entry>
@@ -115,6 +127,29 @@
       </tags>
   </entry>
   <entry>
+    <title>AI 正在污染互联网内容</title>
+    <url>/2024/09/20/AI%20%E6%AD%A3%E5%9C%A8%E6%B1%A1%E6%9F%93%E4%BA%92%E8%81%94%E7%BD%91%E5%86%85%E5%AE%B9/</url>
+    <content><![CDATA[<h2 id="AI正在污染互联网内容"><a href="#AI正在污染互联网内容" class="headerlink" title="AI正在污染互联网内容"></a>AI正在污染互联网内容</h2><p>近年来，AI生成的内容在互联网上迅速扩展，从图像、视频到文章，几乎覆盖了所有领域。尤其是在技术领域，AI生成的文章数量激增，导致信息质量下降，严重影响了用户体验。</p>
+<h3 id="AI生成内容的泛滥"><a href="#AI生成内容的泛滥" class="headerlink" title="AI生成内容的泛滥"></a>AI生成内容的泛滥</h3><p>随着AI技术的发展，各类平台开始利用AI批量生成内容。许多技术教程、产品文档甚至科普文章，看似详尽，但实则存在大量错误或过时的信息。例如，一些AI生成的技术文章引用了并不存在的API或使用了错误的配置方法，给读者带来了极大的困惑。这类内容通过SEO优化获得了更多曝光，尽管阅读量高，但其质量远远达不到用户的期望。</p>
+<p>这一现象不仅出现在技术领域，其他类型的内容，如情感、生活建议等，也被大量AI生成的低质文章所充斥。这种现象让获取高质量、有价值的信息变得越来越困难。</p>
+<h3 id="AI幻觉与错误信息的扩散"><a href="#AI幻觉与错误信息的扩散" class="headerlink" title="AI幻觉与错误信息的扩散"></a>AI幻觉与错误信息的扩散</h3><p>AI生成内容的另一个问题是所谓的“AI幻觉”。AI在生成内容时，有时会凭空创造出错误的或不真实的信息，而这些错误信息很难被一眼识别。例如，某些文章可能基于过时的文档生成，而这些内容在最新的技术版本中早已不适用。AI幻觉不仅误导用户，还会让AI模型进一步使用这些低质数据进行训练，形成恶性循环。</p>
+<p>这种循环一旦形成，未来的AI系统将更加难以避免这种污染，造成更大范围的信息失真与混乱。</p>
+<h3 id="流量至上与内容农场的兴起"><a href="#流量至上与内容农场的兴起" class="headerlink" title="流量至上与内容农场的兴起"></a>流量至上与内容农场的兴起</h3><p>AI生成内容在某些平台上的泛滥，背后是流量经济的驱动。一些平台通过大规模生成文章来提高活跃度与阅读量，从而增加广告收入。平台追求文章数量的同时，忽略了内容的准确性与质量。尤其是在中文互联网中，许多平台上充斥着质量参差不齐的AI生成文章，使得搜索引擎的结果充满了低质量信息。</p>
+<p>这种内容农场式的策略虽然短期内能为平台带来流量增长，但从长远来看，严重影响了用户的信任和互联网生态。</p>
+<h3 id="如何应对AI内容污染？"><a href="#如何应对AI内容污染？" class="headerlink" title="如何应对AI内容污染？"></a>如何应对AI内容污染？</h3><p>尽管AI内容污染问题日益严重，但仍有一些措施可以减缓这一趋势。首先，平台可以加强对内容的审核和过滤，避免低质量的AI生成文章泛滥。构建合理的信息筛选机制，如优质内容推荐系统，可以有效对抗劣质内容的扩散。</p>
+<p>其次，技术开发者可以优化AI模型的训练数据，避免将AI生成的错误内容作为训练数据的一部分。通过更加严格的训练标准与数据筛选，AI可以在生成内容时减少错误的发生。</p>
+<p>最后，用户需要提高自身的辨别能力。在面对大量AI生成的内容时，应多方核实信息，特别是在技术类内容上，避免盲目信任。</p>
+<h3 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h3><p>AI技术的应用给内容生产带来了新的可能，但也引发了内容污染问题。在流量驱动的背景下，AI生成的低质文章大量涌现，影响了信息获取的质量。通过合理的机制、内容审核以及用户自我防范，仍有可能缓解AI带来的信息污染问题，维护互联网的健康发展。</p>
+]]></content>
+      <categories>
+        <category>技术</category>
+        <category>AI</category>
+      </categories>
+      <tags>
+        <tag>AI</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Firewalld防火墙的规则无法控制Docker端口的问题</title>
     <url>/2024/10/10/Firewalld%E9%98%B2%E7%81%AB%E5%A2%99%E7%9A%84%E8%A7%84%E5%88%99%E6%97%A0%E6%B3%95%E6%8E%A7%E5%88%B6Docker%E7%AB%AF%E5%8F%A3%E7%9A%84%E9%97%AE%E9%A2%98/</url>
     <content><![CDATA[<p>在 Ubuntu 系统中使用 <code>firewalld</code> 时，默认情况下，<code>firewalld</code> 不会对 Docker 容器的网络流量生效。这是因为 Docker 在启动时会自动创建自己的 <code>iptables</code> 规则来管理网络，绕过了 <code>firewalld</code> 的规则。这种行为可以确保 Docker 容器的网络功能正常，但也会导致 <code>firewalld</code> 的规则无法控制 Docker 端口。</p>
@@ -155,41 +190,6 @@
         <tag>docker</tag>
         <tag>ubuntu</tag>
         <tag>firewalld</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Airclipbd.com 隔空剪贴板</title>
-    <url>/2024/07/05/airclipbd-0705/</url>
-    <content><![CDATA[<blockquote>
-<p>Snapdrop + Clipboard + ChatGPT &#x3D; Airclipbd.com 隔空剪贴板</p>
-</blockquote>
-<h3 id="SnapDrop-局域网内点对点传输"><a href="#SnapDrop-局域网内点对点传输" class="headerlink" title="SnapDrop 局域网内点对点传输"></a>SnapDrop 局域网内点对点传输</h3><p>Snapdrop: local file sharing in your browser. Inspired by Apple’s Airdrop.</p>
-<p><a href="https://github.com/RobinLinus/snapdrop">https://github.com/RobinLinus/snapdrop</a></p>
-<ul>
-<li>同一网络内设备自动发现</li>
-<li>设备间文件点对点传输 Peer2Peer</li>
-</ul>
-<h3 id="Clipboard-在线剪切板"><a href="#Clipboard-在线剪切板" class="headerlink" title="Clipboard 在线剪切板"></a>Clipboard 在线剪切板</h3><ul>
-<li>支持剪切板空间 <code>/$&#123;board_name&#125;</code></li>
-<li>公开读写，寄存简单方便</li>
-<li>剪贴板复制内容直接粘贴，支持文字、图片、各种文件。</li>
-<li>限制粘贴内容最大20MB，每个剪切板空间暂存最新20条记录。</li>
-<li>暂存6小时</li>
-</ul>
-<h3 id="ChatGPT-提供强大的技术支持"><a href="#ChatGPT-提供强大的技术支持" class="headerlink" title="ChatGPT 提供强大的技术支持"></a>ChatGPT 提供强大的技术支持</h3><ul>
-<li>前端支持 HTML, CSS, Javascript</li>
-<li>后端支持 Golang, Gin, Redis, Websocket</li>
-</ul>
-<h3 id="开发过程与当前进展-2024-07-05"><a href="#开发过程与当前进展-2024-07-05" class="headerlink" title="开发过程与当前进展 2024&#x2F;07&#x2F;05"></a>开发过程与当前进展 2024&#x2F;07&#x2F;05</h3><span id="more"></span>
-
-<p><img src="/./images/airclipbd_20240705.png" alt="image info"></p>
-]]></content>
-      <categories>
-        <category>技术</category>
-        <category>AirClipboard</category>
-      </categories>
-      <tags>
-        <tag>AirClipboard</tag>
       </tags>
   </entry>
   <entry>
@@ -246,6 +246,209 @@
       </categories>
       <tags>
         <tag>AirClipboard</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>关于WebRTC的一些技术总结和记录</title>
+    <url>/2024/07/15/%E5%85%B3%E4%BA%8EWebRTC%E7%9A%84%E4%B8%80%E4%BA%9B%E6%8A%80%E6%9C%AF%E6%80%BB%E7%BB%93%E5%92%8C%E8%AE%B0%E5%BD%95/</url>
+    <content><![CDATA[<h2 id="什么是-WebRTC？"><a href="#什么是-WebRTC？" class="headerlink" title="什么是 WebRTC？"></a>什么是 WebRTC？</h2><p>WebRTC（Web Real-Time Communication）是一种允许网页和应用程序进行实时通信（RTC）的技术。它支持点对点的视频、音频和数据传输，无需安装额外的插件或应用程序。WebRTC 的主要特点如下：</p>
+<ol>
+<li><strong>实时通信</strong>：WebRTC 允许用户通过浏览器直接进行语音和视频通话，以及数据共享。</li>
+<li><strong>点对点连接</strong>：WebRTC 可以直接在两个用户间建立连接，实现数据的直接传输，而非通过中心服务器。这样做可以减少延迟和提高通信效率。</li>
+<li><strong>兼容性</strong>：它是一个开放标准，被大多数现代浏览器支持，包括 Chrome、Firefox、Safari 和 Edge。</li>
+<li><strong>安全性</strong>：所有 WebRTC 组件都要求使用安全的起点（HTTPS），并对所有数据进行加密传输。</li>
+<li><strong>多功能性</strong>：除了音视频通话，WebRTC 还支持各种数据传输，包括文件共享和实时文本聊天。</li>
+<li><strong>NAT 穿透</strong>：WebRTC 使用 STUN&#x2F;TURN 服务器来处理 NAT（网络地址转换）和防火墙穿透，确保不同网络环境下的设备可以相互连接。</li>
+<li><strong>媒体捕获和处理</strong>：WebRTC 提供了捕获本地媒体（如摄像头和麦克风输入）、处理和播放远程媒体的能力。</li>
+<li><strong>标准化 API</strong>：提供了一套标准的 API，方便开发者在网络应用中集成实时通信功能。</li>
+</ol>
+<p>总之，WebRTC 是一种强大的实时通信技术，使得在不同平台和设备之间的音视频通话和数据共享变得简单和高效。</p>
+<h2 id="WebRTC-的-NAT-穿透"><a href="#WebRTC-的-NAT-穿透" class="headerlink" title="WebRTC 的 NAT 穿透"></a>WebRTC 的 NAT 穿透</h2><p>WebRTC 中的 NAT（网络地址转换）穿透是一个关键技术，用于在两个位于不同网络（例如家庭或企业网络）的设备之间建立直接的通信连接。NAT 穿透对于保证 WebRTC 能够在各种网络环境下正常工作至关重要。以下是 WebRTC NAT 穿透的详细介绍：</p>
+<h3 id="1-NAT-问题的背景"><a href="#1-NAT-问题的背景" class="headerlink" title="1. NAT 问题的背景"></a>1. NAT 问题的背景</h3><ul>
+<li><strong>NAT 的作用</strong>：NAT 使多个设备能够共享一个公共 IP 地址，同时保持它们的内部（私有）IP 地址。这是家庭和企业网络常用的一种方法。</li>
+<li><strong>NAT 对 P2P 的影响</strong>：NAT 使得点对点（P2P）通信变得复杂，因为外部网络无法直接访问内部网络中的设备。</li>
+</ul>
+<span id="more"></span>
+
+
+<h3 id="2-WebRTC-的-NAT-穿透技术"><a href="#2-WebRTC-的-NAT-穿透技术" class="headerlink" title="2. WebRTC 的 NAT 穿透技术"></a>2. WebRTC 的 NAT 穿透技术</h3><p>WebRTC 使用几种技术来解决 NAT 问题：</p>
+<h4 id="a-ICE（Interactive-Connectivity-Establishment）"><a href="#a-ICE（Interactive-Connectivity-Establishment）" class="headerlink" title="a. ICE（Interactive Connectivity Establishment）"></a>a. ICE（Interactive Connectivity Establishment）</h4><ul>
+<li><strong>功能</strong>：ICE 是一种框架，用于收集设备的多种网络地址（候选者），并尝试通过这些地址建立连接。</li>
+<li><strong>候选者类型</strong>：包括本地地址、反射地址（通过 STUN 获得）和中继地址（通过 TURN 获得）。</li>
+</ul>
+<h4 id="b-STUN（Session-Traversal-Utilities-for-NAT）"><a href="#b-STUN（Session-Traversal-Utilities-for-NAT）" class="headerlink" title="b. STUN（Session Traversal Utilities for NAT）"></a>b. STUN（Session Traversal Utilities for NAT）</h4><ul>
+<li><strong>用途</strong>：STUN 服务器帮助设备发现其公共 IP 地址和端口，这对于穿越 NAT 是必需的。</li>
+<li><strong>工作原理</strong>：设备向 STUN 服务器发送请求，服务器回应设备的公共 IP 地址和端口。</li>
+</ul>
+<h4 id="c-TURN（Traversal-Using-Relays-around-NAT）"><a href="#c-TURN（Traversal-Using-Relays-around-NAT）" class="headerlink" title="c. TURN（Traversal Using Relays around NAT）"></a>c. TURN（Traversal Using Relays around NAT）</h4><ul>
+<li><strong>场景</strong>：在某些复杂的 NAT 情况下，STUN 无法实现穿透，此时需要 TURN。</li>
+<li><strong>功能</strong>：TURN 服务器充当中继，转发两个尝试连接的设备之间的流量。</li>
+<li><strong>影响</strong>：虽然有效，但使用 TURN 会增加延迟和带宽消耗。</li>
+</ul>
+<h3 id="3-NAT-穿透过程"><a href="#3-NAT-穿透过程" class="headerlink" title="3. NAT 穿透过程"></a>3. NAT 穿透过程</h3><ol>
+<li><strong>收集候选者</strong>：设备使用 ICE 框架来收集其所有可能的网络地址（本地、反射和中继）。</li>
+<li><strong>候选者交换</strong>：通信双方通过信令通道交换他们的 ICE 候选者信息。</li>
+<li><strong>连接尝试</strong>：双方尝试使用收集到的候选者信息来建立直接的 P2P 连接。</li>
+<li><strong>选择最佳路径</strong>：在成功建立连接后，将选择最有效的路径进行数据传输。</li>
+</ol>
+<h3 id="4-重要性"><a href="#4-重要性" class="headerlink" title="4. 重要性"></a>4. 重要性</h3><ul>
+<li><strong>保证连通性</strong>：NAT 穿透使得位于不同 NAT 后面的设备可以建立直接的通信连接。</li>
+<li><strong>提高效率</strong>：虽然使用 TURN 会增加资源消耗，但大多数情况下，ICE 和 STUN 足以成功穿越 NAT，确保通信的高效性。</li>
+</ul>
+<h3 id="5-实践中的挑战"><a href="#5-实践中的挑战" class="headerlink" title="5. 实践中的挑战"></a>5. 实践中的挑战</h3><ul>
+<li><strong>复杂的 NAT 类型</strong>：对于对称型 NAT，仅靠 STUN 可能无法成功穿越，需要依赖 TURN。</li>
+<li><strong>资源和成本</strong>：维护 TURN 服务器可能涉及额外的资源和成本。</li>
+</ul>
+<p>WebRTC 通过这些 NAT 穿透技术，确保了在不同网络环境下都能够实现可靠和高效的实时通信。</p>
+<h2 id="搭建基于-WebRTC-的视频通话系统"><a href="#搭建基于-WebRTC-的视频通话系统" class="headerlink" title="搭建基于 WebRTC 的视频通话系统"></a>搭建基于 WebRTC 的视频通话系统</h2><p>搭建基于 WebRTC 的视频通话系统涉及多个步骤，主要包括信令、NAT 穿透、媒体捕获与渲染等。下面是搭建这种系统的基本指南，假设你想在两个不同的家庭网络中实现视频通话：</p>
+<h3 id="1-准备工作"><a href="#1-准备工作" class="headerlink" title="1. 准备工作"></a>1. 准备工作</h3><ul>
+<li><strong>了解 WebRTC</strong>: 需要基本的了解关于 WebRTC 的工作原理。</li>
+<li><strong>编程技能</strong>: 熟悉至少一种编程语言，如 JavaScript（对于 Web 应用程序）。</li>
+</ul>
+<h3 id="2-信令服务器"><a href="#2-信令服务器" class="headerlink" title="2. 信令服务器"></a>2. 信令服务器</h3><ul>
+<li><strong>作用</strong>: 用于交换 WebRTC 通信双方的元数据，如 ICE 候选者、会话描述协议（SDP）信息等。</li>
+<li><strong>搭建方式</strong>: 可以使用 WebSocket、REST API 等技术搭建一个简单的信令服务器。这可以使用 Node.js、Python 等后端技术实现。</li>
+</ul>
+<h3 id="3-STUN-TURN-服务器"><a href="#3-STUN-TURN-服务器" class="headerlink" title="3. STUN&#x2F;TURN 服务器"></a>3. STUN&#x2F;TURN 服务器</h3><ul>
+<li><strong>STUN</strong>: 使用公共 STUN 服务器（如 Google 的 STUN 服务器: <code>stun:stun.l.google.com:19302</code>）或自建 STUN 服务器。</li>
+<li><strong>TURN</strong>: 对于更复杂的 NAT 穿透情况，可能需要 TURN 服务器。可以使用开源解决方案如 coturn。</li>
+</ul>
+<h3 id="4-媒体捕获和处理"><a href="#4-媒体捕获和处理" class="headerlink" title="4. 媒体捕获和处理"></a>4. 媒体捕获和处理</h3><ul>
+<li><strong>API 使用</strong>: 利用 WebRTC 提供的 API 如 <code>getUserMedia</code> 来捕获音频和视频媒体流。</li>
+<li><strong>显示媒体</strong>: 使用 HTML 的 <code>&lt;video&gt;</code> 标签来显示捕获的视频流。</li>
+</ul>
+<h3 id="5-前端实现"><a href="#5-前端实现" class="headerlink" title="5. 前端实现"></a>5. 前端实现</h3><ul>
+<li><strong>编写客户端代码</strong>: 使用 HTML&#x2F;CSS&#x2F;JavaScript 创建用户界面。</li>
+<li><strong>集成 WebRTC</strong>: 在客户端代码中集成 WebRTC API，实现视频通话的建立、维持和结束。</li>
+</ul>
+<h3 id="6-建立连接"><a href="#6-建立连接" class="headerlink" title="6. 建立连接"></a>6. 建立连接</h3><ul>
+<li><strong>交换 SDP</strong>: 通过信令服务器交换双方的 SDP 描述。</li>
+<li><strong>交换 ICE 候选者</strong>: 通过信令服务器交换 ICE 候选信息以建立连接。</li>
+</ul>
+<h3 id="7-测试和调试"><a href="#7-测试和调试" class="headerlink" title="7. 测试和调试"></a>7. 测试和调试</h3><ul>
+<li><strong>本地测试</strong>: 首先在本地网络环境中测试视频通话功能。</li>
+<li><strong>跨网络测试</strong>: 然后在两个不同的家庭网络中测试，确保 NAT 穿透有效。</li>
+</ul>
+<h3 id="8-部署"><a href="#8-部署" class="headerlink" title="8. 部署"></a>8. 部署</h3><ul>
+<li><strong>信令服务器部署</strong>: 将信令服务器部署到云服务或公共服务器上。</li>
+<li><strong>客户端访问</strong>: 确保用户可以通过互联网访问前端应用。</li>
+</ul>
+<h3 id="9-安全性和隐私"><a href="#9-安全性和隐私" class="headerlink" title="9. 安全性和隐私"></a>9. 安全性和隐私</h3><ul>
+<li><strong>使用 HTTPS</strong>: 确保应用使用 HTTPS，这是 WebRTC 的一个要求。</li>
+<li><strong>数据加密</strong>: WebRTC 本身就提供端到端加密。</li>
+</ul>
+<h3 id="10-可扩展性和性能优化"><a href="#10-可扩展性和性能优化" class="headerlink" title="10. 可扩展性和性能优化"></a>10. 可扩展性和性能优化</h3><ul>
+<li><strong>适应不同带宽</strong>: 实现适应不同网络条件的逻辑。</li>
+<li><strong>优化用户体验</strong>: 根据需要优化界面和用户交互。</li>
+</ul>
+<p>搭建基于 WebRTC 的视频通话系统需要对网络编程、前端开发和后端服务有一定的了解。这个过程涉及到多个技术点，但 WebRTC 提供了大多数必要的工具来简化这个过程。成功实现后，你将拥有一个能够在不同家庭网络间进行视频通话的系统。</p>
+]]></content>
+      <categories>
+        <category>技术</category>
+        <category>开发</category>
+      </categories>
+      <tags>
+        <tag>WebRTC</tag>
+        <tag>NAT穿透</tag>
+        <tag>视频通话</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>通过expect登录linux, vim行错乱问题解决方案</title>
+    <url>/2024/09/03/%E9%80%9A%E8%BF%87expect%E7%99%BB%E5%BD%95linux,%20vim%E8%A1%8C%E9%94%99%E4%B9%B1%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/</url>
+    <content><![CDATA[<h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><p>当使用 expect 登入你的虚拟主机的时候，你会发现使用 vim，会经常出现行错乱的问题。</p>
+<h3 id="原因"><a href="#原因" class="headerlink" title="原因"></a>原因</h3><p>expect 脚本自动 ssh 登陆，当终端窗口发生变化时，默认 expect 不会将终端窗口大小改变的信号传送到远程的服务器上，因此在使用上会出现很不方便的地方，比如 vim 打开文件时出现串行，要是含有中文的文件可能根本无法编辑。</p>
+<h3 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="meta">#!/usr/bin/env expect </span></span><br><span class="line"><span class="comment">#trap sigwinch spawned</span></span><br><span class="line"><span class="built_in">trap</span> &#123;</span><br><span class="line"> <span class="built_in">set</span> rows [<span class="built_in">stty</span> rows]</span><br><span class="line"> <span class="built_in">set</span> cols [<span class="built_in">stty</span> columns]</span><br><span class="line"> <span class="built_in">stty</span> rows <span class="variable">$rows</span> columns <span class="variable">$cols</span> &lt; <span class="variable">$spawn_out</span>(slave,name)</span><br><span class="line">&#125; WINCH</span><br><span class="line"><span class="comment">#...</span></span><br></pre></td></tr></table></figure>
+
+<p>结果你发现完全OK ，不再乱行了</p>
+]]></content>
+      <categories>
+        <category>技术</category>
+        <category>开发</category>
+      </categories>
+      <tags>
+        <tag>ssh</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>如何在 Quest 3 上安装 Parsec 串流 PC 或 MacOS</title>
+    <url>/2025/04/24/%E5%A6%82%E4%BD%95%E5%9C%A8%20Meta%20Quest%203%20%E4%B8%8A%E5%AE%89%E8%A3%85%20Parsec%20%E4%B8%B2%E6%B5%81%20PC%20%E6%88%96%20MacOS/</url>
+    <content><![CDATA[<h1 id="如何在-Quest-3-上安装-Parsec-串流-PC-或-MacOS"><a href="#如何在-Quest-3-上安装-Parsec-串流-PC-或-MacOS" class="headerlink" title="如何在 Quest 3 上安装 Parsec 串流 PC 或 MacOS"></a>如何在 Quest 3 上安装 Parsec 串流 PC 或 MacOS</h1><p>在这篇博客中，我们将详细介绍如何在 Meta Quest 3 上安装 Parsec 客户端，并通过远程串流连接到你的 PC 或 MacOS 设备。整个过程非常简单，通过在 APKPure 下载 Parsec 的 XAPK 文件，然后使用 SAI（Split APKs Installer）在 Quest 3 上进行安装，我们就能轻松实现远程桌面体验。</p>
+<hr>
+<h3 id="第-1-步：下载-Parsec-XAPK-文件"><a href="#第-1-步：下载-Parsec-XAPK-文件" class="headerlink" title="第 1 步：下载 Parsec XAPK 文件"></a>第 1 步：下载 Parsec XAPK 文件</h3><ol>
+<li><p>访问 <a href="https://www.apkpure.com/">APKPure</a> 网站，搜索 Parsec 客户端，选择适合 <code>arm64-v8a</code> 架构的版本。通常，APKPure 会提供一个 XAPK 格式的下载链接。</p>
+<p>在我们的示例中，使用了这个链接：<a href="https://d.apkpure.com/b/XAPK/tv.parsec.client?versionCode=315009705&nc=arm64-v8a&sv=28">下载 Parsec XAPK</a>。</p>
+</li>
+<li><p>下载完成后，你会得到一个 <code>.xapk</code> 文件，这个文件实际上是一个压缩包，里面包含了多个 APK 文件。</p>
+</li>
+</ol>
+<hr>
+<h3 id="第-2-步：解压-XAPK-文件"><a href="#第-2-步：解压-XAPK-文件" class="headerlink" title="第 2 步：解压 XAPK 文件"></a>第 2 步：解压 XAPK 文件</h3><ol>
+<li><p>**将 <code>.xapk</code> 文件的扩展名改为 <code>.zip</code>**，然后解压这个文件。</p>
+</li>
+<li><p>解压后，你会看到两个 APK 文件：</p>
+<ul>
+<li><code>tv.parsec.client.apk</code>（主程序）</li>
+<li><code>config.arm64_v8a.apk</code>（针对 ARM64 架构的配置 APK）</li>
+</ul>
+</li>
+</ol>
+<p>这些文件必须一起安装，才能确保 Parsec 客户端正常运行。</p>
+<hr>
+<h3 id="第-3-步：安装-SAI（Split-APKs-Installer）"><a href="#第-3-步：安装-SAI（Split-APKs-Installer）" class="headerlink" title="第 3 步：安装 SAI（Split APKs Installer）"></a>第 3 步：安装 SAI（Split APKs Installer）</h3><ol>
+<li><p>使用 <strong>SideQuest</strong> 或 <strong>USB</strong> 将 <strong>SAI APK</strong> 安装到你的 Quest 3 上。可以在 <a href="https://github.com/Aefyr/SAI/releases">SAI GitHub 页面</a> 下载最新版本的 SAI 安装包。</p>
+</li>
+<li><p>安装完成后，在 Quest 3 上打开 <strong>SAI</strong> 应用。</p>
+</li>
+</ol>
+<hr>
+<h3 id="第-4-步：使用-SAI-安装-Parsec-客户端"><a href="#第-4-步：使用-SAI-安装-Parsec-客户端" class="headerlink" title="第 4 步：使用 SAI 安装 Parsec 客户端"></a>第 4 步：使用 SAI 安装 Parsec 客户端</h3><ol>
+<li><p>打开 SAI 后，点击界面中的 <strong>“安装 APKs”</strong> 按钮。</p>
+</li>
+<li><p>浏览文件系统，选择你之前解压出的这两个 APK 文件：</p>
+<ul>
+<li><code>tv.parsec.client.apk</code>（主程序）</li>
+<li><code>config.arm64_v8a.apk</code>（配置 APK）</li>
+</ul>
+</li>
+<li><p>勾选这两个文件并点击 <strong>“安装”</strong>。安装过程中，SAI 会自动处理分包 APK，确保 Parsec 客户端能够在 Quest 3 上正常运行。</p>
+</li>
+<li><p>安装完成后，返回 Quest 3 的 <strong>“未知来源”</strong> 页面，你会看到 <strong>Parsec</strong> 应用图标。</p>
+</li>
+</ol>
+<hr>
+<h3 id="第-5-步：连接到-PC-或-MacOS"><a href="#第-5-步：连接到-PC-或-MacOS" class="headerlink" title="第 5 步：连接到 PC 或 MacOS"></a>第 5 步：连接到 PC 或 MacOS</h3><ol>
+<li><p>在你的 PC 或 MacOS 上，下载并安装 <strong>Parsec 客户端</strong>。如果你还没有账户，可以创建一个免费账号。</p>
+</li>
+<li><p>在 Parsec 应用中登录你的账户。</p>
+</li>
+<li><p>在 Quest 3 上启动 Parsec 客户端，使用你的账号登录，并找到你要连接的设备。</p>
+</li>
+<li><p>一旦连接成功，你就可以通过 Quest 3 享受高质量的远程桌面体验，无论是玩游戏、办公，还是使用其他 PC 或 Mac 应用。</p>
+</li>
+</ol>
+<hr>
+<h3 id="小贴士"><a href="#小贴士" class="headerlink" title="小贴士"></a>小贴士</h3><ul>
+<li><strong>网络要求</strong>：确保你的 PC&#x2F;Mac 和 Quest 3 都连接到同一 Wi-Fi 网络，以获得更好的串流体验。</li>
+<li><strong>权限设置</strong>：首次使用 Parsec 时，可能需要授予应用网络、麦克风等权限。</li>
+<li><strong>控制方式</strong>：你可以通过 Quest 3 的虚拟桌面进行鼠标和键盘控制，甚至使用手柄进行游戏控制。</li>
+</ul>
+<hr>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>通过这个简单的过程，你就能在 Quest 3 上安装 Parsec 客户端，并通过串流远程访问你的 PC 或 MacOS 设备。使用 SAI 安装分包 APK，使整个过程更加简便，无需复杂的命令行操作。</p>
+<p>享受你的 VR 串流体验吧！</p>
+<hr>
+]]></content>
+      <categories>
+        <category>技术</category>
+        <category>好玩的</category>
+      </categories>
+      <tags>
+        <tag>Quest</tag>
+        <tag>头显</tag>
+        <tag>串流</tag>
+        <tag>Parsec</tag>
+        <tag>Meta</tag>
+        <tag>VR</tag>
       </tags>
   </entry>
   <entry>
@@ -366,209 +569,6 @@
         <tag>Parsec</tag>
         <tag>Meta</tag>
         <tag>VR</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>关于WebRTC的一些技术总结和记录</title>
-    <url>/2024/07/15/%E5%85%B3%E4%BA%8EWebRTC%E7%9A%84%E4%B8%80%E4%BA%9B%E6%8A%80%E6%9C%AF%E6%80%BB%E7%BB%93%E5%92%8C%E8%AE%B0%E5%BD%95/</url>
-    <content><![CDATA[<h2 id="什么是-WebRTC？"><a href="#什么是-WebRTC？" class="headerlink" title="什么是 WebRTC？"></a>什么是 WebRTC？</h2><p>WebRTC（Web Real-Time Communication）是一种允许网页和应用程序进行实时通信（RTC）的技术。它支持点对点的视频、音频和数据传输，无需安装额外的插件或应用程序。WebRTC 的主要特点如下：</p>
-<ol>
-<li><strong>实时通信</strong>：WebRTC 允许用户通过浏览器直接进行语音和视频通话，以及数据共享。</li>
-<li><strong>点对点连接</strong>：WebRTC 可以直接在两个用户间建立连接，实现数据的直接传输，而非通过中心服务器。这样做可以减少延迟和提高通信效率。</li>
-<li><strong>兼容性</strong>：它是一个开放标准，被大多数现代浏览器支持，包括 Chrome、Firefox、Safari 和 Edge。</li>
-<li><strong>安全性</strong>：所有 WebRTC 组件都要求使用安全的起点（HTTPS），并对所有数据进行加密传输。</li>
-<li><strong>多功能性</strong>：除了音视频通话，WebRTC 还支持各种数据传输，包括文件共享和实时文本聊天。</li>
-<li><strong>NAT 穿透</strong>：WebRTC 使用 STUN&#x2F;TURN 服务器来处理 NAT（网络地址转换）和防火墙穿透，确保不同网络环境下的设备可以相互连接。</li>
-<li><strong>媒体捕获和处理</strong>：WebRTC 提供了捕获本地媒体（如摄像头和麦克风输入）、处理和播放远程媒体的能力。</li>
-<li><strong>标准化 API</strong>：提供了一套标准的 API，方便开发者在网络应用中集成实时通信功能。</li>
-</ol>
-<p>总之，WebRTC 是一种强大的实时通信技术，使得在不同平台和设备之间的音视频通话和数据共享变得简单和高效。</p>
-<h2 id="WebRTC-的-NAT-穿透"><a href="#WebRTC-的-NAT-穿透" class="headerlink" title="WebRTC 的 NAT 穿透"></a>WebRTC 的 NAT 穿透</h2><p>WebRTC 中的 NAT（网络地址转换）穿透是一个关键技术，用于在两个位于不同网络（例如家庭或企业网络）的设备之间建立直接的通信连接。NAT 穿透对于保证 WebRTC 能够在各种网络环境下正常工作至关重要。以下是 WebRTC NAT 穿透的详细介绍：</p>
-<h3 id="1-NAT-问题的背景"><a href="#1-NAT-问题的背景" class="headerlink" title="1. NAT 问题的背景"></a>1. NAT 问题的背景</h3><ul>
-<li><strong>NAT 的作用</strong>：NAT 使多个设备能够共享一个公共 IP 地址，同时保持它们的内部（私有）IP 地址。这是家庭和企业网络常用的一种方法。</li>
-<li><strong>NAT 对 P2P 的影响</strong>：NAT 使得点对点（P2P）通信变得复杂，因为外部网络无法直接访问内部网络中的设备。</li>
-</ul>
-<span id="more"></span>
-
-
-<h3 id="2-WebRTC-的-NAT-穿透技术"><a href="#2-WebRTC-的-NAT-穿透技术" class="headerlink" title="2. WebRTC 的 NAT 穿透技术"></a>2. WebRTC 的 NAT 穿透技术</h3><p>WebRTC 使用几种技术来解决 NAT 问题：</p>
-<h4 id="a-ICE（Interactive-Connectivity-Establishment）"><a href="#a-ICE（Interactive-Connectivity-Establishment）" class="headerlink" title="a. ICE（Interactive Connectivity Establishment）"></a>a. ICE（Interactive Connectivity Establishment）</h4><ul>
-<li><strong>功能</strong>：ICE 是一种框架，用于收集设备的多种网络地址（候选者），并尝试通过这些地址建立连接。</li>
-<li><strong>候选者类型</strong>：包括本地地址、反射地址（通过 STUN 获得）和中继地址（通过 TURN 获得）。</li>
-</ul>
-<h4 id="b-STUN（Session-Traversal-Utilities-for-NAT）"><a href="#b-STUN（Session-Traversal-Utilities-for-NAT）" class="headerlink" title="b. STUN（Session Traversal Utilities for NAT）"></a>b. STUN（Session Traversal Utilities for NAT）</h4><ul>
-<li><strong>用途</strong>：STUN 服务器帮助设备发现其公共 IP 地址和端口，这对于穿越 NAT 是必需的。</li>
-<li><strong>工作原理</strong>：设备向 STUN 服务器发送请求，服务器回应设备的公共 IP 地址和端口。</li>
-</ul>
-<h4 id="c-TURN（Traversal-Using-Relays-around-NAT）"><a href="#c-TURN（Traversal-Using-Relays-around-NAT）" class="headerlink" title="c. TURN（Traversal Using Relays around NAT）"></a>c. TURN（Traversal Using Relays around NAT）</h4><ul>
-<li><strong>场景</strong>：在某些复杂的 NAT 情况下，STUN 无法实现穿透，此时需要 TURN。</li>
-<li><strong>功能</strong>：TURN 服务器充当中继，转发两个尝试连接的设备之间的流量。</li>
-<li><strong>影响</strong>：虽然有效，但使用 TURN 会增加延迟和带宽消耗。</li>
-</ul>
-<h3 id="3-NAT-穿透过程"><a href="#3-NAT-穿透过程" class="headerlink" title="3. NAT 穿透过程"></a>3. NAT 穿透过程</h3><ol>
-<li><strong>收集候选者</strong>：设备使用 ICE 框架来收集其所有可能的网络地址（本地、反射和中继）。</li>
-<li><strong>候选者交换</strong>：通信双方通过信令通道交换他们的 ICE 候选者信息。</li>
-<li><strong>连接尝试</strong>：双方尝试使用收集到的候选者信息来建立直接的 P2P 连接。</li>
-<li><strong>选择最佳路径</strong>：在成功建立连接后，将选择最有效的路径进行数据传输。</li>
-</ol>
-<h3 id="4-重要性"><a href="#4-重要性" class="headerlink" title="4. 重要性"></a>4. 重要性</h3><ul>
-<li><strong>保证连通性</strong>：NAT 穿透使得位于不同 NAT 后面的设备可以建立直接的通信连接。</li>
-<li><strong>提高效率</strong>：虽然使用 TURN 会增加资源消耗，但大多数情况下，ICE 和 STUN 足以成功穿越 NAT，确保通信的高效性。</li>
-</ul>
-<h3 id="5-实践中的挑战"><a href="#5-实践中的挑战" class="headerlink" title="5. 实践中的挑战"></a>5. 实践中的挑战</h3><ul>
-<li><strong>复杂的 NAT 类型</strong>：对于对称型 NAT，仅靠 STUN 可能无法成功穿越，需要依赖 TURN。</li>
-<li><strong>资源和成本</strong>：维护 TURN 服务器可能涉及额外的资源和成本。</li>
-</ul>
-<p>WebRTC 通过这些 NAT 穿透技术，确保了在不同网络环境下都能够实现可靠和高效的实时通信。</p>
-<h2 id="搭建基于-WebRTC-的视频通话系统"><a href="#搭建基于-WebRTC-的视频通话系统" class="headerlink" title="搭建基于 WebRTC 的视频通话系统"></a>搭建基于 WebRTC 的视频通话系统</h2><p>搭建基于 WebRTC 的视频通话系统涉及多个步骤，主要包括信令、NAT 穿透、媒体捕获与渲染等。下面是搭建这种系统的基本指南，假设你想在两个不同的家庭网络中实现视频通话：</p>
-<h3 id="1-准备工作"><a href="#1-准备工作" class="headerlink" title="1. 准备工作"></a>1. 准备工作</h3><ul>
-<li><strong>了解 WebRTC</strong>: 需要基本的了解关于 WebRTC 的工作原理。</li>
-<li><strong>编程技能</strong>: 熟悉至少一种编程语言，如 JavaScript（对于 Web 应用程序）。</li>
-</ul>
-<h3 id="2-信令服务器"><a href="#2-信令服务器" class="headerlink" title="2. 信令服务器"></a>2. 信令服务器</h3><ul>
-<li><strong>作用</strong>: 用于交换 WebRTC 通信双方的元数据，如 ICE 候选者、会话描述协议（SDP）信息等。</li>
-<li><strong>搭建方式</strong>: 可以使用 WebSocket、REST API 等技术搭建一个简单的信令服务器。这可以使用 Node.js、Python 等后端技术实现。</li>
-</ul>
-<h3 id="3-STUN-TURN-服务器"><a href="#3-STUN-TURN-服务器" class="headerlink" title="3. STUN&#x2F;TURN 服务器"></a>3. STUN&#x2F;TURN 服务器</h3><ul>
-<li><strong>STUN</strong>: 使用公共 STUN 服务器（如 Google 的 STUN 服务器: <code>stun:stun.l.google.com:19302</code>）或自建 STUN 服务器。</li>
-<li><strong>TURN</strong>: 对于更复杂的 NAT 穿透情况，可能需要 TURN 服务器。可以使用开源解决方案如 coturn。</li>
-</ul>
-<h3 id="4-媒体捕获和处理"><a href="#4-媒体捕获和处理" class="headerlink" title="4. 媒体捕获和处理"></a>4. 媒体捕获和处理</h3><ul>
-<li><strong>API 使用</strong>: 利用 WebRTC 提供的 API 如 <code>getUserMedia</code> 来捕获音频和视频媒体流。</li>
-<li><strong>显示媒体</strong>: 使用 HTML 的 <code>&lt;video&gt;</code> 标签来显示捕获的视频流。</li>
-</ul>
-<h3 id="5-前端实现"><a href="#5-前端实现" class="headerlink" title="5. 前端实现"></a>5. 前端实现</h3><ul>
-<li><strong>编写客户端代码</strong>: 使用 HTML&#x2F;CSS&#x2F;JavaScript 创建用户界面。</li>
-<li><strong>集成 WebRTC</strong>: 在客户端代码中集成 WebRTC API，实现视频通话的建立、维持和结束。</li>
-</ul>
-<h3 id="6-建立连接"><a href="#6-建立连接" class="headerlink" title="6. 建立连接"></a>6. 建立连接</h3><ul>
-<li><strong>交换 SDP</strong>: 通过信令服务器交换双方的 SDP 描述。</li>
-<li><strong>交换 ICE 候选者</strong>: 通过信令服务器交换 ICE 候选信息以建立连接。</li>
-</ul>
-<h3 id="7-测试和调试"><a href="#7-测试和调试" class="headerlink" title="7. 测试和调试"></a>7. 测试和调试</h3><ul>
-<li><strong>本地测试</strong>: 首先在本地网络环境中测试视频通话功能。</li>
-<li><strong>跨网络测试</strong>: 然后在两个不同的家庭网络中测试，确保 NAT 穿透有效。</li>
-</ul>
-<h3 id="8-部署"><a href="#8-部署" class="headerlink" title="8. 部署"></a>8. 部署</h3><ul>
-<li><strong>信令服务器部署</strong>: 将信令服务器部署到云服务或公共服务器上。</li>
-<li><strong>客户端访问</strong>: 确保用户可以通过互联网访问前端应用。</li>
-</ul>
-<h3 id="9-安全性和隐私"><a href="#9-安全性和隐私" class="headerlink" title="9. 安全性和隐私"></a>9. 安全性和隐私</h3><ul>
-<li><strong>使用 HTTPS</strong>: 确保应用使用 HTTPS，这是 WebRTC 的一个要求。</li>
-<li><strong>数据加密</strong>: WebRTC 本身就提供端到端加密。</li>
-</ul>
-<h3 id="10-可扩展性和性能优化"><a href="#10-可扩展性和性能优化" class="headerlink" title="10. 可扩展性和性能优化"></a>10. 可扩展性和性能优化</h3><ul>
-<li><strong>适应不同带宽</strong>: 实现适应不同网络条件的逻辑。</li>
-<li><strong>优化用户体验</strong>: 根据需要优化界面和用户交互。</li>
-</ul>
-<p>搭建基于 WebRTC 的视频通话系统需要对网络编程、前端开发和后端服务有一定的了解。这个过程涉及到多个技术点，但 WebRTC 提供了大多数必要的工具来简化这个过程。成功实现后，你将拥有一个能够在不同家庭网络间进行视频通话的系统。</p>
-]]></content>
-      <categories>
-        <category>技术</category>
-        <category>开发</category>
-      </categories>
-      <tags>
-        <tag>WebRTC</tag>
-        <tag>NAT穿透</tag>
-        <tag>视频通话</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>如何在 Quest 3 上安装 Parsec 串流 PC 或 MacOS</title>
-    <url>/2025/04/24/%E5%A6%82%E4%BD%95%E5%9C%A8%20Meta%20Quest%203%20%E4%B8%8A%E5%AE%89%E8%A3%85%20Parsec%20%E4%B8%B2%E6%B5%81%20PC%20%E6%88%96%20MacOS/</url>
-    <content><![CDATA[<h1 id="如何在-Quest-3-上安装-Parsec-串流-PC-或-MacOS"><a href="#如何在-Quest-3-上安装-Parsec-串流-PC-或-MacOS" class="headerlink" title="如何在 Quest 3 上安装 Parsec 串流 PC 或 MacOS"></a>如何在 Quest 3 上安装 Parsec 串流 PC 或 MacOS</h1><p>在这篇博客中，我们将详细介绍如何在 Meta Quest 3 上安装 Parsec 客户端，并通过远程串流连接到你的 PC 或 MacOS 设备。整个过程非常简单，通过在 APKPure 下载 Parsec 的 XAPK 文件，然后使用 SAI（Split APKs Installer）在 Quest 3 上进行安装，我们就能轻松实现远程桌面体验。</p>
-<hr>
-<h3 id="第-1-步：下载-Parsec-XAPK-文件"><a href="#第-1-步：下载-Parsec-XAPK-文件" class="headerlink" title="第 1 步：下载 Parsec XAPK 文件"></a>第 1 步：下载 Parsec XAPK 文件</h3><ol>
-<li><p>访问 <a href="https://www.apkpure.com/">APKPure</a> 网站，搜索 Parsec 客户端，选择适合 <code>arm64-v8a</code> 架构的版本。通常，APKPure 会提供一个 XAPK 格式的下载链接。</p>
-<p>在我们的示例中，使用了这个链接：<a href="https://d.apkpure.com/b/XAPK/tv.parsec.client?versionCode=315009705&nc=arm64-v8a&sv=28">下载 Parsec XAPK</a>。</p>
-</li>
-<li><p>下载完成后，你会得到一个 <code>.xapk</code> 文件，这个文件实际上是一个压缩包，里面包含了多个 APK 文件。</p>
-</li>
-</ol>
-<hr>
-<h3 id="第-2-步：解压-XAPK-文件"><a href="#第-2-步：解压-XAPK-文件" class="headerlink" title="第 2 步：解压 XAPK 文件"></a>第 2 步：解压 XAPK 文件</h3><ol>
-<li><p>**将 <code>.xapk</code> 文件的扩展名改为 <code>.zip</code>**，然后解压这个文件。</p>
-</li>
-<li><p>解压后，你会看到两个 APK 文件：</p>
-<ul>
-<li><code>tv.parsec.client.apk</code>（主程序）</li>
-<li><code>config.arm64_v8a.apk</code>（针对 ARM64 架构的配置 APK）</li>
-</ul>
-</li>
-</ol>
-<p>这些文件必须一起安装，才能确保 Parsec 客户端正常运行。</p>
-<hr>
-<h3 id="第-3-步：安装-SAI（Split-APKs-Installer）"><a href="#第-3-步：安装-SAI（Split-APKs-Installer）" class="headerlink" title="第 3 步：安装 SAI（Split APKs Installer）"></a>第 3 步：安装 SAI（Split APKs Installer）</h3><ol>
-<li><p>使用 <strong>SideQuest</strong> 或 <strong>USB</strong> 将 <strong>SAI APK</strong> 安装到你的 Quest 3 上。可以在 <a href="https://github.com/Aefyr/SAI/releases">SAI GitHub 页面</a> 下载最新版本的 SAI 安装包。</p>
-</li>
-<li><p>安装完成后，在 Quest 3 上打开 <strong>SAI</strong> 应用。</p>
-</li>
-</ol>
-<hr>
-<h3 id="第-4-步：使用-SAI-安装-Parsec-客户端"><a href="#第-4-步：使用-SAI-安装-Parsec-客户端" class="headerlink" title="第 4 步：使用 SAI 安装 Parsec 客户端"></a>第 4 步：使用 SAI 安装 Parsec 客户端</h3><ol>
-<li><p>打开 SAI 后，点击界面中的 <strong>“安装 APKs”</strong> 按钮。</p>
-</li>
-<li><p>浏览文件系统，选择你之前解压出的这两个 APK 文件：</p>
-<ul>
-<li><code>tv.parsec.client.apk</code>（主程序）</li>
-<li><code>config.arm64_v8a.apk</code>（配置 APK）</li>
-</ul>
-</li>
-<li><p>勾选这两个文件并点击 <strong>“安装”</strong>。安装过程中，SAI 会自动处理分包 APK，确保 Parsec 客户端能够在 Quest 3 上正常运行。</p>
-</li>
-<li><p>安装完成后，返回 Quest 3 的 <strong>“未知来源”</strong> 页面，你会看到 <strong>Parsec</strong> 应用图标。</p>
-</li>
-</ol>
-<hr>
-<h3 id="第-5-步：连接到-PC-或-MacOS"><a href="#第-5-步：连接到-PC-或-MacOS" class="headerlink" title="第 5 步：连接到 PC 或 MacOS"></a>第 5 步：连接到 PC 或 MacOS</h3><ol>
-<li><p>在你的 PC 或 MacOS 上，下载并安装 <strong>Parsec 客户端</strong>。如果你还没有账户，可以创建一个免费账号。</p>
-</li>
-<li><p>在 Parsec 应用中登录你的账户。</p>
-</li>
-<li><p>在 Quest 3 上启动 Parsec 客户端，使用你的账号登录，并找到你要连接的设备。</p>
-</li>
-<li><p>一旦连接成功，你就可以通过 Quest 3 享受高质量的远程桌面体验，无论是玩游戏、办公，还是使用其他 PC 或 Mac 应用。</p>
-</li>
-</ol>
-<hr>
-<h3 id="小贴士"><a href="#小贴士" class="headerlink" title="小贴士"></a>小贴士</h3><ul>
-<li><strong>网络要求</strong>：确保你的 PC&#x2F;Mac 和 Quest 3 都连接到同一 Wi-Fi 网络，以获得更好的串流体验。</li>
-<li><strong>权限设置</strong>：首次使用 Parsec 时，可能需要授予应用网络、麦克风等权限。</li>
-<li><strong>控制方式</strong>：你可以通过 Quest 3 的虚拟桌面进行鼠标和键盘控制，甚至使用手柄进行游戏控制。</li>
-</ul>
-<hr>
-<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>通过这个简单的过程，你就能在 Quest 3 上安装 Parsec 客户端，并通过串流远程访问你的 PC 或 MacOS 设备。使用 SAI 安装分包 APK，使整个过程更加简便，无需复杂的命令行操作。</p>
-<p>享受你的 VR 串流体验吧！</p>
-<hr>
-]]></content>
-      <categories>
-        <category>技术</category>
-        <category>好玩的</category>
-      </categories>
-      <tags>
-        <tag>Quest</tag>
-        <tag>头显</tag>
-        <tag>串流</tag>
-        <tag>Parsec</tag>
-        <tag>Meta</tag>
-        <tag>VR</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>通过expect登录linux, vim行错乱问题解决方案</title>
-    <url>/2024/09/03/%E9%80%9A%E8%BF%87expect%E7%99%BB%E5%BD%95linux,%20vim%E8%A1%8C%E9%94%99%E4%B9%B1%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/</url>
-    <content><![CDATA[<h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><p>当使用 expect 登入你的虚拟主机的时候，你会发现使用 vim，会经常出现行错乱的问题。</p>
-<h3 id="原因"><a href="#原因" class="headerlink" title="原因"></a>原因</h3><p>expect 脚本自动 ssh 登陆，当终端窗口发生变化时，默认 expect 不会将终端窗口大小改变的信号传送到远程的服务器上，因此在使用上会出现很不方便的地方，比如 vim 打开文件时出现串行，要是含有中文的文件可能根本无法编辑。</p>
-<h3 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="meta">#!/usr/bin/env expect </span></span><br><span class="line"><span class="comment">#trap sigwinch spawned</span></span><br><span class="line"><span class="built_in">trap</span> &#123;</span><br><span class="line"> <span class="built_in">set</span> rows [<span class="built_in">stty</span> rows]</span><br><span class="line"> <span class="built_in">set</span> cols [<span class="built_in">stty</span> columns]</span><br><span class="line"> <span class="built_in">stty</span> rows <span class="variable">$rows</span> columns <span class="variable">$cols</span> &lt; <span class="variable">$spawn_out</span>(slave,name)</span><br><span class="line">&#125; WINCH</span><br><span class="line"><span class="comment">#...</span></span><br></pre></td></tr></table></figure>
-
-<p>结果你发现完全OK ，不再乱行了</p>
-]]></content>
-      <categories>
-        <category>技术</category>
-        <category>开发</category>
-      </categories>
-      <tags>
-        <tag>ssh</tag>
       </tags>
   </entry>
 </search>
