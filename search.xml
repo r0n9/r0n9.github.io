@@ -158,6 +158,66 @@
       </tags>
   </entry>
   <entry>
+    <title>Airclipbd.com 隔空剪贴板</title>
+    <url>/2024/07/05/airclipbd-0705/</url>
+    <content><![CDATA[<blockquote>
+<p>Snapdrop + Clipboard + ChatGPT &#x3D; Airclipbd.com 隔空剪贴板</p>
+</blockquote>
+<h3 id="SnapDrop-局域网内点对点传输"><a href="#SnapDrop-局域网内点对点传输" class="headerlink" title="SnapDrop 局域网内点对点传输"></a>SnapDrop 局域网内点对点传输</h3><p>Snapdrop: local file sharing in your browser. Inspired by Apple’s Airdrop.</p>
+<p><a href="https://github.com/RobinLinus/snapdrop">https://github.com/RobinLinus/snapdrop</a></p>
+<ul>
+<li>同一网络内设备自动发现</li>
+<li>设备间文件点对点传输 Peer2Peer</li>
+</ul>
+<h3 id="Clipboard-在线剪切板"><a href="#Clipboard-在线剪切板" class="headerlink" title="Clipboard 在线剪切板"></a>Clipboard 在线剪切板</h3><ul>
+<li>支持剪切板空间 <code>/$&#123;board_name&#125;</code></li>
+<li>公开读写，寄存简单方便</li>
+<li>剪贴板复制内容直接粘贴，支持文字、图片、各种文件。</li>
+<li>限制粘贴内容最大20MB，每个剪切板空间暂存最新20条记录。</li>
+<li>暂存6小时</li>
+</ul>
+<h3 id="ChatGPT-提供强大的技术支持"><a href="#ChatGPT-提供强大的技术支持" class="headerlink" title="ChatGPT 提供强大的技术支持"></a>ChatGPT 提供强大的技术支持</h3><ul>
+<li>前端支持 HTML, CSS, Javascript</li>
+<li>后端支持 Golang, Gin, Redis, Websocket</li>
+</ul>
+<h3 id="开发过程与当前进展-2024-07-05"><a href="#开发过程与当前进展-2024-07-05" class="headerlink" title="开发过程与当前进展 2024&#x2F;07&#x2F;05"></a>开发过程与当前进展 2024&#x2F;07&#x2F;05</h3><span id="more"></span>
+
+<p><img src="/./images/airclipbd_20240705.png" alt="image info"></p>
+]]></content>
+      <categories>
+        <category>技术</category>
+        <category>AirClipboard</category>
+      </categories>
+      <tags>
+        <tag>AirClipboard</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Airclipbd 隔空剪贴板 v2.4.1-20250611 版本更新</title>
+    <url>/2025/06/25/airclipbd-20250625/</url>
+    <content><![CDATA[<h3 id="v2-4-1-20250611-版本更新"><a href="#v2-4-1-20250611-版本更新" class="headerlink" title="v2.4.1-20250611 版本更新"></a>v2.4.1-20250611 版本更新</h3><p>Airclipbd 隔空剪贴板 迎来了一个新版本，希望大家能够给予支持！</p>
+<p>Changelog</p>
+<ul>
+<li><p>UI 迎来了一个新设计，更加美观。</p>
+</li>
+<li><p>局域网互传优化，设备的名称、图标Icon、设备类型展示更加清晰美观。</p>
+</li>
+<li><p>文件、信息互传窗口优化。</p>
+</li>
+</ul>
+<p><img src="/./images/%E6%88%AA%E5%B1%8F2025-06-25.11.08.11.png" alt="展示图1"></p>
+<p><img src="/./images/%E6%88%AA%E5%B1%8F2025-06-25.11.09.04.png" alt="展示图2"></p>
+<p><img src="/./images/%E6%88%AA%E5%B1%8F2025-06-25.11.09.14.png" alt="展示图3"></p>
+]]></content>
+      <categories>
+        <category>技术</category>
+        <category>AirClipboard</category>
+      </categories>
+      <tags>
+        <tag>AirClipboard</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Airclipbd 隔空剪贴板 v2.3.1-20240926 版本更新</title>
     <url>/2024/09/26/airclipbd-0926/</url>
     <content><![CDATA[<h3 id="v2-3-1-20240926-版本更新"><a href="#v2-3-1-20240926-版本更新" class="headerlink" title="v2.3.1-20240926 版本更新"></a>v2.3.1-20240926 版本更新</h3><p>Changelog</p>
@@ -179,31 +239,6 @@
 <p><img src="/./images/%E6%88%AA%E5%B1%8F2024-09-26.20.47.21.png" alt="大屏展示"></p>
 <p>小屏展示</p>
 <p><img src="/./images/IMG_1928.PNG" alt="小屏展示"></p>
-]]></content>
-      <categories>
-        <category>技术</category>
-        <category>AirClipboard</category>
-      </categories>
-      <tags>
-        <tag>AirClipboard</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Airclipbd 隔空剪贴板 v2.4.1-20250611 版本更新</title>
-    <url>/2024/10/08/airclipbd-20250625/</url>
-    <content><![CDATA[<h3 id="v2-4-1-20250611-版本更新"><a href="#v2-4-1-20250611-版本更新" class="headerlink" title="v2.4.1-20250611 版本更新"></a>v2.4.1-20250611 版本更新</h3><p>Airclipbd 隔空剪贴板 迎来了一个新版本，希望大家能够给予支持！</p>
-<p>Changelog</p>
-<ul>
-<li><p>UI 迎来了一个新设计，更加美观。</p>
-</li>
-<li><p>局域网互传优化，设备的名称、图标Icon、设备类型展示更加清晰美观。</p>
-</li>
-<li><p>文件、信息互传窗口优化。</p>
-</li>
-</ul>
-<p><img src="/./images/%E6%88%AA%E5%B1%8F2025-06-25.11.08.11.png" alt="展示图1"></p>
-<p><img src="/./images/%E6%88%AA%E5%B1%8F2025-06-25.11.09.04.png" alt="展示图2"></p>
-<p><img src="/./images/%E6%88%AA%E5%B1%8F2025-06-25.11.09.14.png" alt="展示图3"></p>
 ]]></content>
       <categories>
         <category>技术</category>
@@ -250,6 +285,87 @@
         <tag>iOS</tag>
         <tag>swift</tag>
         <tag>app</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>如何在 Quest 3 上安装 Parsec 串流 PC 或 MacOS</title>
+    <url>/2025/04/24/iPad%E4%B8%8A%E5%AE%89%E8%A3%85Parsec%E4%B8%B2%E6%B5%81PC%E6%88%96%E8%80%85MacOS/</url>
+    <content><![CDATA[<h1 id="如何在-Quest-3-上安装-Parsec-串流-PC-或-MacOS"><a href="#如何在-Quest-3-上安装-Parsec-串流-PC-或-MacOS" class="headerlink" title="如何在 Quest 3 上安装 Parsec 串流 PC 或 MacOS"></a>如何在 Quest 3 上安装 Parsec 串流 PC 或 MacOS</h1><p>在这篇博客中，我们将详细介绍如何在 Meta Quest 3 上安装 Parsec 客户端，并通过远程串流连接到你的 PC 或 MacOS 设备。整个过程非常简单，通过在 APKPure 下载 Parsec 的 XAPK 文件，然后使用 SAI（Split APKs Installer）在 Quest 3 上进行安装，我们就能轻松实现远程桌面体验。</p>
+<hr>
+<h3 id="第-1-步：下载-Parsec-XAPK-文件"><a href="#第-1-步：下载-Parsec-XAPK-文件" class="headerlink" title="第 1 步：下载 Parsec XAPK 文件"></a>第 1 步：下载 Parsec XAPK 文件</h3><ol>
+<li><p>访问 <a href="https://www.apkpure.com/">APKPure</a> 网站，搜索 Parsec 客户端，选择适合 <code>arm64-v8a</code> 架构的版本。通常，APKPure 会提供一个 XAPK 格式的下载链接。</p>
+<p>在我们的示例中，使用了这个链接：<a href="https://d.apkpure.com/b/XAPK/tv.parsec.client?versionCode=315009705&nc=arm64-v8a&sv=28">下载 Parsec XAPK</a>。</p>
+</li>
+<li><p>下载完成后，你会得到一个 <code>.xapk</code> 文件，这个文件实际上是一个压缩包，里面包含了多个 APK 文件。</p>
+</li>
+</ol>
+<hr>
+<h3 id="第-2-步：解压-XAPK-文件"><a href="#第-2-步：解压-XAPK-文件" class="headerlink" title="第 2 步：解压 XAPK 文件"></a>第 2 步：解压 XAPK 文件</h3><ol>
+<li><p>**将 <code>.xapk</code> 文件的扩展名改为 <code>.zip</code>**，然后解压这个文件。</p>
+</li>
+<li><p>解压后，你会看到两个 APK 文件：</p>
+<ul>
+<li><code>tv.parsec.client.apk</code>（主程序）</li>
+<li><code>config.arm64_v8a.apk</code>（针对 ARM64 架构的配置 APK）</li>
+</ul>
+</li>
+</ol>
+<p>这些文件必须一起安装，才能确保 Parsec 客户端正常运行。</p>
+<hr>
+<h3 id="第-3-步：安装-SAI（Split-APKs-Installer）"><a href="#第-3-步：安装-SAI（Split-APKs-Installer）" class="headerlink" title="第 3 步：安装 SAI（Split APKs Installer）"></a>第 3 步：安装 SAI（Split APKs Installer）</h3><ol>
+<li><p>使用 <strong>SideQuest</strong> 或 <strong>USB</strong> 将 <strong>SAI APK</strong> 安装到你的 Quest 3 上。可以在 <a href="https://github.com/Aefyr/SAI/releases">SAI GitHub 页面</a> 下载最新版本的 SAI 安装包。</p>
+</li>
+<li><p>安装完成后，在 Quest 3 上打开 <strong>SAI</strong> 应用。</p>
+</li>
+</ol>
+<hr>
+<h3 id="第-4-步：使用-SAI-安装-Parsec-客户端"><a href="#第-4-步：使用-SAI-安装-Parsec-客户端" class="headerlink" title="第 4 步：使用 SAI 安装 Parsec 客户端"></a>第 4 步：使用 SAI 安装 Parsec 客户端</h3><ol>
+<li><p>打开 SAI 后，点击界面中的 <strong>“安装 APKs”</strong> 按钮。</p>
+</li>
+<li><p>浏览文件系统，选择你之前解压出的这两个 APK 文件：</p>
+<ul>
+<li><code>tv.parsec.client.apk</code>（主程序）</li>
+<li><code>config.arm64_v8a.apk</code>（配置 APK）</li>
+</ul>
+</li>
+<li><p>勾选这两个文件并点击 <strong>“安装”</strong>。安装过程中，SAI 会自动处理分包 APK，确保 Parsec 客户端能够在 Quest 3 上正常运行。</p>
+</li>
+<li><p>安装完成后，返回 Quest 3 的 <strong>“未知来源”</strong> 页面，你会看到 <strong>Parsec</strong> 应用图标。</p>
+</li>
+</ol>
+<hr>
+<h3 id="第-5-步：连接到-PC-或-MacOS"><a href="#第-5-步：连接到-PC-或-MacOS" class="headerlink" title="第 5 步：连接到 PC 或 MacOS"></a>第 5 步：连接到 PC 或 MacOS</h3><ol>
+<li><p>在你的 PC 或 MacOS 上，下载并安装 <strong>Parsec 客户端</strong>。如果你还没有账户，可以创建一个免费账号。</p>
+</li>
+<li><p>在 Parsec 应用中登录你的账户。</p>
+</li>
+<li><p>在 Quest 3 上启动 Parsec 客户端，使用你的账号登录，并找到你要连接的设备。</p>
+</li>
+<li><p>一旦连接成功，你就可以通过 Quest 3 享受高质量的远程桌面体验，无论是玩游戏、办公，还是使用其他 PC 或 Mac 应用。</p>
+</li>
+</ol>
+<hr>
+<h3 id="小贴士"><a href="#小贴士" class="headerlink" title="小贴士"></a>小贴士</h3><ul>
+<li><strong>网络要求</strong>：确保你的 PC&#x2F;Mac 和 Quest 3 都连接到同一 Wi-Fi 网络，以获得更好的串流体验。</li>
+<li><strong>权限设置</strong>：首次使用 Parsec 时，可能需要授予应用网络、麦克风等权限。</li>
+<li><strong>控制方式</strong>：你可以通过 Quest 3 的虚拟桌面进行鼠标和键盘控制，甚至使用手柄进行游戏控制。</li>
+</ul>
+<hr>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>通过这个简单的过程，你就能在 Quest 3 上安装 Parsec 客户端，并通过串流远程访问你的 PC 或 MacOS 设备。使用 SAI 安装分包 APK，使整个过程更加简便，无需复杂的命令行操作。</p>
+<p>享受你的 VR 串流体验吧！</p>
+<hr>
+]]></content>
+      <categories>
+        <category>技术</category>
+        <category>好玩的</category>
+      </categories>
+      <tags>
+        <tag>Quest</tag>
+        <tag>头显</tag>
+        <tag>串流</tag>
+        <tag>Parsec</tag>
+        <tag>Meta</tag>
+        <tag>VR</tag>
       </tags>
   </entry>
   <entry>
@@ -453,41 +569,6 @@
       </categories>
       <tags>
         <tag>ssh</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Airclipbd.com 隔空剪贴板</title>
-    <url>/2024/07/05/airclipbd-0705/</url>
-    <content><![CDATA[<blockquote>
-<p>Snapdrop + Clipboard + ChatGPT &#x3D; Airclipbd.com 隔空剪贴板</p>
-</blockquote>
-<h3 id="SnapDrop-局域网内点对点传输"><a href="#SnapDrop-局域网内点对点传输" class="headerlink" title="SnapDrop 局域网内点对点传输"></a>SnapDrop 局域网内点对点传输</h3><p>Snapdrop: local file sharing in your browser. Inspired by Apple’s Airdrop.</p>
-<p><a href="https://github.com/RobinLinus/snapdrop">https://github.com/RobinLinus/snapdrop</a></p>
-<ul>
-<li>同一网络内设备自动发现</li>
-<li>设备间文件点对点传输 Peer2Peer</li>
-</ul>
-<h3 id="Clipboard-在线剪切板"><a href="#Clipboard-在线剪切板" class="headerlink" title="Clipboard 在线剪切板"></a>Clipboard 在线剪切板</h3><ul>
-<li>支持剪切板空间 <code>/$&#123;board_name&#125;</code></li>
-<li>公开读写，寄存简单方便</li>
-<li>剪贴板复制内容直接粘贴，支持文字、图片、各种文件。</li>
-<li>限制粘贴内容最大20MB，每个剪切板空间暂存最新20条记录。</li>
-<li>暂存6小时</li>
-</ul>
-<h3 id="ChatGPT-提供强大的技术支持"><a href="#ChatGPT-提供强大的技术支持" class="headerlink" title="ChatGPT 提供强大的技术支持"></a>ChatGPT 提供强大的技术支持</h3><ul>
-<li>前端支持 HTML, CSS, Javascript</li>
-<li>后端支持 Golang, Gin, Redis, Websocket</li>
-</ul>
-<h3 id="开发过程与当前进展-2024-07-05"><a href="#开发过程与当前进展-2024-07-05" class="headerlink" title="开发过程与当前进展 2024&#x2F;07&#x2F;05"></a>开发过程与当前进展 2024&#x2F;07&#x2F;05</h3><span id="more"></span>
-
-<p><img src="/./images/airclipbd_20240705.png" alt="image info"></p>
-]]></content>
-      <categories>
-        <category>技术</category>
-        <category>AirClipboard</category>
-      </categories>
-      <tags>
-        <tag>AirClipboard</tag>
       </tags>
   </entry>
 </search>
