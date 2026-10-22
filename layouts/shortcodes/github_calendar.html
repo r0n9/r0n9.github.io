@@ -1,0 +1,138 @@
+<div class="github-calendar-wrapper" id="gh-calendar-{{ md5 (.Get "username" | default "r0n9") }}" data-username="{{ .Get "username" | default "r0n9" }}">
+  <div class="github-calendar-loading" id="gh-loading">
+    <div class="github-calendar-spinner"></div>
+    <span>正在加载 GitHub 提交记录...</span>
+  </div>
+  <div class="github-calendar-content" id="gh-content" style="display: none;">
+    <div class="github-calendar-scroller">
+      <svg class="github-calendar-svg" id="gh-svg" viewBox="0 0 800 125" xmlns="http://www.w3.org/2000/svg"></svg>
+    </div>
+    <div class="github-calendar-footer">
+      <span class="github-calendar-summary" id="gh-summary"></span>
+      <div class="github-calendar-legend">
+        <span class="legend-text">少</span>
+        <span class="legend-box" data-level="0"></span>
+        <span class="legend-box" data-level="1"></span>
+        <span class="legend-box" data-level="2"></span>
+        <span class="legend-box" data-level="3"></span>
+        <span class="legend-box" data-level="4"></span>
+        <span class="legend-text">多</span>
+      </div>
+    </div>
+  </div>
+  <div class="github-calendar-error" id="gh-error" style="display: none;">
+    <span>暂未获取到提交数据，可前往 <a href="https://github.com/{{ .Get "username" | default "r0n9" }}" target="_blank" rel="noopener">GitHub 主页</a> 查看。</span>
+  </div>
+  <div class="gh-tooltip" id="gh-tooltip" style="display: none;"></div>
+</div>
+
+<script>
+(function() {
+  const container = document.getElementById('gh-calendar-{{ md5 (.Get "username" | default "r0n9") }}');
+  if (!container) return;
+  const username = container.getAttribute('data-username') || 'r0n9';
+  const loadingEl = container.querySelector('#gh-loading');
+  const contentEl = container.querySelector('#gh-content');
+  const errorEl = container.querySelector('#gh-error');
+  const svgEl = container.querySelector('#gh-svg');
+  const summaryEl = container.querySelector('#gh-summary');
+  const tooltipEl = container.querySelector('#gh-tooltip');
+
+  const cacheKey = 'gh_contrib_' + username;
+  const cached = localStorage.getItem(cacheKey);
+  if (cached) {
+    try {
+      const parsed = JSON.parse(cached);
+      if (Date.now() - parsed.ts < 3600000 && parsed.data) {
+        render(parsed.data);
+      }
+    } catch (e) {}
+  }
+
+  fetch('https://github-contributions-api.jogruber.de/v4/' + username + '?y=last')
+    .then(res => {
+      if (!res.ok) throw new Error('Network response was not ok');
+      return res.json();
+    })
+    .then(data => {
+      try {
+        localStorage.setItem(cacheKey, JSON.stringify({ ts: Date.now(), data: data }));
+      } catch (e) {}
+      render(data);
+    })
+    .catch(err => {
+      if (!contentEl.style.display || contentEl.style.display === 'none') {
+        loadingEl.style.display = 'none';
+        errorEl.style.display = 'block';
+      }
+    });
+
+  function render(data) {
+    if (!data || !data.contributions || data.contributions.length === 0) return;
+    loadingEl.style.display = 'none';
+    errorEl.style.display = 'none';
+    contentEl.style.display = 'block';
+
+    const total = data.total && (data.total.lastYear || data.total[new Date().getFullYear()]) || 0;
+    summaryEl.textContent = `过去一年在 GitHub 累计产生 ${total} 次贡献`;
+
+    const contributions = data.contributions;
+    const cellSize = 11;
+    const cellGap = 3.5;
+    const step = cellSize + cellGap;
+    const startX = 26;
+    const startY = 20;
+
+    let svgInner = '';
+
+    const weekdays = [
+      { row: 1, label: '一' },
+      { row: 3, label: '三' },
+      { row: 5, label: '五' }
+    ];
+    weekdays.forEach(w => {
+      const y = startY + w.row * step + cellSize - 2;
+      svgInner += `<text class="gh-weekday-label" x="4" y="${y}">${w.label}</text>`;
+    });
+
+    const monthNames = ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
+    let lastMonth = -1;
+
+    for (let i = 0; i < contributions.length; i++) {
+      const item = contributions[i];
+      const col = Math.floor(i / 7);
+      const row = i % 7;
+      const x = startX + col * step;
+      const y = startY + row * step;
+
+      const dateObj = new Date(item.date + 'T00:00:00');
+      const m = dateObj.getMonth();
+
+      if (row === 0 && m !== lastMonth && col < 51) {
+        lastMonth = m;
+        svgInner += `<text class="gh-month-label" x="${x}" y="12">${monthNames[m]}</text>`;
+      }
+
+      svgInner += `<rect class="contrib-cell" data-date="${item.date}" data-count="${item.count}" data-level="${item.level}" x="${x}" y="${y}" width="${cellSize}" height="${cellSize}" rx="2" ry="2"><title>${item.date}：${item.count} 次贡献</title></rect>`;
+    }
+
+    svgEl.innerHTML = svgInner;
+
+    svgEl.querySelectorAll('.contrib-cell').forEach(cell => {
+      cell.addEventListener('mouseenter', function(e) {
+        const d = this.getAttribute('data-date');
+        const c = this.getAttribute('data-count');
+        tooltipEl.textContent = `${d}：${c} 次贡献`;
+        tooltipEl.style.display = 'block';
+        const rect = this.getBoundingClientRect();
+        const wrapperRect = container.getBoundingClientRect();
+        tooltipEl.style.left = (rect.left - wrapperRect.left + rect.width / 2) + 'px';
+        tooltipEl.style.top = (rect.top - wrapperRect.top) + 'px';
+      });
+      cell.addEventListener('mouseleave', function() {
+        tooltipEl.style.display = 'none';
+      });
+    });
+  }
+})();
+</script>

@@ -30,6 +30,12 @@ summary: "关于 R0n9 与这个博客"
 
 ---
 
+### GitHub 提交记录
+
+{{< github_calendar username="r0n9" >}}
+
+---
+
 ### 找到我
 
 - GitHub: [https://github.com/r0n9](https://github.com/r0n9)
