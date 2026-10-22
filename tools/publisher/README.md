@@ -104,6 +104,15 @@
 
 ---
 
+### 方式四：Cloudflare Workers 边缘免服务器部署 (推荐：0 成本 / 0 运维)
+
+如果您没有云服务器或常开的 NAS，可以直接将发布台部署在 Cloudflare 全球边缘网络上：
+- **0 成本**（Cloudflare 免费版每天 100,000 次请求，永久免费）；
+- **0ms 冷启动**，手机、平板随时随地在浏览器中直接发表内容；
+- 详见完整指引：👉 [tools/publisher/cloudflare/README.md](cloudflare/README.md)。
+
+---
+
 ## 🔑 GitHub Token 权限申请说明
 
 本服务需要一个具备目标仓库写权限的 GitHub Personal Access Token (PAT)：
@@ -126,6 +135,10 @@ tools/publisher/
 ├── docker-compose.yml          # Docker Compose 快速编排模板
 ├── .env.example                # 环境变量配置模板
 ├── publisher.webp              # 发布控制台界面展示截图
+├── cloudflare/                 # Cloudflare Workers 免服务器边缘部署版本
+│   ├── worker.js               # 单文件轻量 Worker 源码 (内嵌完整 UI 与 Git API)
+│   ├── wrangler.toml           # Wrangler CLI 部署配置
+│   └── README.md               # Cloudflare 控制台与 CLI 部署说明
 ├── go.mod                      # Go 纯标准库模块声明
 ├── main.go                     # 主服务入口
 ├── cmd/

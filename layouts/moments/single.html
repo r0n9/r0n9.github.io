@@ -18,7 +18,7 @@
       <li class="moment-item" style="border-bottom: none; padding-top: 8px;">
         <article>
           <header class="moment-header">
-            {{- $avatar := .Params.avatar | default site.Params.avatar | default "/images/avatar.png" }}
+            {{- $avatar := .Params.avatar | default site.Params.avatar | default "/images/avatar.webp" }}
             <img src="{{ $avatar }}" alt="{{ .Params.author | default site.Params.author | default "R0n9" }} 的头像" width="40" height="40" class="moment-avatar" loading="lazy" />
             <div class="moment-author-info">
               <strong class="moment-author">{{ .Params.author | default site.Params.author | default "R0n9" }}</strong>

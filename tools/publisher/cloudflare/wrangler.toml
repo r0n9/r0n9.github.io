@@ -1,0 +1,14 @@
+name = "r0n9-blog-publisher"
+main = "worker.js"
+compatibility_date = "2024-01-01"
+
+[vars]
+GITHUB_REPO = "r0n9/r0n9.github.io"
+GITHUB_BRANCH = "master"
+AUTHOR = "R0n9"
+
+# 敏感安全凭据（严禁明文写入本文件）：
+# 部署后请通过终端命令安全注入或在 Cloudflare 控制台 -> Settings -> Variables 添加：
+#
+# npx wrangler secret put GITHUB_TOKEN
+# npx wrangler secret put ADMIN_SECRET

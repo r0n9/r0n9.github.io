@@ -51,8 +51,14 @@ params:
   description: "R0n9 的个人技术博客，记录 Go、HomeLab、边缘计算、WebRTC、网络安全与日常折腾实践"
   keywords: ["技术博客", "Go", "HomeLab", "Docker", "MySQL", "WebRTC", "iOS", "Swift", "Boardrop", "AirClipboard"]
   author: "R0n9"
-  avatar: "/images/avatar.png"
+  avatar: "/images/avatar.webp"
   mainSections: ["posts"]
+
+  assets:
+    favicon: "favicon.ico"
+    favicon16x16: "favicon-16x16.png"
+    favicon32x32: "favicon-32x32.png"
+    apple_touch_icon: "apple-touch-icon.png"
 
   defaultTheme: auto
   disableThemeToggle: false
