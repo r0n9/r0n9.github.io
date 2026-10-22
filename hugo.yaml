@@ -1,5 +1,5 @@
 baseURL: "https://r0n9.github.io/"
-title: "隔空剪贴板-技术博客"
+title: "R0n9's Blog"
 paginate: 10
 theme: "PaperMod"
 defaultContentLanguage: "zh"
@@ -41,7 +41,7 @@ menu:
 
 params:
   env: production
-  title: "隔空剪贴板-技术博客"
+  title: "R0n9's Blog"
   description: "R0n9 的个人技术博客，记录全栈开发、网络技术、移动端开发与日常折腾实践"
   keywords: ["技术博客", "Docker", "MySQL", "WebRTC", "iOS", "Swift", "Boardrop", "AirClipboard"]
   author: "R0n9"
@@ -61,7 +61,7 @@ params:
   TocOpen: false
 
   homeInfoParams:
-    Title: "隔空剪贴板-技术博客 👋"
+    Title: "R0n9's Blog 👋"
     Content: "专注于全栈开发、系统运维、移动端与网络技术。记录开发过程中的心得体会与技术方案。"
 
   socialIcons:
