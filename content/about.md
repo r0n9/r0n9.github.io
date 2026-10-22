@@ -2,6 +2,8 @@
 title: "关于"
 url: "/about/"
 draft: false
+hideTitle: true
+hideMeta: true
 summary: "关于 R0n9 与这个博客"
 ---
 

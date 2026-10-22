@@ -1,0 +1,44 @@
+<script>
+(function() {
+  // 1. Instant Hover Prefetcher (悬浮预加载，消除点击网络延迟)
+  const prefetched = new Set();
+  function prefetch(url) {
+    if (!url || prefetched.has(url) || url.startsWith('#') || url.includes('mailto:') || (url.startsWith('http') && !url.startsWith(window.location.origin))) return;
+    prefetched.add(url);
+    const link = document.createElement('link');
+    link.rel = 'prefetch';
+    link.href = url;
+    document.head.appendChild(link);
+  }
+
+  document.addEventListener('mouseover', function(e) {
+    const a = e.target.closest('a');
+    if (a && a.href && a.origin === window.location.origin) {
+      prefetch(a.pathname + a.search);
+    }
+  }, { passive: true });
+
+  document.addEventListener('touchstart', function(e) {
+    const a = e.target.closest('a');
+    if (a && a.href && a.origin === window.location.origin) {
+      prefetch(a.pathname + a.search);
+    }
+  }, { passive: true });
+
+  // 2. Track & Restore List URLs
+  const path = window.location.pathname;
+  const isPost = path.includes('/202') || (path.startsWith('/posts/') && path !== '/posts/' && !path.startsWith('/posts/page/'));
+
+  if (!isPost) {
+    sessionStorage.setItem('lastListUrl', path + window.location.search);
+  } else {
+    const backBtn = document.getElementById('back-button');
+    if (backBtn) {
+      const lastList = sessionStorage.getItem('lastListUrl');
+      if (lastList) {
+        backBtn.href = lastList;
+      }
+    }
+  }
+})();
+</script>

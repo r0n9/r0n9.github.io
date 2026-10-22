@@ -14,6 +14,7 @@
   --theme: #fcfbfa;
   --entry: #ffffff;
   --primary: #121214;
+  --accent: #006cac;
   --secondary: #6e6e77;
   --tertiary: #a1a1aa;
   --content: #27272a;
@@ -27,6 +28,8 @@
   --theme: #121214;
   --entry: #18181b;
   --primary: #f4f4f5;
+  --accent: #5ea5f5;
+  --accent: oklch(70% 0.11 252);
   --secondary: #a1a1aa;
   --tertiary: #71717a;
   --content: #d4d4d8;
@@ -80,21 +83,100 @@ body, .list {
   color: var(--secondary);
   transition: color 0.15s ease;
   position: relative;
+  text-decoration: none;
 }
 
 #menu a:hover,
-#menu a.active {
+#menu a:hover span {
   color: var(--primary);
+  text-decoration: underline dashed;
+  text-underline-offset: 6px;
+  text-decoration-thickness: 1.5px;
 }
 
+#menu a .active,
+#menu a.active {
+  color: var(--primary) !important;
+  font-weight: 600 !important;
+  text-decoration: underline dashed !important;
+  text-underline-offset: 6px !important;
+  text-decoration-thickness: 2px !important;
+}
+
+/* Theme toggle button interactive motion (昼夜模式切换按钮旋转缩放动效) */
 #theme-toggle {
+  position: relative;
+  width: 32px;
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
   color: var(--secondary);
-  padding: 0 4px;
-  transition: color 0.15s ease;
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  padding: 0;
+  margin: 0;
+  outline: none;
+  transition: color 0.15s ease, transform 0.15s cubic-bezier(0.65, 0, 0.35, 1);
+  overflow: visible;
 }
 
 #theme-toggle:hover {
-  color: var(--primary);
+  color: var(--accent);
+}
+
+#theme-toggle:active {
+  transform: scale(0.88);
+}
+
+#theme-toggle svg {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-top: -8.5px;
+  margin-left: -8.5px;
+  transition: transform 300ms cubic-bezier(0.65, 0, 0.35, 1), opacity 300ms cubic-bezier(0.65, 0, 0.35, 1);
+  transform-origin: center center;
+}
+
+/* Force both SVGs to participate in transform transition, overriding PaperMod's display: none */
+html[data-theme="dark"] #theme-toggle .moon,
+html[data-theme="light"] #theme-toggle .moon,
+:root:not([data-theme="dark"]) #theme-toggle .moon,
+html[data-theme="dark"] #theme-toggle .sun,
+html[data-theme="light"] #theme-toggle .sun,
+:root:not([data-theme="dark"]) #theme-toggle .sun {
+  display: block !important;
+}
+
+/* Light theme: Moon visible (0deg, scale 1), Sun hidden (90deg, scale 0) */
+html[data-theme="light"] #theme-toggle .moon,
+:root:not([data-theme="dark"]) #theme-toggle .moon {
+  opacity: 1 !important;
+  transform: rotate(0deg) scale(1) !important;
+  pointer-events: auto;
+}
+
+html[data-theme="light"] #theme-toggle .sun,
+:root:not([data-theme="dark"]) #theme-toggle .sun {
+  opacity: 0 !important;
+  transform: rotate(90deg) scale(0) !important;
+  pointer-events: none;
+}
+
+/* Dark theme: Moon hidden (-90deg, scale 0), Sun visible (0deg, scale 1) */
+html[data-theme="dark"] #theme-toggle .moon {
+  opacity: 0 !important;
+  transform: rotate(-90deg) scale(0) !important;
+  pointer-events: none;
+}
+
+html[data-theme="dark"] #theme-toggle .sun {
+  opacity: 1 !important;
+  transform: rotate(0deg) scale(1) !important;
+  pointer-events: auto;
 }
 
 /* --- 3. Home Info / Hero (融入式自述区，无突兀边框) --- */
@@ -186,14 +268,15 @@ body, .list {
   font-weight: 650;
   line-height: 1.45;
   letter-spacing: -0.02em;
-  color: var(--primary);
+  color: var(--accent);
   display: inline-block;
   margin-bottom: 6px;
-  transition: color 0.15s ease;
+  transition: opacity 0.15s ease, color 0.15s ease;
 }
 
 /* 目标站标志性效果：悬浮虚线下划线 */
 .post-entry:hover .entry-header h2 {
+  color: var(--accent);
   text-decoration: underline dashed;
   text-underline-offset: 5px;
   text-decoration-thickness: 1.5px;
@@ -228,7 +311,7 @@ body, .list {
   font-weight: 800;
   letter-spacing: -0.03em;
   line-height: 1.35;
-  color: var(--primary);
+  color: var(--accent);
   margin-bottom: 14px;
 }
 
@@ -404,24 +487,228 @@ body, .list {
   text-underline-offset: 3px;
 }
 
-/* Archive timeline list */
-.archive-year {
-  margin-top: 36px;
-  font-size: 1.4rem;
+/* --- 6. Archives: Minimalist Paper Aesthetic (归档页极简纸质美学) --- */
+.archive-page-header {
+  margin-bottom: 24px;
+}
+
+.archive-page-title {
+  font-size: 2.1rem;
   font-weight: 750;
+  letter-spacing: -0.03em;
   color: var(--primary);
-  border-bottom: 1px solid var(--border);
-  padding-bottom: 6px;
+  margin: 6px 0 10px 0;
+  line-height: 1.25;
 }
 
-.archive-entry {
-  padding: 14px 0;
+.archive-description {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  font-size: 0.95rem;
+  color: var(--secondary);
+  font-style: italic;
+  margin-bottom: 24px;
+}
+
+.archive-total-badge {
+  font-style: normal;
+  font-size: 0.75rem;
+  font-weight: 550;
+  color: var(--secondary);
+  background: var(--entry);
+  border: 1px dashed var(--border);
+  padding: 1px 8px;
+  border-radius: 9999px;
+  letter-spacing: 0.02em;
+}
+
+.archive-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 36px;
+}
+
+.archive-year-section {
+  position: relative;
+  scroll-margin-top: 80px;
+}
+
+.archive-year-header {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  padding-bottom: 8px;
+  border-bottom: 1.5px dashed var(--border);
+  margin-bottom: 18px;
+}
+
+.archive-year-heading {
+  font-size: 1.65rem;
+  font-weight: 750;
+  letter-spacing: -0.03em;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.archive-year-link {
+  color: var(--primary);
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.archive-year-link:hover {
+  color: var(--accent);
+}
+
+.archive-year-badge {
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--tertiary);
+  padding: 1px 6px;
+  background: var(--entry);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  letter-spacing: 0.02em;
+}
+
+.archive-year-body {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.archive-month-block {
+  display: flex;
+  flex-direction: column;
+  scroll-margin-top: 80px;
+}
+
+@media (min-width: 640px) {
+  .archive-month-block {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 16px;
+  }
+}
+
+.archive-month-label {
+  min-width: 100px;
+  flex-shrink: 0;
+  padding-top: 6px;
+  margin-bottom: 10px;
+}
+
+@media (min-width: 640px) {
+  .archive-month-label {
+    margin-bottom: 0;
+    position: sticky;
+    top: 76px;
+  }
+}
+
+.archive-month-anchor {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  text-decoration: none;
+  color: var(--primary);
+  transition: color 0.15s ease;
+}
+
+.archive-month-anchor:hover .archive-month-name {
+  color: var(--accent);
+}
+
+.archive-month-name {
+  font-size: 1.05rem;
+  font-weight: 650;
+  letter-spacing: -0.01em;
+  color: var(--primary);
+  transition: color 0.15s ease;
+}
+
+.archive-month-count {
+  font-size: 0.72rem;
+  color: var(--tertiary);
+  font-weight: 500;
+}
+
+.archive-posts-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  flex-grow: 1;
+}
+
+.archive-post-item {
+  padding: 8px 0 14px 0;
+  margin-bottom: 4px;
   border-bottom: 1px dashed var(--border);
+  transition: background-color 0.15s ease;
 }
 
-.archive-entry:hover .archive-entry-title {
+.archive-post-item:last-child {
+  border-bottom: none;
+  padding-bottom: 4px;
+}
+
+.archive-post-link {
+  text-decoration: none;
+  display: inline-block;
+}
+
+.archive-post-title {
+  font-size: 1.06rem;
+  font-weight: 550;
+  line-height: 1.45;
+  letter-spacing: -0.015em;
+  color: var(--accent);
+  margin: 0 0 6px 0;
+  display: inline-block;
+  transition: opacity 0.15s ease, color 0.15s ease;
+}
+
+.archive-post-item:hover .archive-post-title {
   text-decoration: underline dashed;
   text-underline-offset: 4px;
+  text-decoration-thickness: 1.5px;
+}
+
+.archive-post-meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.82rem;
+  color: var(--secondary);
+  line-height: 1;
+}
+
+.archive-meta-icon {
+  width: 13px;
+  height: 13px;
+  opacity: 0.75;
+  stroke: currentColor;
+  flex-shrink: 0;
+}
+
+.archive-post-meta time {
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.01em;
+}
+
+.archive-draft-pill {
+  display: inline-block;
+  font-size: 10.5px;
+  font-weight: 600;
+  line-height: 1;
+  padding: 2px 6px;
+  border-radius: 3px;
+  background: rgba(239, 68, 68, 0.12);
+  color: #ef4444;
+  margin-left: 6px;
+  vertical-align: middle;
 }
 
 /* Search input */
@@ -722,7 +1009,7 @@ body, .list {
 .paginav .nav-title {
   font-size: 15px !important;
   font-weight: 550 !important;
-  color: var(--primary) !important;
+  color: var(--accent) !important;
   line-height: 1.45 !important;
   transition: text-decoration 0.15s ease;
 }
@@ -905,4 +1192,123 @@ body, .list {
   margin-top: -8px;
   z-index: 10;
   transition: opacity 0.15s ease;
+}
+
+/* --- 11. Cross-Document View Transitions & UI Motion (视图过渡与飞行转场) --- */
+@view-transition {
+  navigation: auto;
+}
+
+/* Stable Header (顶栏稳定固定，换页不重新闪烁重绘) */
+.header {
+  view-transition-name: site-header;
+}
+
+::view-transition-group(site-header) {
+  animation: none;
+}
+
+/* Shared Title Flight Transition (文章标题平滑飞行与字号插值形变) */
+::view-transition-group(*) {
+  animation-duration: 200ms;
+  animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+}
+
+/* Theme Transition Curtain Wipe (昼夜模式整页幕布垂直擦除动效) */
+:root.theme-transition * {
+  view-transition-name: none !important;
+}
+
+:root.theme-transition::view-transition-old(root) {
+  mix-blend-mode: normal;
+  animation: none;
+  z-index: 0;
+}
+
+:root.theme-transition::view-transition-new(root) {
+  mix-blend-mode: normal;
+  animation: none;
+  z-index: 1;
+}
+
+/* Page Content Hop / Entrance & Exit Motion (页面内容轻微跳动微动效) */
+.main {
+  view-transition-name: page-content;
+}
+
+::view-transition-old(page-content) {
+  animation-duration: 140ms;
+  animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+  animation-name: page-content-exit;
+  animation-fill-mode: both;
+}
+
+::view-transition-new(page-content) {
+  animation-duration: 360ms;
+  animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+  animation-name: page-content-enter;
+  animation-fill-mode: both;
+}
+
+@keyframes page-content-enter {
+  0% {
+    opacity: 0;
+    transform: translateY(0.5rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes page-content-exit {
+  0% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-0.25rem);
+  }
+}
+
+/* Back Button (文章页顶部动态返回按钮) */
+.post-back-container {
+  margin: 16px 0 6px 0;
+}
+
+.post-back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--secondary);
+  text-decoration: none !important;
+  transition: color 0.15s ease, transform 0.15s ease;
+}
+
+.post-back-btn svg {
+  transition: transform 0.15s ease;
+}
+
+.post-back-btn:hover {
+  color: var(--primary);
+}
+
+.post-back-btn:hover svg {
+  transform: translateX(-3px);
+}
+
+.post-back-btn:active {
+  transform: translateY(0);
+}
+
+/* Accessibility: respect user prefers-reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
 }

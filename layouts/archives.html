@@ -1,0 +1,75 @@
+{{- define "main" }}
+
+{{- $pages := where site.RegularPages "Type" "in" site.Params.mainSections }}
+{{- if site.Params.ShowAllPagesInArchive }}
+{{- $pages = site.RegularPages }}
+{{- end }}
+
+<header class="page-header archive-page-header">
+  {{- partial "breadcrumbs.html" . }}
+  <h1 class="archive-page-title">{{ .Title }}</h1>
+  <div class="archive-description">
+    {{ with .Description }}
+      <span>{{ . | markdownify }}</span>
+    {{ else }}
+      <span>按时间整理的所有文章。</span>
+    {{ end }}
+    <span class="archive-total-badge">共 {{ len $pages }} 篇</span>
+  </div>
+</header>
+
+<div class="archive-timeline">
+  {{- range $pages.GroupByPublishDate "2006" }}
+  {{- if ne .Key "0001" }}
+  {{- $year := replace .Key "0001" "" }}
+  <section class="archive-year-section" id="{{ $year }}">
+    <div class="archive-year-header">
+      <h2 class="archive-year-heading">
+        <a class="archive-year-link" href="#{{ $year }}">{{ $year }}</a>
+      </h2>
+      <span class="archive-year-badge">{{ len .Pages }} 篇</span>
+    </div>
+
+    <div class="archive-year-body">
+      {{- range .Pages.GroupByDate "January" }}
+      <div class="archive-month-block" id="{{ $year }}-{{ .Key }}">
+        <div class="archive-month-label">
+          <a class="archive-month-anchor" href="#{{ $year }}-{{ .Key }}">
+            <span class="archive-month-name">{{ .Key }}</span>
+            <span class="archive-month-count">{{ len .Pages }}</span>
+          </a>
+        </div>
+
+        <ul class="archive-posts-list">
+          {{- range .Pages }}
+          {{- if eq .Kind "page" }}
+          <li class="archive-post-item">
+            <a class="archive-post-link" href="{{ .RelPermalink }}">
+              <h3 class="archive-post-title" style="view-transition-name: vt-post-{{ md5 .RelPermalink }};">
+                {{- .Title | markdownify -}}
+                {{- if .Draft }}
+                <span class="archive-draft-pill">草稿</span>
+                {{- end }}
+              </h3>
+            </a>
+            <div class="archive-post-meta">
+              <svg class="archive-meta-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path stroke="none" d="M0 0h24v24H0z"/>
+                <path d="M4 7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z"/>
+                <path d="M16 3v4M8 3v4M4 11h16M7 14h.013M10.01 14h.005M13.01 14h.005M16.015 14h.005M13.015 17h.005M7.01 17h.005M10.01 17h.005"/>
+              </svg>
+              <time datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">{{ .Date.Format "2006年1月2日" }}</time>
+            </div>
+          </li>
+          {{- end }}
+          {{- end }}
+        </ul>
+      </div>
+      {{- end }}
+    </div>
+  </section>
+  {{- end }}
+  {{- end }}
+</div>
+
+{{- end }}{{/* end main */}}

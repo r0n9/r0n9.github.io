@@ -1,9 +1,24 @@
 {{- define "main" }}
 
 <article class="post-single">
+  {{- if or (eq .Type "posts") (eq .Section "posts") }}
+  <div class="post-back-container">
+    <a id="back-button" href="/posts/" class="post-back-btn" title="返回上一级">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path stroke="none" d="M0 0h24v24H0z"/>
+        <path d="m15 6-6 6 6 6"/>
+      </svg>
+      <span>返回</span>
+    </a>
+  </div>
+  {{- end }}
+
+  {{- $showTitle := not (.Param "hideTitle") }}
+  {{- if or $showTitle .Description (and (not (.Param "hideMeta")) (or (eq .Type "posts") (eq .Section "posts"))) }}
   <header class="post-header">
     {{ partial "breadcrumbs.html" . }}
-    <h1 class="post-title entry-hint-parent">
+    {{- if $showTitle }}
+    <h1 class="post-title entry-hint-parent" {{- if or (eq .Type "posts") (eq .Section "posts") }} style="view-transition-name: vt-post-{{ md5 .RelPermalink }};"{{- end }}>
       {{ .Title }}
       {{- if .Draft }}
       <span class="entry-hint" title="Draft">
@@ -14,12 +29,13 @@
       </span>
       {{- end }}
     </h1>
+    {{- end }}
     {{- if .Description }}
     <div class="post-description">
       {{ .Description }}
     </div>
     {{- end }}
-    {{- if not (.Param "hideMeta") }}
+    {{- if and (not (.Param "hideMeta")) (or (eq .Type "posts") (eq .Section "posts")) }}
     <div class="post-meta">
       {{- partial "post_meta.html" . -}}
       {{- partial "translation_list.html" . -}}
@@ -28,6 +44,13 @@
     </div>
     {{- end }}
   </header>
+  {{- else }}
+    {{- if .Param "ShowBreadCrumbs" }}
+    <div class="page-breadcrumbs-standalone">
+      {{ partial "breadcrumbs.html" . }}
+    </div>
+    {{- end }}
+  {{- end }}
   {{- $isHidden := (.Param "cover.hiddenInSingle") | default (.Param "cover.hidden") | default false }}
   {{- partial "cover.html" (dict "cxt" . "IsSingle" true "isHidden" $isHidden) }}
   {{- if (.Param "ShowToc") }}
