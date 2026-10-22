@@ -1,7 +1,9 @@
 {{- define "main" }}
 
+{{- partial "breadcrumbs.html" . }}
+
+<div class="page-content-wrapper">
 <header class="page-header">
-    {{- partial "breadcrumbs.html" . }}
     <h1>{{ .Title }}</h1>
     {{- if .Description }}
     <div class="post-description">
@@ -35,5 +37,6 @@
         {{- end }}
     {{- end }}
 </ul>
+</div>
 
 {{- end }}{{/* end main */ -}}

@@ -5,20 +5,22 @@
 {{- $pages = site.RegularPages }}
 {{- end }}
 
-<header class="page-header archive-page-header">
-  {{- partial "breadcrumbs.html" . }}
-  <h1 class="archive-page-title">{{ .Title }}</h1>
-  <div class="archive-description">
-    {{ with .Description }}
-      <span>{{ . | markdownify }}</span>
-    {{ else }}
-      <span>按时间整理的所有文章。</span>
-    {{ end }}
-    <span class="archive-total-badge">共 {{ len $pages }} 篇</span>
-  </div>
-</header>
+{{- partial "breadcrumbs.html" . }}
 
-<div class="archive-timeline">
+<div class="page-content-wrapper">
+  <header class="page-header archive-page-header">
+    <h1 class="archive-page-title">{{ .Title }}</h1>
+    <div class="archive-description">
+      {{ with .Description }}
+        <span>{{ . | markdownify }}</span>
+      {{ else }}
+        <span>按时间整理的所有文章。</span>
+      {{ end }}
+      <span class="archive-total-badge">共 {{ len $pages }} 篇</span>
+    </div>
+  </header>
+
+  <div class="archive-timeline">
   {{- range $pages.GroupByPublishDate "2006" }}
   {{- if ne .Key "0001" }}
   {{- $year := replace .Key "0001" "" }}
@@ -70,6 +72,7 @@
   </section>
   {{- end }}
   {{- end }}
+</div>
 </div>
 
 {{- end }}{{/* end main */}}

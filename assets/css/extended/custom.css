@@ -711,19 +711,282 @@ html[data-theme="dark"] #theme-toggle .sun {
   vertical-align: middle;
 }
 
-/* Search input */
-#searchInput {
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  background: var(--code-bg);
+/* --- 7.3 Search Page & Results (极简纸质美学搜索) --- */
+.search-page-header {
+  margin-top: 10px;
+  margin-bottom: 22px;
+}
+
+.search-page-title {
+  font-size: 2.15rem;
+  font-weight: 750;
+  letter-spacing: -0.025em;
   color: var(--primary);
-  padding: 12px 18px;
-  font-size: 15px;
+  margin: 8px 0 10px 0;
+}
+
+.search-page-description {
+  font-size: 14.5px;
+  font-style: italic;
+  color: var(--secondary);
+  margin-bottom: 0;
+}
+
+.searchbox {
+  width: 100%;
+}
+
+.search-input-wrapper {
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  margin: 20px 0 16px 0;
+}
+
+.search-input-icon {
+  position: absolute;
+  left: 16px;
+  color: var(--tertiary);
+  pointer-events: none;
+  transition: color 0.2s ease;
+  z-index: 2;
+  width: 18px;
+  height: 18px;
+}
+
+.search-input-wrapper:focus-within .search-input-icon {
+  color: var(--accent);
+}
+
+#searchInput {
+  width: 100%;
+  height: 50px;
+  padding: 0 46px 0 46px;
+  font-size: 15.5px;
+  font-family: inherit;
+  color: var(--primary);
+  background: var(--entry);
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+  font-weight: 400;
+  letter-spacing: 0.01em;
+}
+
+#searchInput::placeholder {
+  color: var(--tertiary);
+  opacity: 0.8;
+  font-weight: 400;
 }
 
 #searchInput:focus {
-  border-color: var(--primary);
-  outline: none;
+  border-color: var(--accent);
+  background: var(--theme);
+  box-shadow: 0 0 0 3px rgba(0, 108, 172, 0.1);
+}
+
+.dark #searchInput:focus {
+  box-shadow: 0 0 0 3px rgba(94, 165, 245, 0.15);
+}
+
+#searchInput:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+/* 隐藏浏览器原生 type="search" 默认的清除小叉号，避免与自定义按钮重复 */
+#searchInput::-webkit-search-cancel-button,
+#searchInput::-webkit-search-decoration,
+#searchInput::-webkit-search-results-button,
+#searchInput::-webkit-search-results-decoration {
+  -webkit-appearance: none;
+  appearance: none;
+  display: none;
+}
+
+#searchInput::-ms-clear {
+  display: none;
+  width: 0;
+  height: 0;
+}
+
+.search-clear-btn {
+  position: absolute;
+  right: 12px;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: none;
+  background: transparent;
+  color: var(--tertiary);
+  cursor: pointer;
+  padding: 0;
+  transition: background-color 0.15s ease, color 0.15s ease, transform 0.15s ease;
+  z-index: 2;
+}
+
+.search-clear-btn:hover {
+  background: var(--border);
+  color: var(--primary);
+  transform: scale(1.06);
+}
+
+.search-stats {
+  font-size: 13.5px;
+  color: var(--secondary);
+  padding: 4px 0 14px 0;
+  border-bottom: 1px dashed var(--border);
+  margin-bottom: 6px;
+  letter-spacing: 0.01em;
+  transition: opacity 0.2s ease;
+}
+
+.search-stats:empty {
+  display: none;
+}
+
+.search-count strong {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.search-empty {
+  color: var(--secondary);
+}
+
+.search-query-highlight {
+  color: var(--primary);
+  font-weight: 600;
+}
+
+/* 覆盖 PaperMod 默认搜索卡片样式为极简纸质列表 */
+.searchResults {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.searchResults li,
+.searchResults .search-result-item {
+  list-style: none;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  padding: 18px 0;
+  margin: 0;
+  border: none;
+  border-bottom: 1px dashed var(--border);
+  border-radius: 0;
+  background: transparent;
+  transform: none !important;
+  transition: background-color 0.15s ease, padding 0.15s ease;
+}
+
+.searchResults li:last-child,
+.searchResults .search-result-item:last-child {
+  border-bottom: none;
+}
+
+.searchResults li:hover,
+.searchResults .search-result-item:hover,
+.searchResults li:focus-within {
+  transform: none !important;
+  border-color: var(--border);
+  background: transparent;
+}
+
+.searchResults li.focus,
+.searchResults .search-result-item.focus {
+  background: rgba(0, 108, 172, 0.04);
+  padding-left: 10px;
+  padding-right: 10px;
+  border-radius: 6px;
+}
+
+.dark .searchResults li.focus,
+.dark .searchResults .search-result-item.focus {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.searchResults li .entry-link:focus {
+  outline: none !important;
+}
+
+.search-result-title {
+  font-size: 1.08rem;
+  font-weight: 600;
+  line-height: 1.45;
+  letter-spacing: -0.015em;
+  margin: 0 0 6px 0;
+}
+
+.search-result-link {
+  color: var(--accent);
+  text-decoration: none;
+  transition: opacity 0.15s ease, color 0.15s ease;
+  display: inline-block;
+}
+
+.search-result-item:hover .search-result-link,
+.search-result-link:hover {
+  text-decoration: underline dashed;
+  text-underline-offset: 4px;
+  text-decoration-thickness: 1.5px;
+}
+
+.search-result-meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.82rem;
+  color: var(--tertiary);
+  margin-bottom: 8px;
+  line-height: 1;
+}
+
+.search-meta-icon {
+  width: 13px;
+  height: 13px;
+  opacity: 0.75;
+  stroke: currentColor;
+  flex-shrink: 0;
+}
+
+.search-result-meta time {
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.01em;
+}
+
+.search-result-snippet {
+  margin: 0;
+  font-size: 0.885rem;
+  line-height: 1.65;
+  color: var(--secondary);
+  word-break: break-word;
+}
+
+.search-mark {
+  background: rgba(0, 108, 172, 0.13);
+  color: inherit;
+  padding: 1px 3px;
+  border-radius: 3px;
+  font-weight: 600;
+}
+
+.dark .search-mark {
+  background: rgba(94, 165, 245, 0.22);
+  color: #93c5fd;
 }
 
 /* --- 8. Tags & Categories (标签与分类极简 Paper 风格) --- */
@@ -1231,8 +1494,25 @@ html[data-theme="dark"] #theme-toggle .sun {
   z-index: 1;
 }
 
-/* Page Content Hop / Entrance & Exit Motion (页面内容轻微跳动微动效) */
-.main {
+/* Breadcrumbs Stability (面包屑稳定在位，不参与下层内容的位移跳动) */
+.breadcrumbs {
+  view-transition-name: site-breadcrumbs;
+}
+
+::view-transition-group(site-breadcrumbs) {
+  animation: none;
+}
+
+::view-transition-old(site-breadcrumbs) {
+  animation: 90ms ease both;
+}
+
+::view-transition-new(site-breadcrumbs) {
+  animation: 120ms ease both;
+}
+
+/* Page Content Hop / Entrance & Exit Motion (仅面包屑下方主体内容跳动) */
+.page-content-wrapper {
   view-transition-name: page-content;
 }
 

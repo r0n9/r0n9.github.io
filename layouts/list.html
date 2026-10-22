@@ -5,8 +5,12 @@
 {{- else }} {{/* if not profileMode */}}
 
 {{- if not .IsHome | and .Title }}
-<header class="page-header">
   {{- partial "breadcrumbs.html" . }}
+{{- end }}
+
+<div class="page-content-wrapper">
+{{- if not .IsHome | and .Title }}
+<header class="page-header">
   <h1>
     {{ .Title }}
     {{- if and (or (eq .Kind `term`) (eq .Kind `section`)) (.Param "ShowRssButtonInSectionTermList") }}
@@ -94,6 +98,7 @@
 {{- end }}
 
 {{- partial "pagination.html" $paginator }}
+</div>
 
 {{- end }}{{/* end profileMode */}}
 

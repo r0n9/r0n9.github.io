@@ -1,7 +1,9 @@
 {{- define "main" }}
 
+{{- partial "breadcrumbs.html" . }}
+
+<div class="page-content-wrapper">
 <header class="page-header">
-  {{- partial "breadcrumbs.html" . }}
   <h1>
     {{- if or (eq .Data.Singular "tag") (eq .Type "tags") }}
       <span class="term-type-prefix">标签:</span> {{ .Title }}
@@ -77,5 +79,6 @@
 {{- end }}
 
 {{- partial "pagination.html" $paginator }}
+</div>
 
 {{- end }}{{/* end main */ -}}

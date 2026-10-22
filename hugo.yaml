@@ -89,7 +89,14 @@ params:
     isCaseSensitive: false
     shouldSort: true
     location: 0
-    distance: 1000
-    threshold: 0.4
-    minMatchCharLength: 0
-    keys: ["title", "permalink", "summary", "content"]
+    distance: 100
+    threshold: 0.2
+    minMatchCharLength: 1
+    ignoreLocation: true
+    keys:
+      - name: "title"
+        weight: 0.6
+      - name: "description"
+        weight: 0.25
+      - name: "content"
+        weight: 0.15

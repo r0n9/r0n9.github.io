@@ -1,5 +1,8 @@
 {{- define "main" }}
 
+{{ partial "breadcrumbs.html" . }}
+
+<div class="page-content-wrapper">
 <article class="post-single">
   {{- if or (eq .Type "posts") (eq .Section "posts") }}
   <div class="post-back-container">
@@ -16,7 +19,6 @@
   {{- $showTitle := not (.Param "hideTitle") }}
   {{- if or $showTitle .Description (and (not (.Param "hideMeta")) (or (eq .Type "posts") (eq .Section "posts"))) }}
   <header class="post-header">
-    {{ partial "breadcrumbs.html" . }}
     {{- if $showTitle }}
     <h1 class="post-title entry-hint-parent" {{- if or (eq .Type "posts") (eq .Section "posts") }} style="view-transition-name: vt-post-{{ md5 .RelPermalink }};"{{- end }}>
       {{ .Title }}
@@ -44,12 +46,6 @@
     </div>
     {{- end }}
   </header>
-  {{- else }}
-    {{- if .Param "ShowBreadCrumbs" }}
-    <div class="page-breadcrumbs-standalone">
-      {{ partial "breadcrumbs.html" . }}
-    </div>
-    {{- end }}
   {{- end }}
   {{- $isHidden := (.Param "cover.hiddenInSingle") | default (.Param "cover.hidden") | default false }}
   {{- partial "cover.html" (dict "cxt" . "IsSingle" true "isHidden" $isHidden) }}
@@ -96,5 +92,6 @@
   {{- partial "comments.html" . }}
   {{- end }}
 </article>
+</div>
 
 {{- end }}{{/* end main */}}
