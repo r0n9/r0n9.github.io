@@ -5,6 +5,26 @@ R0n9 的个人技术博客，记录 Go、HomeLab、边缘计算、WebRTC、网�
 - **线上地址**：[https://r0n9.github.io/](https://r0n9.github.io/)
 - **技术栈**：[Hugo](https://gohugo.io/) + [PaperMod](https://github.com/adityatelange/hugo-PaperMod)（深度定制极简纸质美学）
 - **自动部署**：通过 GitHub Actions 自动化编译并部署至 GitHub Pages
+- **Web 发布台**：内置轻量独立在线发布服务 [tools/publisher/](tools/publisher/README.md)（浏览器直接发文章/动态，GitHub API 直写）
+
+---
+
+## ✍️ 在线发布管理台 (Web Publisher)
+
+博客在 [`tools/publisher/`](tools/publisher/README.md) 目录下内置了一个独立、极速、无外部依赖的在线 Web 发布服务。无论是在桌面电脑、手机或平板上，无需打开 IDE 或命令行，即可通过浏览器快速记录碎碎念或撰写长篇博文。
+
+- ⚡️ **GitHub API 直写**：生成的 Markdown 及配图通过 GitHub REST API 原子提交至 `master` 分支，杜绝中间脏状态。
+- 🖼️ **Canvas 智能转码 WebP**：支持剪贴板截图直接粘贴（`Ctrl+V` / `Cmd+V`），浏览器端利用 Canvas 自动将大图等比缩放并高保真转码为 `.webp` 格式（体积立降 70%~90%）。
+- 📝 **长文与随手记双模式**：随手记配图与正文全自动归档；文章支持双栏实时 Markdown 渲染。
+- 🚀 **完整说明与部署指南**：请阅读 [tools/publisher/README.md](tools/publisher/README.md)。
+
+```bash
+# 本地一键启动 (默认端口 :13133)
+cd tools/publisher && go run .
+
+# 或直接拉取多架构 Docker 镜像运行
+docker run -d -p 13133:13133 --env-file tools/publisher/.env ghcr.io/r0n9/blog-publisher:latest
+```
 
 ---
 
@@ -138,6 +158,7 @@ git push origin master
 | `hugo --gc --minify` | 本地执行生产环境完整编译（输出至 `public/` 目录） |
 | `hugo new posts/<filename>.md` | 快速创建长篇文章模板 |
 | `./bin/moment "<内容>" [图片...]` | 快速发表一条随手动态 |
+| `go run ./tools/publisher` | 启动 Web 内容发布管理服务 (http://localhost:13133) |
 
 ---
 
@@ -164,6 +185,8 @@ git push origin master
 ├── static/
 │   ├── favicon.ico       # 站点图标
 │   └── images/           # 博客插图存放目录 (images/moments/)
+├── tools/
+│   └── publisher/        # 独立轻量在线发布管理台 (Web UI, 支持文章/动态一键提交 GitHub)
 ├── hugo.yaml             # 站点全局配置文件
-└── .github/workflows/    # GitHub Actions 自动化部署工作流
+└── .github/workflows/    # GitHub Actions 自动化部署工作流 (Pages 部署 / Publisher 构建)
 ```

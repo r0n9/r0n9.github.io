@@ -1,0 +1,21 @@
+version: "3.8"
+
+services:
+  blog-publisher:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: blog-publisher
+    restart: unless-stopped
+    ports:
+      - "13133:13133"
+    environment:
+      # 必填配置项：
+      - GITHUB_TOKEN=ghp_your_personal_access_token_here
+      - ADMIN_SECRET=your_super_secret_password_here
+      # 可选配置项：
+      - GITHUB_REPO=r0n9/r0n9.github.io
+      - GITHUB_BRANCH=master
+      - AUTHOR=R0n9
+      - PORT=13133
+      - TZ=Asia/Shanghai

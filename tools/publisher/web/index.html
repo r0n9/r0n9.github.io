@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>R0n9's Blog Publisher | 博客内容发布台</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- 头部导航 -->
+    <header class="header">
+      <div class="header-brand">
+        <div class="brand-logo">✍️</div>
+        <div class="brand-info">
+          <h1>Blog Publisher</h1>
+          <span class="brand-subtitle" id="repo-badge">Connecting...</span>
+        </div>
+      </div>
+      <div class="header-actions">
+        <button id="theme-toggle" class="btn btn-icon" title="切换暗黑/明亮主题">🌓</button>
+        <button id="auth-btn" class="btn btn-secondary btn-sm">口令验证</button>
+      </div>
+    </header>
+
+    <!-- 选项卡切换 -->
+    <div class="tabs">
+      <button class="tab-btn active" data-tab="moment-tab">
+        <span class="tab-icon">💬</span> 随手记 (Moments)
+      </button>
+      <button class="tab-btn" data-tab="post-tab">
+        <span class="tab-icon">📝</span> 长篇文章 (Posts)
+      </button>
+    </div>
+
+    <!-- 随手记发布面板 -->
+    <main id="moment-tab" class="tab-content active">
+      <form id="moment-form" class="publish-form">
+        <div class="form-group">
+          <label for="moment-content">动态内容 (支持 Markdown & 原生 Emoji)：</label>
+          <textarea id="moment-content" name="content" rows="6" placeholder="今天有什么想记录的？支持直接截图粘贴 (Ctrl+V / Cmd+V)..."></textarea>
+        </div>
+
+        <div class="form-group">
+          <div class="label-with-toggle">
+            <label>配图上传 (支持拖拽、点击选择或直接粘贴)：</label>
+            <label class="checkbox-inline">
+              <input type="checkbox" id="moment-webp-toggle" checked>
+              <span>Canvas 智能压制为 WebP</span>
+            </label>
+          </div>
+          <div class="drop-zone" id="moment-dropzone">
+            <input type="file" id="moment-file-input" multiple accept="image/*" class="file-input-hidden">
+            <div class="drop-zone-content">
+              <span class="upload-icon">📷</span>
+              <p>拖拽图片到这里，或 <span class="highlight-link">点击浏览</span>，也可以直接快捷键粘贴图片</p>
+              <span class="file-hint">✨ 自动 Canvas 高保真转码 WebP (超大图自动等比缩放至 1920px，体积减少 70%~90%)</span>
+            </div>
+          </div>
+          <div class="image-preview-grid" id="moment-preview-grid"></div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group col-half">
+            <label for="moment-author">署名 (Author)：</label>
+            <input type="text" id="moment-author" name="author" value="R0n9" placeholder="R0n9">
+          </div>
+          <div class="form-group col-half align-end">
+            <button type="submit" class="btn btn-primary btn-publish" id="moment-submit-btn">
+              <span>🚀 立即发布随手记</span>
+            </button>
+          </div>
+        </div>
+      </form>
+    </main>
+
+    <!-- 文章发布面板 -->
+    <main id="post-tab" class="tab-content">
+      <form id="post-form" class="publish-form">
+        <div class="form-row">
+          <div class="form-group col-full">
+            <label for="post-title">文章标题 *：</label>
+            <input type="text" id="post-title" name="title" required placeholder="如：深入探索 Go 内存分配机制">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group col-full">
+            <label for="post-description">文章摘要 (Description)：</label>
+            <input type="text" id="post-description" name="description" placeholder="一句话总结文章要点，便于首页卡片展示与 SEO">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group col-half">
+            <label for="post-categories">分类 (以逗号分隔)：</label>
+            <input type="text" id="post-categories" name="categories" value="技术" placeholder="技术, 架构">
+          </div>
+          <div class="form-group col-half">
+            <label for="post-tags">标签 (以逗号分隔)：</label>
+            <input type="text" id="post-tags" name="tags" placeholder="Go, 内存管理, 后端">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group draft-group">
+            <label class="checkbox-label">
+              <input type="checkbox" id="post-draft" name="draft">
+              <span>存为草稿 (Draft: true)</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <div class="label-with-toggle">
+            <label>文章配图 / 插图 (上传后将自动提交至 static/images/)：</label>
+            <label class="checkbox-inline">
+              <input type="checkbox" id="post-webp-toggle" checked>
+              <span>Canvas 智能压制为 WebP</span>
+            </label>
+          </div>
+          <div class="drop-zone" id="post-dropzone">
+            <input type="file" id="post-file-input" multiple accept="image/*" class="file-input-hidden">
+            <div class="drop-zone-content">
+              <span class="upload-icon">🖼️</span>
+              <p>拖拽插图到此，或 <span class="highlight-link">选择插图</span>。上传后可一键复制 Markdown 引用链接</p>
+              <span class="file-hint">✨ 自动转换为 WebP 格式，大幅节省仓库容量与文章访问加载时间</span>
+            </div>
+          </div>
+          <div class="image-preview-grid" id="post-preview-grid"></div>
+        </div>
+
+        <div class="form-group editor-container">
+          <div class="editor-header">
+            <label for="post-content">正文内容 (Markdown)：</label>
+            <div class="editor-actions">
+              <button type="button" class="btn btn-xs" id="insert-code-btn">代码块</button>
+              <button type="button" class="btn btn-xs" id="insert-table-btn">表格</button>
+              <button type="button" class="btn btn-xs" id="toggle-preview-btn">切换双栏实时预览</button>
+            </div>
+          </div>
+          <div class="editor-split" id="editor-split-wrapper">
+            <div class="editor-pane">
+              <textarea id="post-content" name="content" rows="16" placeholder="# 标题一&#10;&#10;开始写正文... 支持直接拖拽或粘贴图片插入到光标处"></textarea>
+            </div>
+            <div class="preview-pane" id="post-preview-pane">
+              <div class="preview-header">实时渲染预览</div>
+              <div class="preview-body markdown-body" id="post-preview-body">
+                <p class="preview-placeholder">在此输入 Markdown，右侧将实时渲染预览效果...</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group col-full align-end">
+            <button type="submit" class="btn btn-primary btn-publish" id="post-submit-btn">
+              <span>🚀 发布文章至 GitHub</span>
+            </button>
+          </div>
+        </div>
+      </form>
+    </main>
+
+    <!-- 结果通知模态框 / 弹窗 -->
+    <div id="status-modal" class="modal">
+      <div class="modal-card">
+        <div class="modal-header">
+          <h3 id="modal-title">正在发布...</h3>
+          <button class="modal-close" id="modal-close-btn">&times;</button>
+        </div>
+        <div class="modal-body" id="modal-body">
+          <div class="spinner" id="modal-spinner"></div>
+          <p id="modal-message">正在打包数据并生成 GitHub 提交...</p>
+        </div>
+        <div class="modal-footer" id="modal-footer">
+          <button class="btn btn-secondary" id="modal-dismiss-btn">关闭</button>
+          <a href="#" target="_blank" class="btn btn-primary" id="modal-commit-link" style="display:none;">查看 GitHub Commit</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- 口令认证模态框 -->
+    <div id="auth-modal" class="modal">
+      <div class="modal-card">
+        <div class="modal-header">
+          <h3>管理口令验证</h3>
+        </div>
+        <div class="modal-body">
+          <p class="auth-desc">请输入后端设置的 <code>ADMIN_SECRET</code> 口令以解锁发布权限：</p>
+          <div class="form-group">
+            <input type="password" id="secret-input" placeholder="输入访问口令..." autocomplete="current-password">
+          </div>
+          <p class="auth-error-msg" id="auth-error" style="display:none;"></p>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-primary btn-block" id="secret-submit-btn">验证并保存</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

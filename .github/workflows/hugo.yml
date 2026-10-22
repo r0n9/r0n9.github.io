@@ -3,6 +3,8 @@ name: Deploy Hugo site to Pages
 on:
   push:
     branches: ["master"]
+    paths-ignore:
+      - "tools/**"
   workflow_dispatch:
 
 permissions:
