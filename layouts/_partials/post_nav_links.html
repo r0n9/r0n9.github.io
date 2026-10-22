@@ -1,0 +1,34 @@
+{{- $pages := where site.RegularPages "Type" "in" site.Params.mainSections }}
+{{- if and (gt (len $pages) 1) (in $pages . ) }}
+<hr class="post-nav-divider">
+<nav class="paginav" aria-label="文章前后导航">
+  {{- with $pages.Next . }}
+  <a class="prev" href="{{ .Permalink }}" aria-label="上一篇: {{ .Title }}">
+    <span class="title">
+      <svg class="nav-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path stroke="none" d="M0 0h24v24H0z"/>
+        <path d="M5 12h14M5 12l6 6M5 12l6-6"/>
+      </svg>
+      <span>上一篇</span>
+    </span>
+    <span class="nav-title">{{- .Title -}}</span>
+  </a>
+  {{- else }}
+  <div class="paginav-placeholder"></div>
+  {{- end }}
+  {{- with $pages.Prev . }}
+  <a class="next" href="{{ .Permalink }}" aria-label="下一篇: {{ .Title }}">
+    <span class="title">
+      <span>下一篇</span>
+      <svg class="nav-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path stroke="none" d="M0 0h24v24H0z"/>
+        <path d="M5 12h14M13 18l6-6M13 6l6 6"/>
+      </svg>
+    </span>
+    <span class="nav-title">{{- .Title -}}</span>
+  </a>
+  {{- else }}
+  <div class="paginav-placeholder"></div>
+  {{- end }}
+</nav>
+{{- end }}

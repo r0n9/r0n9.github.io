@@ -523,42 +523,231 @@ body, .list {
 
 /* Single post detail page bottom tags */
 .post-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 14px 20px;
-  margin: 32px 0 24px 0;
-  padding: 0;
-  list-style: none;
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 14px 20px !important;
+  margin: 36px 0 24px 0 !important;
+  padding: 0 !important;
+  list-style: none !important;
 }
 
 .post-tags li {
-  display: inline-flex;
-  margin: 0;
+  display: inline-flex !important;
+  margin: 0 !important;
+  padding: 0 !important;
 }
 
-.post-tags a {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
+.post-tags a,
+.post-tag-item {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 5px !important;
   background: transparent !important;
+  border: none !important;
   border-radius: 0 !important;
   padding: 2px 2px 4px 2px !important;
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--secondary);
-  border-bottom: 1.5px dashed var(--secondary);
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  line-height: normal !important;
+  color: var(--primary) !important;
+  border-bottom: 2px dashed var(--primary) !important;
   text-decoration: none !important;
-  transition: transform 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+  transition: transform 0.15s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.15s ease, color 0.15s ease !important;
 }
 
-.post-tags a::before {
-  content: "#";
-  font-weight: 700;
-  opacity: 0.7;
+.post-tags a:hover,
+.post-tag-item:hover {
+  transform: translateY(-2px) !important;
+  opacity: 0.75 !important;
+  background: transparent !important;
 }
 
-.post-tags a:hover {
-  color: var(--primary);
-  border-bottom-color: var(--primary);
-  transform: translateY(-2px);
+.post-tags a:active,
+.post-tag-item:active {
+  transform: translateY(0) !important;
+}
+
+.post-tag-icon {
+  width: 15px;
+  height: 15px;
+  stroke: currentColor;
+  opacity: 0.8;
+  flex-shrink: 0;
+}
+
+/* --- 9. Pagination & Post Navigation (AstroPaper 极简风格分页与前后导航) --- */
+
+/* --- 9.1 List Pagination (列表分页导航) --- */
+.page-footer {
+  margin: 40px 0 24px 0;
+  padding: 0;
+}
+
+.pagination {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  gap: 20px !important;
+  padding: 24px 0 0 0 !important;
+  border-top: 1px dashed var(--border) !important;
+  font-family: inherit;
+}
+
+.pagination a,
+.pagination .disabled {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  background: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  padding: 4px 6px !important;
+  font-size: 14.5px !important;
+  font-weight: 500 !important;
+  line-height: normal !important;
+  text-decoration: none !important;
+  color: var(--secondary) !important;
+  border-bottom: 1.5px dashed transparent !important;
+  transition: color 0.15s ease, transform 0.15s ease, opacity 0.15s ease, border-color 0.15s ease;
+}
+
+.pagination a {
+  cursor: pointer;
+}
+
+.pagination a:hover {
+  color: var(--primary) !important;
+  border-bottom-color: var(--primary) !important;
+  transform: translateY(-1px);
+}
+
+.pagination a:active {
+  transform: translateY(0);
+}
+
+.pagination .disabled {
+  opacity: 0.35 !important;
+  cursor: not-allowed !important;
+  user-select: none !important;
+}
+
+.pagination .page-num {
+  font-size: 14px;
+  color: var(--tertiary);
+  font-variant-numeric: tabular-nums;
+  user-select: none;
+  padding: 0 4px;
+}
+
+.pagination-arrow {
+  width: 17px;
+  height: 17px;
+  stroke: currentColor;
+  flex-shrink: 0;
+  transition: transform 0.15s ease;
+}
+
+.pagination a.prev:hover .pagination-arrow {
+  transform: translateX(-3px);
+}
+
+.pagination a.next:hover .pagination-arrow {
+  transform: translateX(3px);
+}
+
+/* --- 9.2 Post Navigation (文章底部前后导航) --- */
+.post-nav-divider {
+  border: none !important;
+  border-top: 1px dashed var(--border) !important;
+  margin: 36px 0 24px 0 !important;
+}
+
+.paginav {
+  background: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  margin: 0 0 32px 0 !important;
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  gap: 24px !important;
+  line-height: normal !important;
+}
+
+@media (max-width: 640px) {
+  .paginav {
+    grid-template-columns: 1fr !important;
+    gap: 18px !important;
+  }
+}
+
+.paginav a {
+  width: auto !important;
+  background: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  padding: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 6px !important;
+  text-decoration: none !important;
+  transition: opacity 0.15s ease;
+}
+
+.paginav a:hover {
+  background: transparent !important;
+  opacity: 0.85;
+}
+
+.paginav .title {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 5px !important;
+  font-size: 13.5px !important;
+  color: var(--tertiary) !important;
+  letter-spacing: normal !important;
+  text-transform: none !important;
+  font-weight: 500 !important;
+  user-select: none;
+}
+
+.paginav .nav-title {
+  font-size: 15px !important;
+  font-weight: 550 !important;
+  color: var(--primary) !important;
+  line-height: 1.45 !important;
+  transition: text-decoration 0.15s ease;
+}
+
+.paginav a:hover .nav-title {
+  text-decoration: underline dashed !important;
+  text-underline-offset: 4px !important;
+  text-decoration-thickness: 1px !important;
+}
+
+.paginav .nav-arrow {
+  width: 16px;
+  height: 16px;
+  stroke: currentColor;
+  flex-shrink: 0;
+  transition: transform 0.15s ease;
+}
+
+.paginav a.prev:hover .nav-arrow {
+  transform: translateX(-3px);
+}
+
+.paginav a.next:hover .nav-arrow {
+  transform: translateX(3px);
+}
+
+.paginav .next {
+  margin-inline-start: 0 !important;
+  text-align: right !important;
+  align-items: flex-end !important;
+}
+
+.paginav .paginav-placeholder {
+  display: block;
 }
