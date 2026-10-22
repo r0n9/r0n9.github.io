@@ -62,7 +62,6 @@ cat <<EOF > "$FILE_PATH"
 title: "动态"
 date: $DATE_ISO
 draft: false
-searchHidden: true
 author: "R0n9"
 images:
 EOF

@@ -2,7 +2,6 @@
 title: "动态"
 date: {{ .Date }}
 draft: false
-searchHidden: true
 images: []
 ---
 

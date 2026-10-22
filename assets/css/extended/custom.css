@@ -939,6 +939,30 @@ html[data-theme="dark"] #theme-toggle .sun {
   margin: 0 0 6px 0;
 }
 
+.search-result-badge {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1;
+  padding: 3px 6px;
+  border-radius: 4px;
+  margin-right: 8px;
+  vertical-align: middle;
+  letter-spacing: 0.02em;
+}
+
+.search-badge-moment {
+  background: rgba(0, 108, 172, 0.1);
+  color: var(--accent);
+  border: 1px solid rgba(0, 108, 172, 0.2);
+}
+
+.dark .search-badge-moment {
+  background: rgba(94, 165, 245, 0.15);
+  color: #93c5fd;
+  border-color: rgba(94, 165, 245, 0.25);
+}
+
 .search-result-link {
   color: var(--accent);
   text-decoration: none;
@@ -1688,6 +1712,19 @@ html[data-theme="dark"] #theme-toggle .sun {
 
 .moment-item:last-child {
   border-bottom: none;
+}
+
+.moment-item:target {
+  scroll-margin-top: 80px;
+  background: rgba(0, 108, 172, 0.04);
+  border-radius: 8px;
+  padding-left: 12px;
+  padding-right: 12px;
+  transition: background-color 0.3s ease;
+}
+
+.dark .moment-item:target {
+  background: rgba(94, 165, 245, 0.08);
 }
 
 .moment-header {

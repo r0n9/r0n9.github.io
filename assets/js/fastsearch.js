@@ -164,6 +164,14 @@ const renderResults = (results, query) => {
         // Title
         const titleHeading = document.createElement('h2');
         titleHeading.className = 'search-result-title';
+
+        if (item.badge) {
+            const badgeSpan = document.createElement('span');
+            badgeSpan.className = 'search-result-badge search-badge-moment';
+            badgeSpan.textContent = item.badge;
+            titleHeading.appendChild(badgeSpan);
+        }
+
         const titleLink = document.createElement('a');
         titleLink.href = item.permalink;
         titleLink.className = 'search-result-link entry-link';

@@ -1,14 +1,34 @@
 {{- $index := slice -}}
 {{- range site.RegularPages -}}
-    {{- if and (not .Params.searchHidden) (ne .Layout `archives`) (ne .Layout `search`) (ne .Section `moments`) }}
-    {{- $date := "" }}
-    {{- if not .Date.IsZero }}
-      {{- $date = .Date.Format "2006年1月2日" }}
-    {{- end }}
-    {{- $summary := .Summary | plainify | htmlUnescape }}
-    {{- $desc := .Description | default $summary | plainify | htmlUnescape }}
-    {{- $content := .Plain | htmlUnescape }}
-    {{- $index = $index | append (dict "title" .Title "content" $content "permalink" .Permalink "date" $date "description" $desc) -}}
+    {{- $isPost := and (eq .Section "posts") (not .Params.searchHidden) }}
+    {{- $isMoment := and (eq .Section "moments") (not .Draft) }}
+    {{- if or $isPost $isMoment }}
+        {{- $date := "" }}
+        {{- if not .Date.IsZero }}
+            {{- if $isMoment }}
+                {{- $date = .Date.Format "2006年1月2日 15:04" }}
+            {{- else }}
+                {{- $date = .Date.Format "2006年1月2日" }}
+            {{- end }}
+        {{- end }}
+        {{- $content := .Plain | htmlUnescape | strings.TrimSpace }}
+        {{- $permalink := .Permalink }}
+        {{- $title := .Title }}
+        {{- $desc := "" }}
+        {{- $badge := "" }}
+
+        {{- if $isMoment }}
+            {{- $anchor := printf "moments/#moment-%s" (.Date.Format "20060102150405") }}
+            {{- $permalink = $anchor | absURL }}
+            {{- $title = $content | truncate 40 }}
+            {{- $desc = $content | truncate 120 }}
+            {{- $badge = "动态" }}
+        {{- else }}
+            {{- $summary := .Summary | plainify | htmlUnescape }}
+            {{- $desc = .Description | default $summary | plainify | htmlUnescape }}
+        {{- end }}
+
+        {{- $index = $index | append (dict "title" $title "content" $content "permalink" $permalink "date" $date "description" $desc "badge" $badge "type" .Section) -}}
     {{- end }}
 {{- end -}}
 {{- $index | jsonify -}}
