@@ -42,8 +42,8 @@ menu:
 params:
   env: production
   title: "R0n9's Blog"
-  description: "R0n9 的个人技术博客，记录全栈开发、网络技术、移动端开发与日常折腾实践"
-  keywords: ["技术博客", "Docker", "MySQL", "WebRTC", "iOS", "Swift", "Boardrop", "AirClipboard"]
+  description: "R0n9 的个人技术博客，记录 Go、HomeLab、边缘计算、WebRTC、网络安全与日常折腾实践"
+  keywords: ["技术博客", "Go", "HomeLab", "Docker", "MySQL", "WebRTC", "iOS", "Swift", "Boardrop", "AirClipboard"]
   author: "R0n9"
 
   defaultTheme: auto
@@ -62,7 +62,15 @@ params:
 
   homeInfoParams:
     Title: "R0n9's Blog 👋"
-    Content: "专注于全栈开发、系统运维、移动端与网络技术。记录开发过程中的心得体会与技术方案。"
+    Content: |
+      后端开发者 · 开源探索者 · HomeLab 极客
+
+      热衷于打磨轻量高效的私有化工具，专注 **Go / 云原生 / 边缘计算 / 跨端协同**：
+      - 📹 **流媒体与私有云**：轻量自建 NAS 视频监控系统 [camkeep](https://github.com/r0n9/camkeep)、网盘流媒体挂载工具 [openlist-strm-go](https://github.com/r0n9/openlist-strm-go)
+      - 🔒 **隐私安全与效率**：纯离线密码管理插件 [vaultwarden-offline](https://github.com/r0n9/vaultwarden-offline)、跨设备隔空剪贴板 Boardrop
+      - 🌐 **网络协议与运维**：WebRTC 实时通信、NAT 穿透、Cloudflare Serverless 与 Linux 自动化
+
+      这里记录系统架构、开发实践与软硬件折腾心得。欢迎交流！
 
   socialIcons:
     - name: "github"
