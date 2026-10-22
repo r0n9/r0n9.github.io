@@ -331,7 +331,8 @@ html[data-theme="dark"] #theme-toggle .sun {
 }
 
 .bc-root-prefix,
-.bc-dynamic-wrap {
+.bc-dynamic-wrap,
+.bc-page-wrap {
   display: inline-flex;
   align-items: center;
   gap: 6px;
@@ -1523,16 +1524,21 @@ html[data-theme="dark"] #theme-toggle .sun {
 }
 
 ::view-transition-group(bc-dynamic-wrap) {
-  animation: none;
+  animation: none !important;
+}
+
+::view-transition-old(bc-dynamic-wrap),
+::view-transition-new(bc-dynamic-wrap) {
+  mix-blend-mode: normal !important;
+  object-fit: none !important;
+  object-position: left center !important;
 }
 
 ::view-transition-old(bc-dynamic-wrap) {
-  mix-blend-mode: normal;
   animation: 50ms cubic-bezier(0.4, 0, 1, 1) both breadcrumbs-fade-out;
 }
 
 ::view-transition-new(bc-dynamic-wrap) {
-  mix-blend-mode: normal;
   animation: 100ms cubic-bezier(0, 0, 0.2, 1) 50ms both breadcrumbs-fade-in;
 }
 

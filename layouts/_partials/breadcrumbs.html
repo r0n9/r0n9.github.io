@@ -5,7 +5,7 @@
         <a href="/">{{ i18n "home" | default "主页" }}</a>
         <span class="bc-sep" aria-hidden="true">&raquo;</span>
     </span>
-    <span class="bc-dynamic-wrap">
+    <span class="{{ if not .IsPage }}bc-dynamic-wrap{{ else }}bc-page-wrap{{ end }}">
         {{- range $i, $bc := $ancestors }}
             {{- if gt $i 0 }}
                 <a href="{{ $bc.RelPermalink }}">{{ $bc.Title }}</a>
