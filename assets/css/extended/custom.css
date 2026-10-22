@@ -1,0 +1,50 @@
+/* Custom refinements for PaperMod */
+:root {
+  --radius: 10px;
+}
+
+/* Post list card enhancement */
+.post-entry {
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  padding: var(--gap);
+  margin-bottom: var(--gap);
+  background: var(--entry);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.post-entry:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+  border-color: var(--secondary);
+}
+
+.dark .post-entry:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+}
+
+/* Home info banner card */
+.first-entry.home-info {
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  padding: 24px 28px;
+  background: var(--entry);
+}
+
+/* Code blocks */
+.highlight, pre {
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+}
+
+/* Smooth transitions */
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  letter-spacing: 0.01em;
+}
+
+/* Image styling */
+.post-content img {
+  border-radius: var(--radius);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+}

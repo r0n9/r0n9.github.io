@@ -1,0 +1,87 @@
+baseURL: "https://r0n9.github.io/"
+title: "隔空剪贴板-技术博客"
+paginate: 10
+theme: "PaperMod"
+defaultContentLanguage: "zh"
+
+enableRobotsTXT: true
+buildDrafts: false
+buildFuture: false
+
+outputs:
+  home:
+    - HTML
+    - RSS
+    - JSON
+
+taxonomies:
+  category: categories
+  tag: tags
+
+menu:
+  main:
+    - name: "文章"
+      url: "/posts/"
+      weight: 10
+    - name: "归档"
+      url: "/archives/"
+      weight: 20
+    - name: "搜索"
+      url: "/search/"
+      weight: 30
+    - name: "分类"
+      url: "/categories/"
+      weight: 40
+    - name: "标签"
+      url: "/tags/"
+      weight: 50
+    - name: "关于"
+      url: "/about/"
+      weight: 60
+
+params:
+  env: production
+  title: "隔空剪贴板-技术博客"
+  description: "R0n9 的个人技术博客，记录全栈开发、网络技术、移动端开发与日常折腾实践"
+  keywords: ["技术博客", "Docker", "MySQL", "WebRTC", "iOS", "Swift", "Boardrop", "AirClipboard"]
+  author: "R0n9"
+
+  defaultTheme: auto
+  disableThemeToggle: false
+
+  ShowReadingTime: true
+  ShowShareButtons: false
+  ShowPostNavLinks: true
+  ShowBreadCrumbs: true
+  ShowCodeCopyButtons: true
+  ShowWordCount: true
+  ShowRssButtonInSectionTermList: true
+  UseHugoToc: true
+  ShowToc: true
+  TocOpen: false
+
+  homeInfoParams:
+    Title: "隔空剪贴板-技术博客 👋"
+    Content: "专注于全栈开发、系统运维、移动端与网络技术。记录开发过程中的心得体会与技术方案。"
+
+  socialIcons:
+    - name: "github"
+      url: "https://github.com/r0n9"
+    - name: "email"
+      url: "mailto:87953343@qq.com"
+    - name: "rss"
+      url: "/index.xml"
+
+  cover:
+    hidden: false
+    hiddenInList: false
+    hiddenInSingle: false
+
+  fuseOpts:
+    isCaseSensitive: false
+    shouldSort: true
+    location: 0
+    distance: 1000
+    threshold: 0.4
+    minMatchCharLength: 0
+    keys: ["title", "permalink", "summary", "content"]
