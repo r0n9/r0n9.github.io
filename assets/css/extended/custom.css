@@ -330,6 +330,13 @@ html[data-theme="dark"] #theme-toggle .sun {
   margin: 18px 0 16px 0;
 }
 
+.bc-root-prefix,
+.bc-dynamic-wrap {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
 .breadcrumbs a {
   color: var(--secondary);
   transition: color 0.15s ease;
@@ -1494,21 +1501,57 @@ html[data-theme="dark"] #theme-toggle .sun {
   z-index: 1;
 }
 
-/* Breadcrumbs Stability (面包屑稳定在位，不参与下层内容的位移跳动) */
-.breadcrumbs {
-  view-transition-name: site-breadcrumbs;
+/* Breadcrumbs Root Prefix (主页与首个分隔符绝对固化，换页零闪烁零位移) */
+.bc-root-prefix {
+  view-transition-name: bc-root-prefix;
 }
 
-::view-transition-group(site-breadcrumbs) {
+::view-transition-group(bc-root-prefix) {
+  animation: none !important;
+}
+
+::view-transition-old(bc-root-prefix),
+::view-transition-new(bc-root-prefix) {
+  animation: none !important;
+  opacity: 1 !important;
+  mix-blend-mode: normal !important;
+}
+
+/* Breadcrumbs Dynamic Part (仅右侧发生变化的层级时序错开平滑过渡) */
+.bc-dynamic-wrap {
+  view-transition-name: bc-dynamic-wrap;
+}
+
+::view-transition-group(bc-dynamic-wrap) {
   animation: none;
 }
 
-::view-transition-old(site-breadcrumbs) {
-  animation: 90ms ease both;
+::view-transition-old(bc-dynamic-wrap) {
+  mix-blend-mode: normal;
+  animation: 50ms cubic-bezier(0.4, 0, 1, 1) both breadcrumbs-fade-out;
 }
 
-::view-transition-new(site-breadcrumbs) {
-  animation: 120ms ease both;
+::view-transition-new(bc-dynamic-wrap) {
+  mix-blend-mode: normal;
+  animation: 100ms cubic-bezier(0, 0, 0.2, 1) 50ms both breadcrumbs-fade-in;
+}
+
+@keyframes breadcrumbs-fade-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes breadcrumbs-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 /* Page Content Hop / Entrance & Exit Motion (仅面包屑下方主体内容跳动) */
@@ -1591,4 +1634,466 @@ html[data-theme="dark"] #theme-toggle .sun {
   ::view-transition-new(*) {
     animation: none !important;
   }
+}
+
+/* --- 12. Moments Stream, Gallery & Lightbox (动态随手记、智能画廊与灯箱) --- */
+.moments-page-header {
+  margin-top: 10px;
+  margin-bottom: 14px;
+}
+
+.moments-page-title {
+  font-size: 2.15rem;
+  font-weight: 750;
+  letter-spacing: -0.025em;
+  color: var(--primary);
+  margin: 8px 0 10px 0;
+}
+
+.moments-page-description {
+  font-size: 14.5px;
+  font-style: italic;
+  color: var(--secondary);
+  margin-bottom: 24px;
+}
+
+.moments-container {
+  width: 100%;
+}
+
+.moments-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.moment-item {
+  position: relative;
+  padding: 26px 0;
+  border-bottom: 1px dashed var(--border);
+  list-style: none;
+}
+
+.moment-item:first-child {
+  padding-top: 6px;
+}
+
+.moment-item:last-child {
+  border-bottom: none;
+}
+
+.moment-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.moment-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1.5px solid var(--border);
+  object-fit: cover;
+  flex-shrink: 0;
+  background: var(--entry);
+}
+
+.moment-author-info {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.moment-author {
+  font-size: 0.98rem;
+  font-weight: 650;
+  color: var(--primary);
+  letter-spacing: -0.01em;
+}
+
+.moment-time {
+  margin-left: auto;
+  font-size: 0.82rem;
+  color: var(--tertiary);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.01em;
+}
+
+.moment-body {
+  margin-left: 52px;
+}
+
+@media (max-width: 640px) {
+  .moment-body {
+    margin-left: 0;
+    margin-top: 8px;
+  }
+}
+
+.moment-content {
+  font-size: 0.95rem;
+  line-height: 1.7;
+  color: var(--content);
+  margin-bottom: 4px;
+}
+
+.moment-content p {
+  margin: 0 0 10px 0;
+}
+
+.moment-content p:last-child {
+  margin-bottom: 0;
+}
+
+.moment-content a {
+  color: var(--accent);
+  text-decoration: underline dashed;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1.5px;
+}
+
+.moment-content a:hover {
+  color: var(--accent);
+  opacity: 0.85;
+}
+
+.moment-content code {
+  font-size: 0.86em;
+  background: var(--code-bg);
+  padding: 2px 5px;
+  border-radius: 4px;
+}
+
+/* 智能画廊 (Moment Gallery) 响应式网格布局 */
+.moment-gallery {
+  background: var(--border);
+  border-radius: 12px;
+  gap: 4px;
+  margin-top: 14px;
+  display: grid;
+  overflow: hidden;
+}
+
+.moment-gallery img {
+  object-fit: cover;
+  border: 0;
+  width: 100%;
+  min-width: 0;
+  height: 100%;
+  min-height: 0;
+  margin: 0;
+  display: block;
+  cursor: zoom-in;
+  transition: opacity 0.15s ease;
+}
+
+.moment-gallery img:hover {
+  opacity: 0.92;
+}
+
+/* 单图 (Solo) */
+.moment-gallery[data-layout="solo"] {
+  background: transparent;
+  border-radius: 0;
+  display: block;
+}
+
+.moment-gallery[data-layout="solo"] img {
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  object-fit: contain;
+  width: auto;
+  max-width: min(340px, 100%);
+  max-height: 340px;
+  margin: 0;
+}
+
+/* 双图 (Pair) */
+.moment-gallery[data-layout="pair"] {
+  aspect-ratio: 16 / 9;
+  grid-template-columns: repeat(2, 1fr);
+}
+
+/* 三图 (Triple 画报风) */
+.moment-gallery[data-layout="triple"] {
+  aspect-ratio: 4 / 3;
+  grid-template-rows: repeat(2, 1fr);
+  grid-template-columns: 1.35fr 1fr;
+}
+
+.moment-gallery[data-layout="triple"] > :first-child {
+  grid-area: 1 / 1 / span 2;
+}
+
+/* 四图 (Grid 四宫格) */
+.moment-gallery[data-layout="grid"] {
+  aspect-ratio: 4 / 3;
+  grid-template-rows: repeat(2, 1fr);
+  grid-template-columns: repeat(2, 1fr);
+}
+
+/* 五图及以上 (Mosaic 拼贴) */
+.moment-gallery[data-layout="mosaic"] {
+  aspect-ratio: 4 / 3;
+  grid-template-rows: repeat(2, 1fr);
+  grid-template-columns: repeat(6, 1fr);
+}
+
+.moment-gallery[data-layout="mosaic"] > :nth-child(-n+2) {
+  grid-column: span 3;
+}
+
+.moment-gallery[data-layout="mosaic"] > :nth-child(n+3) {
+  grid-column: span 2;
+}
+
+.moment-gallery[data-layout="mosaic"] > :nth-child(n+6) {
+  display: none;
+}
+
+.moment-gallery__cell {
+  min-width: 0;
+  display: flex;
+  position: relative;
+  overflow: hidden;
+}
+
+.moment-gallery__count {
+  color: #fff;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  pointer-events: none;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.35rem;
+  font-weight: 700;
+  position: absolute;
+  inset: 0;
+}
+
+.moments-empty {
+  padding: 40px 0;
+  color: var(--secondary);
+  font-style: italic;
+  font-size: 0.95rem;
+}
+
+/* 无限滚动加载哨兵与动效 */
+.moments-infinite-sentinel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 0 20px 0;
+  min-height: 48px;
+}
+
+.moments-loading-indicator {
+  display: none;
+  align-items: center;
+  gap: 7px;
+}
+
+.moments-infinite-sentinel.loading .moments-loading-indicator {
+  display: flex;
+}
+
+.moments-loading-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--tertiary);
+  opacity: 0.35;
+  animation: moments-dot-pulse 1.2s infinite ease-in-out;
+}
+
+.moments-loading-dot:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.moments-loading-dot:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes moments-dot-pulse {
+  0%, 80%, 100% {
+    opacity: 0.25;
+    transform: scale(0.85);
+  }
+  40% {
+    opacity: 1;
+    transform: scale(1.2);
+    background: var(--accent);
+  }
+}
+
+.moments-end-indicator {
+  text-align: center;
+  font-size: 13px;
+  color: var(--tertiary);
+  padding: 36px 0 24px 0;
+  letter-spacing: 0.05em;
+  font-style: italic;
+  opacity: 0.8;
+}
+
+/* 追加条目平滑淡入动效 */
+.moment-item.moment-item-appended {
+  animation: moment-item-fade-in 0.35s ease both;
+}
+
+@keyframes moment-item-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.moments-noscript-pagination {
+  padding: 16px 0;
+  text-align: center;
+}
+
+.moments-noscript-next {
+  color: var(--accent);
+  text-decoration: underline dashed;
+  font-size: 14px;
+}
+
+/* Lightbox 大图预览灯箱 */
+.moment-lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(18, 18, 20, 0.85);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.22s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.moment-lightbox.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.moment-lightbox-close {
+  position: absolute;
+  top: 20px;
+  right: 24px;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.15s ease, transform 0.15s ease;
+  z-index: 10002;
+  padding: 0;
+}
+
+.moment-lightbox-close:hover {
+  background: rgba(255, 255, 255, 0.24);
+  transform: scale(1.06);
+}
+
+.moment-lightbox-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+  z-index: 10002;
+  padding: 0;
+}
+
+.moment-lightbox-btn:hover {
+  background: rgba(255, 255, 255, 0.26);
+  transform: translateY(-50%) scale(1.06);
+}
+
+.moment-lightbox-btn-prev {
+  left: 24px;
+}
+
+.moment-lightbox-btn-next {
+  right: 24px;
+}
+
+@media (max-width: 640px) {
+  .moment-lightbox-btn-prev {
+    left: 12px;
+  }
+  .moment-lightbox-btn-next {
+    right: 12px;
+  }
+}
+
+.moment-lightbox-content {
+  max-width: 90vw;
+  max-height: 85vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.moment-lightbox-img {
+  max-width: 90vw;
+  max-height: 85vh;
+  border-radius: 8px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+  object-fit: contain;
+  transition: transform 0.22s cubic-bezier(0.25, 1, 0.5, 1);
+  transform: scale(0.96);
+  user-select: none;
+}
+
+.moment-lightbox.active .moment-lightbox-img {
+  transform: scale(1);
+}
+
+.moment-lightbox-counter {
+  position: absolute;
+  bottom: 22px;
+  color: rgba(255, 255, 255, 0.88);
+  font-size: 0.84rem;
+  font-variant-numeric: tabular-nums;
+  background: rgba(0, 0, 0, 0.5);
+  padding: 5px 16px;
+  border-radius: 20px;
+  letter-spacing: 0.02em;
+  z-index: 10002;
+}
+
+.moment-lightbox-counter:empty {
+  display: none;
 }

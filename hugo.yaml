@@ -26,6 +26,9 @@ menu:
     - name: "文章"
       url: "/posts/"
       weight: 10
+    - name: "动态"
+      url: "/moments/"
+      weight: 15
     - name: "归档"
       url: "/archives/"
       weight: 20
@@ -48,6 +51,8 @@ params:
   description: "R0n9 的个人技术博客，记录 Go、HomeLab、边缘计算、WebRTC、网络安全与日常折腾实践"
   keywords: ["技术博客", "Go", "HomeLab", "Docker", "MySQL", "WebRTC", "iOS", "Swift", "Boardrop", "AirClipboard"]
   author: "R0n9"
+  avatar: "/images/avatar.png"
+  mainSections: ["posts"]
 
   defaultTheme: auto
   disableThemeToggle: false

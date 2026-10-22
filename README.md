@@ -92,35 +92,78 @@ git push origin master
 
 ---
 
+## 💬 发表新动态（Moments）流程
+
+博客提供独立于长篇博文的“随手记录 / 动态”流，支持文字、Markdown 语法、多图自适应画廊排版及全屏灯箱浏览。
+
+### 方式一：使用内置一键发表脚本（极速推荐）
+在项目根目录下直接运行：
+```bash
+# 纯文字动态
+./bin/moment "今天折腾了下Parsec串流，延迟很低！"
+
+# 带配图动态（自动复制图片并映射路径）
+./bin/moment "组装了一个小NAS，上机测试跑分" /path/to/photo1.jpg /path/to/photo2.png
+
+# 交互式输入（无参数直接运行）
+./bin/moment
+```
+
+### 方式二：手动创建 Markdown 文件
+1. 在 `content/moments/` 目录下新建 `.md` 文件（命名如 `2026-10-23-01.md`）：
+   ```yaml
+   ---
+   title: "动态"
+   date: 2026-10-23T11:50:00+08:00
+   draft: false
+   searchHidden: true
+   images:
+     - "/images/moments/photo1.jpg"
+     - "/images/moments/photo2.jpg"
+     - "/images/moments/photo3.jpg"
+   ---
+
+   随手记录文字内容，支持 Markdown 超链接与语法。
+   ```
+2. 图片放入 `static/images/moments/` 目录中。
+3. 智能画廊会根据图片张数自动呈现优雅的 Solo 单图、Pair 双图、Triple 画报风、Grid 四宫格或 Mosaic 拼贴网格，并支持点击灯箱放大轮播！
+
+---
+
 ## 🛠️ 本地常用开发命令
 
 | 命令 | 说明 |
 | :--- | :--- |
 | `hugo server -D` | 启动本地开发服务器（包含草稿文章），支持热更新 |
 | `hugo --gc --minify` | 本地执行生产环境完整编译（输出至 `public/` 目录） |
-| `hugo new posts/<filename>.md` | 快速创建新文章模板 |
+| `hugo new posts/<filename>.md` | 快速创建长篇文章模板 |
+| `./bin/moment "<内容>" [图片...]` | 快速发表一条随手动态 |
 
 ---
 
 ## 📂 项目核心目录结构
 
 ```text
-├── archetypes/           # 新建内容模板 (default.md)
+├── archetypes/           # 新建内容模板 (default.md / moment.md)
 ├── assets/
-│   ├── css/extended/     # 自定义样式 (custom.css 极简纸质美学与动效)
-│   └── js/               # 自定义搜索交互脚本 (fastsearch.js)
+│   ├── css/extended/     # 自定义样式 (custom.css 极简纸质美学、画廊与动效)
+│   └── js/               # 自定义交互脚本 (fastsearch.js 搜索 / moments-lightbox.js 灯箱)
+├── bin/
+│   └── moment            # 动态快速发表辅助脚本
 ├── content/
 │   ├── about.md          # 关于页面
 │   ├── search.md         # 搜索页面
-│   └── posts/            # 博客文章目录
+│   ├── posts/            # 博客正式长文目录
+│   └── moments/          # 随手记录微语动态目录
 ├── layouts/              # 自定义页面模板（覆盖 PaperMod 默认模板）
 │   ├── archives.html     # 极简时间轴归档页
 │   ├── search.html       # 极简搜索页
 │   ├── index.json        # 搜索索引生成模板
+│   ├── moments/          # 动态列表页与单页模板 (list.html / single.html)
 │   └── _partials/        # 面包屑等公共组件
 ├── static/
 │   ├── favicon.ico       # 站点图标
-│   └── images/           # 博客插图存放目录
+│   └── images/           # 博客插图存放目录 (images/moments/)
 ├── hugo.yaml             # 站点全局配置文件
 └── .github/workflows/    # GitHub Actions 自动化部署工作流
 ```

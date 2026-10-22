@@ -1,0 +1,122 @@
+{{- define "main" }}
+
+{{- partial "breadcrumbs.html" . }}
+
+<div class="page-content-wrapper">
+  <header class="page-header moments-page-header">
+    <h1 class="moments-page-title">{{ .Title }}</h1>
+    {{ with .Description }}
+    <div class="post-description moments-page-description">
+      {{ . }}
+    </div>
+    {{ end }}
+  </header>
+
+  <div class="moments-container" data-image-lightbox-root>
+    {{- $paginator := .Paginate .Pages.ByDate.Reverse 10 }}
+    {{- if gt (len $paginator.Pages) 0 }}
+    <ol class="moments-list" id="momentsList">
+      {{- range $paginator.Pages }}
+      <li class="moment-item" id="moment-{{ .Date.Format "20060102150405" }}">
+        <article>
+          <header class="moment-header">
+            {{- $avatar := .Params.avatar | default site.Params.avatar | default "/images/avatar.png" }}
+            <img src="{{ $avatar }}" alt="{{ .Params.author | default site.Params.author | default "R0n9" }} 的头像" width="40" height="40" class="moment-avatar" loading="lazy" />
+            <div class="moment-author-info">
+              <strong class="moment-author">{{ .Params.author | default site.Params.author | default "R0n9" }}</strong>
+            </div>
+            <time datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}" class="moment-time">
+              <span class="moment-date">{{ .Date.Format "2006/01/02" }}</span>
+              <span class="moment-clock">{{ .Date.Format "15:04" }}</span>
+            </time>
+          </header>
+
+          <div class="moment-body app-prose">
+            {{- if .Content }}
+            <div class="moment-content">
+              {{ .Content }}
+            </div>
+            {{- end }}
+
+            {{- with .Params.images }}
+            {{- $count := len . }}
+            {{- if gt $count 0 }}
+            {{- $layout := "solo" }}
+            {{- if eq $count 2 }}{{ $layout = "pair" }}
+            {{- else if eq $count 3 }}{{ $layout = "triple" }}
+            {{- else if eq $count 4 }}{{ $layout = "grid" }}
+            {{- else if ge $count 5 }}{{ $layout = "mosaic" }}
+            {{- end }}
+
+            <div class="moment-gallery" data-count="{{ $count }}" data-layout="{{ $layout }}">
+              {{- range $i, $img := . }}
+              <div class="moment-gallery__cell">
+                <img src="{{ $img }}" alt="配图 {{ add $i 1 }}" loading="lazy" decoding="async" />
+                {{- if and (eq $layout "mosaic") (eq $i 4) (gt $count 5) }}
+                <div class="moment-gallery__count">+{{ sub $count 5 }}</div>
+                {{- end }}
+              </div>
+              {{- end }}
+            </div>
+            {{- end }}
+            {{- end }}
+          </div>
+        </article>
+      </li>
+      {{- end }}
+    </ol>
+
+    {{- if $paginator.HasNext }}
+    <div id="momentsInfiniteSentinel" class="moments-infinite-sentinel" data-next-url="{{ $paginator.Next.URL }}">
+      <div class="moments-loading-indicator" aria-hidden="true">
+        <span class="moments-loading-dot"></span>
+        <span class="moments-loading-dot"></span>
+        <span class="moments-loading-dot"></span>
+      </div>
+      <noscript>
+        <div class="moments-noscript-pagination">
+          <a href="{{ $paginator.Next.URL }}" class="moments-noscript-next">下一页 &raquo;</a>
+        </div>
+      </noscript>
+    </div>
+    {{- else }}
+    <div class="moments-end-indicator">— 已展示全部随手记 —</div>
+    {{- end }}
+    {{- else }}
+    <div class="moments-empty">
+      <p>暂无动态，随手记录即将开启...</p>
+    </div>
+    {{- end }}
+  </div>
+</div>
+
+{{/* Lightbox Modal */}}
+<div id="momentLightbox" class="moment-lightbox" aria-hidden="true" role="dialog" aria-label="图片预览">
+  <button class="moment-lightbox-close" id="lightboxCloseBtn" type="button" aria-label="关闭预览" title="关闭 (Esc)">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <line x1="18" y1="6" x2="6" y2="18"></line>
+      <line x1="6" y1="6" x2="18" y2="18"></line>
+    </svg>
+  </button>
+  <button class="moment-lightbox-btn moment-lightbox-btn-prev" id="lightboxPrevBtn" type="button" aria-label="上一张" title="上一张 (←)">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="15 18 9 12 15 6"></polyline>
+    </svg>
+  </button>
+  <button class="moment-lightbox-btn moment-lightbox-btn-next" id="lightboxNextBtn" type="button" aria-label="下一张" title="下一张 (→)">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </button>
+  <div class="moment-lightbox-content" id="lightboxContent">
+    <img id="lightboxImg" class="moment-lightbox-img" src="" alt="预览大图" />
+  </div>
+  <div id="lightboxCounter" class="moment-lightbox-counter"></div>
+</div>
+
+{{- $lightboxJs := resources.Get "js/moments-lightbox.js" | resources.Minify | fingerprint }}
+<script defer src="{{ $lightboxJs.RelPermalink }}" integrity="{{ $lightboxJs.Data.Integrity }}"></script>
+{{- $infiniteJs := resources.Get "js/moments-infinite.js" | resources.Minify | fingerprint }}
+<script defer src="{{ $infiniteJs.RelPermalink }}" integrity="{{ $infiniteJs.Data.Integrity }}"></script>
+
+{{- end }}{{/* end main */}}

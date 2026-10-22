@@ -1,0 +1,86 @@
+#!/usr/bin/env bash
+
+# R0n9's Blog - 动态快速发表脚本
+# 用法:
+#   ./bin/moment "今天折腾了下Parsec串流，延迟很低！" [图片1.png 图片2.jpg ...]
+#   或者直接运行 ./bin/moment 进入交互式输入
+
+set -e
+
+# 定位项目根目录
+ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+MOMENTS_DIR="$ROOT_DIR/content/moments"
+IMAGES_DIR="$ROOT_DIR/static/images/moments"
+
+mkdir -p "$MOMENTS_DIR"
+mkdir -p "$IMAGES_DIR"
+
+# 获取动态文本与图片
+TEXT=""
+IMAGES=()
+
+if [ $# -ge 1 ]; then
+  TEXT="$1"
+  shift
+  while [ $# -gt 0 ]; do
+    IMAGES+=("$1")
+    shift
+  done
+else
+  echo "=== 发表新动态 (Moments) ==="
+  read -r -p "请输入动态内容: " TEXT
+  if [ -z "$TEXT" ]; then
+    echo "动态内容不能为空，已取消。"
+    exit 1
+  fi
+  read -r -p "请输入图片路径 (直接回车跳过，多张用空格分隔): " -a IMAGES_INPUT
+  IMAGES=("${IMAGES_INPUT[@]}")
+fi
+
+TIMESTAMP=$(date +"%Y-%m-%d-%H%M%S")
+DATE_ISO=$(date +"%Y-%m-%dT%H:%M:%S+08:00")
+FILE_PATH="$MOMENTS_DIR/$TIMESTAMP.md"
+
+# 处理图片复制与路径映射
+COPIED_IMAGES=()
+for img in "${IMAGES[@]}"; do
+  if [ -f "$img" ]; then
+    EXT="${img##*.}"
+    BASENAME=$(basename "$img")
+    TARGET_NAME="${TIMESTAMP}_${BASENAME}"
+    cp "$img" "$IMAGES_DIR/$TARGET_NAME"
+    COPIED_IMAGES+=("/images/moments/$TARGET_NAME")
+    echo "已导入图片: /images/moments/$TARGET_NAME"
+  else
+    echo "警告: 未找到图片文件 $img ，已忽略。"
+  fi
+done
+
+# 生成 Markdown 文件
+cat <<EOF > "$FILE_PATH"
+---
+title: "动态"
+date: $DATE_ISO
+draft: false
+searchHidden: true
+author: "R0n9"
+images:
+EOF
+
+if [ ${#COPIED_IMAGES[@]} -eq 0 ]; then
+  echo "  []" >> "$FILE_PATH"
+else
+  for c_img in "${COPIED_IMAGES[@]}"; do
+    echo "  - \"$c_img\"" >> "$FILE_PATH"
+  done
+fi
+
+cat <<EOF >> "$FILE_PATH"
+---
+
+$TEXT
+EOF
+
+echo ""
+echo "✅ 动态创建成功: content/moments/$TIMESTAMP.md"
+echo "💡 可在终端运行 'hugo server -D' 本地预览，确认无误后执行 git 提交与推送即可发布上线！"

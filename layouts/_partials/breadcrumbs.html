@@ -1,15 +1,18 @@
 {{- if (.Param "ShowBreadCrumbs") -}}
 <nav class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
     {{- $ancestors := .Ancestors.Reverse -}}
-    {{- range $i, $bc := $ancestors }}
-        {{- if eq $i 0 }}
-            <a href="{{ $bc.RelPermalink }}">{{ i18n "home" | default "首页" }}</a>
-        {{- else }}
-            <span class="bc-sep" aria-hidden="true">&raquo;</span>
-            <a href="{{ $bc.RelPermalink }}">{{ $bc.Title }}</a>
+    <span class="bc-root-prefix">
+        <a href="/">{{ i18n "home" | default "主页" }}</a>
+        <span class="bc-sep" aria-hidden="true">&raquo;</span>
+    </span>
+    <span class="bc-dynamic-wrap">
+        {{- range $i, $bc := $ancestors }}
+            {{- if gt $i 0 }}
+                <a href="{{ $bc.RelPermalink }}">{{ $bc.Title }}</a>
+                <span class="bc-sep" aria-hidden="true">&raquo;</span>
+            {{- end }}
         {{- end }}
-    {{- end }}
-    <span class="bc-sep" aria-hidden="true">&raquo;</span>
-    <span class="bc-current" aria-current="page">{{ .Title }}</span>
+        <span class="bc-current" aria-current="page">{{ .Title }}</span>
+    </span>
 </nav>
 {{- end -}}
