@@ -60,6 +60,9 @@ params:
     favicon32x32: "favicon-32x32.png"
     apple_touch_icon: "apple-touch-icon.png"
 
+  comments: true
+  interactionApi: "https://blog-publisher.fanrong3304402.workers.dev" # Cloudflare Worker 服务地址
+
   defaultTheme: auto
   disableThemeToggle: false
 

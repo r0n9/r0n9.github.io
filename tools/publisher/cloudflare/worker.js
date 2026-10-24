@@ -14,18 +14,30 @@
 // 1. 工具辅助函数
 // ----------------------------------------------------
 
-function jsonResponse(data, status = 200, headers = {}) {
+function corsHeaders(request) {
+  const origin = (request && request.headers.get('Origin')) || '*';
+  return {
+    'Access-Control-Allow-Origin': origin,
+    'Access-Control-Allow-Methods': 'GET, POST, OPTIONS, DELETE',
+    'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-Admin-Secret',
+    'Access-Control-Max-Age': '86400'
+  };
+}
+
+function jsonResponse(data, status = 200, headers = {}, request = null) {
+  const cors = request ? corsHeaders(request) : {};
   return new Response(JSON.stringify(data), {
     status,
     headers: {
       'Content-Type': 'application/json; charset=utf-8',
+      ...cors,
       ...headers
     }
   });
 }
 
-function jsonError(message, status = 400) {
-  return jsonResponse({ ok: false, error: message }, status);
+function jsonError(message, status = 400, request = null) {
+  return jsonResponse({ ok: false, error: message }, status, {}, request);
 }
 
 // 防时序侧信道攻击的口令校验
@@ -409,6 +421,274 @@ async function handlePublishPost(request, env) {
 }
 
 // ----------------------------------------------------
+// 3.5 互动与评论 (Interaction & Comments with Cloudflare D1)
+// ----------------------------------------------------
+
+let isDbInit = false;
+async function initDatabase(env) {
+  if (!env.DB) return false;
+  if (isDbInit) return true;
+  try {
+    await env.DB.batch([
+      env.DB.prepare(`CREATE TABLE IF NOT EXISTS likes (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        target_key TEXT NOT NULL,
+        client_ip_hash TEXT NOT NULL,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        UNIQUE(target_key, client_ip_hash)
+      )`),
+      env.DB.prepare(`CREATE INDEX IF NOT EXISTS idx_likes_target ON likes(target_key)`),
+      env.DB.prepare(`CREATE TABLE IF NOT EXISTS comments (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        target_key TEXT NOT NULL,
+        author TEXT NOT NULL,
+        email TEXT,
+        avatar TEXT,
+        content TEXT NOT NULL,
+        ip_hash TEXT,
+        status INTEGER DEFAULT 1,
+        is_admin INTEGER DEFAULT 0,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+      )`),
+      env.DB.prepare(`CREATE INDEX IF NOT EXISTS idx_comments_target ON comments(target_key, status, created_at)`)
+    ]);
+    isDbInit = true;
+    return true;
+  } catch (err) {
+    console.error('Failed to init D1 database:', err);
+    return false;
+  }
+}
+
+async function sha256Hex(str) {
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+async function getIpHash(request) {
+  const ip = request.headers.get('CF-Connecting-IP') || request.headers.get('X-Forwarded-For') || '127.0.0.1';
+  return await sha256Hex(ip + '_blog_interaction_salt');
+}
+
+async function generateAvatar(email) {
+  if (!email || typeof email !== 'string') {
+    return 'https://cravatar.cn/avatar/?d=mp';
+  }
+  const cleanEmail = email.trim().toLowerCase();
+  const qqMatch = cleanEmail.match(/^(\d{5,11})@qq\.com$/);
+  if (qqMatch) {
+    return `https://q1.qlogo.cn/g?b=qq&nk=${qqMatch[1]}&s=100`;
+  }
+  const hash = await sha256Hex(cleanEmail);
+  return `https://cravatar.cn/avatar/${hash}?d=mp`;
+}
+
+async function handleGetInteractionsStats(request, env) {
+  if (!env.DB) {
+    return jsonResponse({ ok: true, stats: {}, message: 'D1 not configured' }, 200, {}, request);
+  }
+  await initDatabase(env);
+  const url = new URL(request.url);
+  const keysParam = url.searchParams.get('keys');
+  if (!keysParam) {
+    return jsonResponse({ ok: true, stats: {} }, 200, {}, request);
+  }
+  const keys = keysParam.split(',').map(k => k.trim()).filter(Boolean);
+  if (keys.length === 0) {
+    return jsonResponse({ ok: true, stats: {} }, 200, {}, request);
+  }
+  const ipHash = await getIpHash(request);
+
+  const stats = {};
+  keys.forEach(k => {
+    stats[k] = { likes: 0, comments: 0, liked: false };
+  });
+
+  const placeholders = keys.map(() => '?').join(',');
+  const likesStmt = env.DB.prepare(
+    `SELECT target_key, COUNT(*) as count FROM likes WHERE target_key IN (${placeholders}) GROUP BY target_key`
+  ).bind(...keys);
+  const userLikesStmt = env.DB.prepare(
+    `SELECT target_key FROM likes WHERE client_ip_hash = ? AND target_key IN (${placeholders})`
+  ).bind(ipHash, ...keys);
+  const commentsStmt = env.DB.prepare(
+    `SELECT target_key, COUNT(*) as count FROM comments WHERE status = 1 AND target_key IN (${placeholders}) GROUP BY target_key`
+  ).bind(...keys);
+
+  const [likesRes, userLikesRes, commentsRes] = await env.DB.batch([likesStmt, userLikesStmt, commentsStmt]);
+
+  if (likesRes && likesRes.results) {
+    likesRes.results.forEach(row => {
+      if (stats[row.target_key]) stats[row.target_key].likes = row.count || 0;
+    });
+  }
+  if (userLikesRes && userLikesRes.results) {
+    userLikesRes.results.forEach(row => {
+      if (stats[row.target_key]) stats[row.target_key].liked = true;
+    });
+  }
+  if (commentsRes && commentsRes.results) {
+    commentsRes.results.forEach(row => {
+      if (stats[row.target_key]) stats[row.target_key].comments = row.count || 0;
+    });
+  }
+
+  return jsonResponse({ ok: true, stats }, 200, {}, request);
+}
+
+async function handleGetInteractionsComments(request, env) {
+  if (!env.DB) {
+    return jsonResponse({ ok: true, comments: [], message: 'D1 not configured' }, 200, {}, request);
+  }
+  await initDatabase(env);
+  const url = new URL(request.url);
+  const key = url.searchParams.get('key');
+  if (!key) {
+    return jsonError('缺少 key 参数', 400, request);
+  }
+  const stmt = env.DB.prepare(
+    `SELECT id, target_key, author, avatar, content, is_admin, created_at 
+     FROM comments 
+     WHERE target_key = ? AND status = 1 
+     ORDER BY id ASC`
+  ).bind(key);
+  const { results } = await stmt.all();
+  return jsonResponse({ ok: true, comments: results || [] }, 200, {}, request);
+}
+
+async function handleInteractionsLike(request, env) {
+  if (!env.DB) {
+    return jsonError('数据库未绑定 (D1 DB is not configured)', 500, request);
+  }
+  await initDatabase(env);
+  let body;
+  try {
+    body = await request.json();
+  } catch {
+    return jsonError('无效的 JSON 请求体', 400, request);
+  }
+  const { key } = body || {};
+  if (!key || typeof key !== 'string') {
+    return jsonError('缺少有效的 key 参数', 400, request);
+  }
+  const ipHash = await getIpHash(request);
+
+  const checkStmt = env.DB.prepare('SELECT id FROM likes WHERE target_key = ? AND client_ip_hash = ?').bind(key, ipHash);
+  const existing = await checkStmt.first();
+
+  let liked = false;
+  if (existing) {
+    await env.DB.prepare('DELETE FROM likes WHERE target_key = ? AND client_ip_hash = ?').bind(key, ipHash).run();
+    liked = false;
+  } else {
+    await env.DB.prepare('INSERT INTO likes (target_key, client_ip_hash) VALUES (?, ?)').bind(key, ipHash).run();
+    liked = true;
+  }
+
+  const countRow = await env.DB.prepare('SELECT COUNT(*) as count FROM likes WHERE target_key = ?').bind(key).first();
+  const likes = countRow ? countRow.count : 0;
+
+  return jsonResponse({ ok: true, likes, liked }, 200, {}, request);
+}
+
+async function handleInteractionsComment(request, env) {
+  if (!env.DB) {
+    return jsonError('数据库未绑定 (D1 DB is not configured)', 500, request);
+  }
+  await initDatabase(env);
+  let body;
+  try {
+    body = await request.json();
+  } catch {
+    return jsonError('无效的 JSON 请求体', 400, request);
+  }
+  const { key, author, email, content, hp_token } = body || {};
+  if (hp_token) {
+    return jsonResponse({ ok: true, comment: { id: 0, author: author || '访客', content: content || '' } }, 200, {}, request);
+  }
+  if (!key || typeof key !== 'string') {
+    return jsonError('目标页面参数无效', 400, request);
+  }
+  const trimmedAuthor = (author || '').trim();
+  if (!trimmedAuthor || trimmedAuthor.length > 20) {
+    return jsonError('请填写称呼 (1-20字)', 400, request);
+  }
+  const trimmedContent = (content || '').trim();
+  if (!trimmedContent || trimmedContent.length > 500) {
+    return jsonError('留言内容请保持在 1-500 字以内', 400, request);
+  }
+
+  const ipHash = await getIpHash(request);
+
+  const recentComment = await env.DB.prepare(
+    "SELECT id FROM comments WHERE ip_hash = ? AND created_at > datetime('now', '-20 seconds') LIMIT 1"
+  ).bind(ipHash).first();
+  if (recentComment) {
+    return jsonError('发言过于频繁，请稍息片刻后再试', 429, request);
+  }
+
+  let isAdmin = 0;
+  let finalAuthor = trimmedAuthor;
+  const token = extractAuthToken(request);
+  if (token && env.ADMIN_SECRET && (await verifySecret(token, env.ADMIN_SECRET))) {
+    isAdmin = 1;
+    finalAuthor = trimmedAuthor || env.AUTHOR || '博主';
+  }
+
+  const avatar = await generateAvatar(email);
+
+  const insertResult = await env.DB.prepare(
+    `INSERT INTO comments (target_key, author, email, avatar, content, ip_hash, status, is_admin)
+     VALUES (?, ?, ?, ?, ?, ?, 1, ?)`
+  ).bind(key, finalAuthor, (email || '').trim(), avatar, trimmedContent, ipHash, isAdmin).run();
+
+  const newId = insertResult.meta ? insertResult.meta.last_row_id : null;
+  const newComment = {
+    id: newId,
+    target_key: key,
+    author: finalAuthor,
+    avatar,
+    content: trimmedContent,
+    is_admin: isAdmin === 1,
+    created_at: new Date().toISOString().replace('T', ' ').substring(0, 19)
+  };
+
+  return jsonResponse({ ok: true, comment: newComment }, 200, {}, request);
+}
+
+async function handleAdminGetComments(request, env) {
+  const token = extractAuthToken(request);
+  if (!token || !env.ADMIN_SECRET || !(await verifySecret(token, env.ADMIN_SECRET))) {
+    return jsonError('口令无效或已过期，请重新登录', 401, request);
+  }
+  if (!env.DB) {
+    return jsonResponse({ ok: true, comments: [], message: 'D1 not configured' }, 200, {}, request);
+  }
+  await initDatabase(env);
+  const stmt = env.DB.prepare(
+    `SELECT id, target_key, author, email, avatar, content, ip_hash, status, is_admin, created_at 
+     FROM comments 
+     ORDER BY id DESC 
+     LIMIT 50`
+  );
+  const { results } = await stmt.all();
+  return jsonResponse({ ok: true, comments: results || [] }, 200, {}, request);
+}
+
+async function handleAdminDeleteComment(request, env, commentId) {
+  const token = extractAuthToken(request);
+  if (!token || !env.ADMIN_SECRET || !(await verifySecret(token, env.ADMIN_SECRET))) {
+    return jsonError('口令无效或已过期，请重新登录', 401, request);
+  }
+  if (!env.DB) {
+    return jsonError('数据库未绑定', 500, request);
+  }
+  await initDatabase(env);
+  await env.DB.prepare('UPDATE comments SET status = 0 WHERE id = ?').bind(commentId).run();
+  return jsonResponse({ ok: true, deleted_id: commentId }, 200, {}, request);
+}
+
+// ----------------------------------------------------
 // 4. 前端单页嵌入式 UI (HTML + CSS + JS)
 // ----------------------------------------------------
 
@@ -620,6 +900,25 @@ const HTML_PAGE = `<!DOCTYPE html>
     .markdown-body code { background-color: var(--code-bg); padding: 2px 4px; border-radius: 4px; font-family: var(--font-mono); font-size: 0.88em; }
     .markdown-body img { max-width: 100%; border-radius: 6px; }
     .markdown-body blockquote { border-left: 3px solid var(--accent-color); padding-left: 10px; color: var(--text-secondary); margin-bottom: 10px; }
+    .btn-danger { background-color: var(--danger-color); color: #fff; border: 1px solid var(--danger-color); }
+    .btn-danger:hover { opacity: 0.9; }
+    .admin-comment-card {
+      background-color: var(--bg-hover);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 14px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .admin-comment-header { display: flex; align-items: center; gap: 10px; }
+    .admin-comment-avatar { width: 28px; height: 28px; border-radius: 50%; object-fit: cover; background: var(--border-color); }
+    .admin-comment-meta { display: flex; align-items: center; gap: 8px; flex: 1; font-size: 0.85rem; flex-wrap: wrap; }
+    .admin-comment-author { font-weight: 600; color: var(--text-primary); }
+    .admin-comment-target { font-family: var(--font-mono); font-size: 0.75rem; background: var(--bg-card); border: 1px solid var(--border-color); padding: 2px 6px; border-radius: 4px; color: var(--accent-color); }
+    .admin-comment-time { font-size: 0.75rem; color: var(--text-secondary); margin-left: auto; }
+    .admin-comment-body { font-size: 0.88rem; line-height: 1.5; color: var(--text-primary); white-space: pre-wrap; word-break: break-word; }
+    .admin-comment-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 4px; }
     @media (max-width: 640px) {
       body { padding: 12px 8px; }
       .header { flex-direction: column; align-items: flex-start; gap: 12px; }
@@ -651,6 +950,9 @@ const HTML_PAGE = `<!DOCTYPE html>
       </button>
       <button class="tab-btn" data-tab="post-tab">
         <span class="tab-icon">📝</span> 长篇文章 (Posts)
+      </button>
+      <button class="tab-btn" data-tab="comments-tab">
+        <span class="tab-icon">❤️</span> 互动管理 (Comments)
       </button>
     </div>
 
@@ -781,6 +1083,24 @@ const HTML_PAGE = `<!DOCTYPE html>
           </div>
         </div>
       </form>
+    </main>
+
+    <!-- 互动管理面板 -->
+    <main id="comments-tab" class="tab-content">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px;">
+        <div>
+          <h2 style="font-size:1.15rem; font-weight:700; margin:0 0 4px 0;">💬 访客留言与点赞管理</h2>
+          <span style="font-size:0.82rem; color:var(--text-secondary);">查看全站文章和动态的最新留言，支持一键屏蔽或清理垃圾评论</span>
+        </div>
+        <button type="button" class="btn btn-secondary btn-sm" id="refresh-comments-btn">🔄 刷新列表</button>
+      </div>
+
+      <div id="admin-comments-container">
+        <div id="admin-comments-loading" style="text-align:center; padding:32px; color:var(--text-secondary); font-size:0.9rem;">
+          点击“刷新列表”或切换标签载入最新留言...
+        </div>
+        <div id="admin-comments-list" style="display:flex; flex-direction:column; gap:12px;"></div>
+      </div>
     </main>
 
     <!-- 结果通知模态框 -->
@@ -961,8 +1281,103 @@ const HTML_PAGE = `<!DOCTYPE html>
           btn.classList.add('active');
           activeTab = btn.getAttribute('data-tab');
           document.getElementById(activeTab).classList.add('active');
+          if (activeTab === 'comments-tab') {
+            loadAdminComments();
+          }
         });
       });
+
+      async function loadAdminComments() {
+        const loadingEl = document.getElementById('admin-comments-loading');
+        const listEl = document.getElementById('admin-comments-list');
+        loadingEl.style.display = 'block';
+        loadingEl.textContent = '正在获取最新留言...';
+        listEl.innerHTML = '';
+
+        try {
+          const res = await fetch('/api/admin/comments', {
+            headers: { 'Authorization': 'Bearer ' + adminSecret }
+          });
+          const data = await res.json();
+          loadingEl.style.display = 'none';
+
+          if (!data.ok) {
+            loadingEl.style.display = 'block';
+            loadingEl.textContent = '获取失败: ' + (data.error || '未知错误');
+            return;
+          }
+
+          if (!data.comments || data.comments.length === 0) {
+            loadingEl.style.display = 'block';
+            loadingEl.textContent = '暂无访客留言 (DB 连接正常)';
+            return;
+          }
+
+          data.comments.forEach(c => {
+            const card = document.createElement('div');
+            card.className = 'admin-comment-card';
+            card.id = 'admin-comment-' + c.id;
+            const isHidden = c.status === 0;
+
+            const adminBadge = c.is_admin ? '<span style="font-size:0.7rem; background:var(--accent-color); color:#fff; padding:1px 5px; border-radius:3px;">博主</span>' : '';
+            const emailTag = c.email ? '<span style="font-size:0.75rem; color:var(--text-secondary);">&lt;' + escapeHtml(c.email) + '&gt;</span>' : '';
+            const actionBtn = !isHidden ? '<button type="button" class="btn btn-xs btn-danger delete-comment-btn" data-id="' + c.id + '">🗑️ 删除留言</button>' : '<span style="font-size:0.75rem; color:var(--text-secondary);">已隐藏/删除</span>';
+            const bodyStyle = isHidden ? 'text-decoration:line-through; opacity:0.6;' : '';
+
+            card.innerHTML = 
+              '<div class="admin-comment-header">' +
+                '<img src="' + escapeHtml(c.avatar || '') + '" class="admin-comment-avatar" alt="avatar" onerror="this.src=\'https://cravatar.cn/avatar/?d=mp\'"/>' +
+                '<div class="admin-comment-meta">' +
+                  '<span class="admin-comment-author">' + escapeHtml(c.author) + '</span>' +
+                  adminBadge +
+                  '<span class="admin-comment-target">' + escapeHtml(c.target_key) + '</span>' +
+                  emailTag +
+                  '<span class="admin-comment-time">' + escapeHtml(c.created_at || '') + '</span>' +
+                '</div>' +
+              '</div>' +
+              '<div class="admin-comment-body" style="' + bodyStyle + '">' +
+                escapeHtml(c.content) +
+              '</div>' +
+              '<div class="admin-comment-actions">' +
+                actionBtn +
+              '</div>';
+            listEl.appendChild(card);
+          });
+
+          listEl.querySelectorAll('.delete-comment-btn').forEach(btn => {
+            btn.addEventListener('click', async () => {
+              const id = btn.getAttribute('data-id');
+              if (!confirm('确定要删除此条留言吗？')) return;
+              btn.disabled = true;
+              try {
+                const delRes = await fetch('/api/admin/comments/' + id, {
+                  method: 'DELETE',
+                  headers: { 'Authorization': 'Bearer ' + adminSecret }
+                });
+                const delData = await delRes.json();
+                if (delData.ok) {
+                  const card = document.getElementById('admin-comment-' + id);
+                  if (card) {
+                    card.style.opacity = '0.5';
+                    btn.parentNode.innerHTML = '<span style="font-size:0.75rem; color:var(--text-secondary);">已删除</span>';
+                  }
+                } else {
+                  alert('删除失败: ' + (delData.error || '未知错误'));
+                  btn.disabled = false;
+                }
+              } catch (err) {
+                alert('网络异常: ' + err.message);
+                btn.disabled = false;
+              }
+            });
+          });
+        } catch (err) {
+          loadingEl.style.display = 'block';
+          loadingEl.textContent = '请求异常: ' + err.message;
+        }
+      }
+
+      document.getElementById('refresh-comments-btn').addEventListener('click', loadAdminComments);
 
       function formatFileSize(bytes) {
         if (!bytes || bytes < 1024) return (bytes || 0) + ' B';
@@ -1371,6 +1786,14 @@ export default {
     const url = new URL(request.url);
     const path = url.pathname;
 
+    // 跨域预检请求 (CORS Preflight)
+    if (request.method === 'OPTIONS') {
+      return new Response(null, {
+        status: 204,
+        headers: corsHeaders(request)
+      });
+    }
+
     // 静态前端界面
     if (path === '/' || path === '/index.html') {
       return new Response(HTML_PAGE, {
@@ -1383,6 +1806,30 @@ export default {
 
     // API 路由分发
     try {
+      // 1. 公开互动 API
+      if (path === '/api/interactions/stats' && request.method === 'GET') {
+        return await handleGetInteractionsStats(request, env);
+      }
+      if (path === '/api/interactions/comments' && request.method === 'GET') {
+        return await handleGetInteractionsComments(request, env);
+      }
+      if (path === '/api/interactions/like' && request.method === 'POST') {
+        return await handleInteractionsLike(request, env);
+      }
+      if (path === '/api/interactions/comment' && request.method === 'POST') {
+        return await handleInteractionsComment(request, env);
+      }
+
+      // 2. 管理员互动管理 API
+      if (path === '/api/admin/comments' && request.method === 'GET') {
+        return await handleAdminGetComments(request, env);
+      }
+      const deleteMatch = path.match(/^\/api\/admin\/comments\/(\d+)$/);
+      if (deleteMatch && request.method === 'DELETE') {
+        return await handleAdminDeleteComment(request, env, deleteMatch[1]);
+      }
+
+      // 3. 发布与管理 API
       if (path === '/api/auth/verify' && request.method === 'POST') {
         return await handleAuthVerify(request, env);
       }
@@ -1393,9 +1840,12 @@ export default {
         return await handlePublishPost(request, env);
       }
     } catch (err) {
-      return jsonError(err.message || '服务器内部异常', 500);
+      return jsonError(err.message || '服务器内部异常', 500, request);
     }
 
-    return new Response('Not Found', { status: 404 });
+    return new Response('Not Found', {
+      status: 404,
+      headers: corsHeaders(request)
+    });
   }
 };

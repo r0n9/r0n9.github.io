@@ -1,4 +1,7 @@
 name = "r0n9-blog-publisher"
+# 入口文件切换（按需选择）：
+# - worker-basic.js: 原版纯净发布台（免数据库，体积最小，仅发布文章与随手记）
+# - worker-interactive.js / worker.js: 全功能互动版（内置 D1 支持，点赞 + 访客留言 + 互动管理后台）
 main = "worker.js"
 compatibility_date = "2024-01-01"
 
@@ -12,3 +15,11 @@ AUTHOR = "R0n9"
 #
 # npx wrangler secret put GITHUB_TOKEN
 # npx wrangler secret put ADMIN_SECRET
+
+# Cloudflare D1 互动数据库绑定 (文章与动态的点赞与极简留言)：
+# 执行创建命令：npx wrangler d1 create blog-interaction
+# 将生成的 database_id 填入下方并解除注释：
+# [[d1_databases]]
+# binding = "DB"
+# database_name = "blog-interaction"
+# database_id = "your-d1-database-id-here"

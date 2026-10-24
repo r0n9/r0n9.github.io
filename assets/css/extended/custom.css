@@ -2140,3 +2140,431 @@ html[data-theme="dark"] #theme-toggle .sun {
 .moment-lightbox-counter:empty {
   display: none;
 }
+
+/* ==========================================================================
+   博客轻量互动系统 (Paper 纸质美学点赞与极简留言板)
+   ========================================================================== */
+
+/* 1. 文章页文末点赞胶囊 */
+.post-interaction-wrap {
+  margin-top: 48px;
+  padding-top: 24px;
+  border-top: 1px dashed var(--border);
+}
+
+.post-like-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 36px;
+}
+
+.post-like-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 22px;
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 30px;
+  color: var(--primary);
+  font-size: 0.95rem;
+  font-family: inherit;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.22s cubic-bezier(0.2, 0, 0, 1);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+  user-select: none;
+}
+
+.post-like-btn:hover {
+  transform: translateY(-1px);
+  border-color: var(--secondary);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+}
+
+.post-like-btn .like-heart-icon {
+  color: var(--secondary);
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.post-like-btn:hover .like-heart-icon {
+  color: #e0245e;
+  transform: scale(1.1);
+}
+
+.post-like-btn.liked {
+  border-color: rgba(224, 36, 94, 0.3);
+  background: rgba(224, 36, 94, 0.05);
+  color: #e0245e;
+}
+
+.post-like-btn.liked .like-heart-icon {
+  fill: #e0245e;
+  color: #e0245e;
+  animation: heartPulse 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.like-divider {
+  opacity: 0.3;
+  font-weight: 300;
+}
+
+.like-count {
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+}
+
+@keyframes heartPulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.35); }
+  100% { transform: scale(1.15); }
+}
+
+/* 2. 访客留言板 (文章页与抽屉通用) */
+.post-comments-container {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+}
+
+.comments-header {
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 1px dashed var(--border);
+}
+
+.comments-title {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--primary);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.comments-badge {
+  font-size: 0.85rem;
+  font-weight: normal;
+  color: var(--tertiary);
+}
+
+.comments-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.comments-loading,
+.comments-notice,
+.comments-empty-notice {
+  text-align: center;
+  padding: 24px 0;
+  font-size: 0.88rem;
+  color: var(--tertiary);
+}
+
+.comments-notice.error {
+  color: #e0245e;
+}
+
+.comment-item {
+  display: flex;
+  gap: 12px;
+  padding-bottom: 16px;
+  border-bottom: 1px dashed var(--border);
+  animation: fadeIn 0.25s ease-out;
+}
+
+.comment-item:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.comment-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: var(--border);
+  flex-shrink: 0;
+}
+
+.comment-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.comment-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.84rem;
+}
+
+.comment-author {
+  font-weight: 600;
+  color: var(--primary);
+}
+
+.comment-badge-admin {
+  font-size: 0.7rem;
+  background: var(--primary);
+  color: var(--theme);
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.comment-time {
+  font-size: 0.75rem;
+  color: var(--tertiary);
+  margin-left: auto;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+.comment-content {
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: var(--content);
+  word-break: break-word;
+}
+
+/* 3. 纸质留言表单 (Paper Form) */
+.paper-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  background: var(--theme);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+}
+
+.paper-form .form-row {
+  display: flex;
+  gap: 12px;
+}
+
+.paper-form .form-col {
+  flex: 1;
+}
+
+.paper-form .form-input,
+.paper-form .form-textarea {
+  width: 100%;
+  padding: 8px 12px;
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--primary);
+  font-family: inherit;
+  font-size: 0.88rem;
+  box-sizing: border-box;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.paper-form .form-input:focus,
+.paper-form .form-textarea:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px rgba(128, 128, 128, 0.15);
+}
+
+.paper-form .form-textarea {
+  resize: vertical;
+  min-height: 70px;
+}
+
+.paper-form .form-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 4px;
+}
+
+.paper-form .form-hint {
+  font-size: 0.76rem;
+  color: var(--tertiary);
+}
+
+.paper-form .comment-submit-btn {
+  background: var(--primary);
+  color: var(--theme);
+  border: none;
+  border-radius: var(--radius);
+  padding: 6px 16px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  font-family: inherit;
+  cursor: pointer;
+  transition: opacity 0.2s ease, transform 0.15s ease;
+}
+
+.paper-form .comment-submit-btn:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+.paper-form .comment-submit-btn:active {
+  transform: translateY(0);
+}
+
+.paper-form .comment-submit-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.form-feedback {
+  padding: 8px 12px;
+  border-radius: var(--radius);
+  font-size: 0.82rem;
+  margin-top: 6px;
+}
+
+.form-feedback.success {
+  background: rgba(34, 197, 94, 0.1);
+  color: #16a34a;
+  border: 1px solid rgba(34, 197, 94, 0.2);
+}
+
+.form-feedback.error {
+  background: rgba(239, 68, 68, 0.1);
+  color: #dc2626;
+  border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+/* 4. 动态页瀑布流互动栏 (Moments Actions & Collapsible Drawer) */
+.moment-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 14px;
+  padding-top: 10px;
+  border-top: 1px dashed var(--border);
+}
+
+.moment-action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--secondary);
+  font-size: 0.82rem;
+  font-family: inherit;
+  cursor: pointer;
+  padding: 4px 10px;
+  border-radius: var(--radius);
+  transition: all 0.2s cubic-bezier(0.2, 0, 0, 1);
+  user-select: none;
+}
+
+.moment-action-btn:hover {
+  color: var(--primary);
+  background: var(--code-bg);
+  border-color: var(--border);
+}
+
+.moment-action-btn.active {
+  color: var(--primary);
+  background: var(--code-bg);
+  border-color: var(--border);
+}
+
+.moment-like-btn.liked {
+  color: #e0245e;
+}
+
+.moment-like-btn.liked .heart-icon {
+  fill: #e0245e;
+  color: #e0245e;
+  animation: heartPulse 0.3s ease;
+}
+
+.moment-action-btn .action-icon {
+  line-height: 1;
+  transition: transform 0.2s ease;
+}
+
+.moment-action-btn:hover .action-icon {
+  transform: scale(1.1);
+}
+
+.moment-comments-drawer {
+  margin-top: 12px;
+  padding: 14px 16px;
+  background: var(--code-bg);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  animation: drawerSlideDown 0.22s ease-out;
+}
+
+@keyframes drawerSlideDown {
+  from { opacity: 0; transform: translateY(-6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.drawer-comments-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-height: 280px;
+  overflow-y: auto;
+  margin-bottom: 12px;
+}
+
+.drawer-loading {
+  text-align: center;
+  padding: 12px 0;
+  font-size: 0.82rem;
+  color: var(--tertiary);
+}
+
+.moment-comment-form {
+  padding: 12px;
+  gap: 8px;
+}
+
+.moment-comment-form .form-row {
+  display: flex;
+  gap: 8px;
+}
+
+.moment-comment-form .form-input {
+  font-size: 0.82rem;
+  padding: 6px 10px;
+}
+
+.moment-comment-form .form-textarea {
+  font-size: 0.82rem;
+  padding: 6px 10px;
+  min-height: 50px;
+}
+
+.moment-comment-form .comment-submit-btn {
+  padding: 4px 12px;
+  font-size: 0.8rem;
+}
+
+@media (max-width: 600px) {
+  .paper-form .form-row,
+  .moment-comment-form .form-row {
+    flex-direction: column;
+    gap: 8px;
+  }
+  .post-comments-container {
+    padding: 16px;
+  }
+}

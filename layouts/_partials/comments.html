@@ -1,0 +1,57 @@
+{{- /* 文章页点赞与极简纸质留言板 */ -}}
+{{- $interactionApi := site.Params.interactionApi | default "" }}
+{{- if and .Site.Params.comments (ne .Params.comments false) (ne $interactionApi "") }}
+<div class="post-interaction-wrap" id="postInteractionWrap" data-key="{{ .RelPermalink }}">
+  {{- /* 1. 文末纸质点赞胶囊 */ -}}
+  <div class="post-like-container">
+    <button type="button" class="post-like-btn" id="postLikeBtn" aria-label="点赞文章" title="喜欢这篇文章">
+      <svg class="like-heart-icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+      </svg>
+      <span class="like-label">喜欢</span>
+      <span class="like-divider">|</span>
+      <span class="like-count" id="postLikeCount">0</span>
+    </button>
+  </div>
+
+  {{- /* 2. 纸质访客留言板 */ -}}
+  <div class="post-comments-container" id="postCommentsContainer">
+    <div class="comments-header">
+      <h3 class="comments-title">
+        <span>💬 交流与留言</span>
+        <span class="comments-badge" id="postCommentsBadge">(0)</span>
+      </h3>
+    </div>
+
+    <div class="comments-list" id="postCommentsList">
+      <div class="comments-placeholder">正在加载留言...</div>
+    </div>
+
+    <form class="comment-form paper-form" id="postCommentForm">
+      <input type="text" name="hp_token" class="hp-input" tabindex="-1" autocomplete="off" style="display:none;" />
+      <div class="form-row">
+        <div class="form-col">
+          <input type="text" name="author" class="form-input author-input" placeholder="称呼 (必填)" maxlength="20" required autocomplete="nickname" />
+        </div>
+        <div class="form-col">
+          <input type="email" name="email" class="form-input email-input" placeholder="邮箱 (选填，自动匹配头像/保密)" autocomplete="email" />
+        </div>
+      </div>
+      <div class="form-row">
+        <textarea name="content" class="form-textarea content-input" placeholder="留下您的想法或探讨交流..." rows="3" maxlength="500" required></textarea>
+      </div>
+      <div class="form-footer">
+        <span class="form-hint">纸质极简 · 免登录</span>
+        <button type="submit" class="comment-submit-btn" id="postCommentSubmitBtn">发表留言</button>
+      </div>
+      <div class="form-feedback" id="postCommentFeedback" style="display:none;"></div>
+    </form>
+  </div>
+</div>
+
+<script>
+  window.__INTERACTION_API__ = {{ $interactionApi | jsonify | safeJS }};
+</script>
+{{- $interactionJs := resources.Get "js/interaction.js" | resources.Minify | fingerprint }}
+<script defer src="{{ $interactionJs.RelPermalink }}" integrity="{{ $interactionJs.Data.Integrity }}"></script>
+{{- end }}
