@@ -146,6 +146,12 @@ body {
   box-shadow: var(--shadow-sm);
 }
 
+.tab-sub {
+  font-size: 0.82rem;
+  font-weight: 400;
+  opacity: 0.85;
+}
+
 .tab-content {
   display: none;
   background-color: var(--bg-card);
@@ -664,21 +670,154 @@ textarea {
 
 @media (max-width: 640px) {
   body {
-    padding: 12px 8px;
+    padding: max(10px, env(safe-area-inset-top)) max(10px, env(safe-area-inset-right)) max(20px, env(safe-area-inset-bottom)) max(10px, env(safe-area-inset-left));
   }
+
+  /* 头部导航紧凑化，保持单行横向排列不换行 */
   .header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 12px;
+    padding: 10px 12px;
+    margin-bottom: 12px;
+    border-radius: var(--radius-md);
+    gap: 8px;
+  }
+  .brand-logo {
+    font-size: 20px;
+    width: 34px;
+    height: 34px;
+    border-radius: var(--radius-sm);
+  }
+  .brand-info h1 {
+    font-size: 1rem;
+  }
+  .brand-subtitle {
+    font-size: 0.7rem;
+    max-width: 120px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    display: block;
   }
   .header-actions {
+    gap: 6px;
+  }
+  .btn-sm {
+    padding: 6px 10px;
+    font-size: 0.78rem;
+  }
+
+  /* 选项卡紧凑化并隐藏英文副标题 */
+  .tabs {
+    gap: 6px;
+    margin-bottom: 14px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .tabs::-webkit-scrollbar {
+    display: none;
+  }
+  .tab-btn {
+    padding: 9px 8px;
+    font-size: 0.85rem;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .tab-sub {
+    display: none;
+  }
+
+  /* 主发布表单容器紧凑化 */
+  .publish-form {
+    padding: 16px 12px;
+    border-radius: var(--radius-md);
+  }
+
+  /* 表单控件优化：字号不低于16px，彻底防止 iOS Safari 聚焦放大 */
+  input[type="text"],
+  input[type="password"],
+  textarea {
+    font-size: 16px;
+    padding: 9px 12px;
+  }
+
+  /* 提示与开关垂直流布局 */
+  .label-with-toggle {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
+
+  .form-row {
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+  .col-half {
+    flex: 1 1 100%;
+    min-width: 100%;
+  }
+
+  /* 配图上传区适配触摸手势与小屏幕 */
+  .drop-zone {
+    padding: 16px 10px;
+  }
+  .upload-icon {
+    font-size: 26px;
+    margin-bottom: 4px;
+  }
+  .drop-zone p {
+    font-size: 0.82rem;
+  }
+  .file-hint {
+    font-size: 0.72rem;
+  }
+
+  /* 图片预览栅格紧凑化 */
+  .image-preview-grid {
+    grid-template-columns: repeat(auto-fill, minmax(85px, 1fr));
+    gap: 8px;
+  }
+  .image-preview-thumb {
+    height: 75px;
+  }
+
+  /* 编辑器操作区适配 */
+  .editor-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
+  .editor-actions {
     width: 100%;
     justify-content: flex-end;
+    gap: 4px;
   }
   .editor-split {
     flex-direction: column;
+    gap: 10px;
   }
   .preview-pane {
-    display: none !important;
+    max-height: 320px;
+  }
+  .preview-pane.visible {
+    display: flex;
+  }
+
+  /* 发布大按钮移动端全宽显示，拇指单手轻松点击 */
+  .align-end {
+    width: 100%;
+    justify-content: stretch;
+  }
+  .btn-publish {
+    width: 100%;
+    justify-content: center;
+    padding: 12px 16px;
+    font-size: 0.95rem;
+  }
+
+  /* 模态框小屏幕适配 */
+  .modal-card {
+    width: 92%;
+    padding: 20px 14px;
+    border-radius: var(--radius-md);
   }
 }

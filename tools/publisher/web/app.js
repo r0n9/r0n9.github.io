@@ -138,6 +138,13 @@
     }
   });
 
+  secretInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      secretSubmitBtn.click();
+    }
+  });
+
   // --- 选项卡切换 ---
   tabButtons.forEach(btn => {
     btn.addEventListener('click', () => {
@@ -626,5 +633,6 @@
     verifySecret(adminSecret);
   } else {
     authModal.classList.add('active');
+    setTimeout(() => { if (secretInput && secretInput.focus) secretInput.focus(); }, 100);
   }
 })();

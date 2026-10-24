@@ -838,7 +838,7 @@ const HTML_PAGE = `<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>R0n9's Blog Publisher | 博客内容发布台 (Cloudflare Edition)</title>
   <style>
     :root {
@@ -921,6 +921,7 @@ const HTML_PAGE = `<!DOCTYPE html>
       background-color: var(--accent-color); border-color: var(--accent-color);
       color: #ffffff; box-shadow: var(--shadow-sm);
     }
+    .tab-sub { font-size: 0.82rem; font-weight: 400; opacity: 0.85; }
     .tab-content {
       display: none; background-color: var(--bg-card);
       border: 1px solid var(--border-color); border-radius: var(--radius-lg);
@@ -1062,11 +1063,45 @@ const HTML_PAGE = `<!DOCTYPE html>
     .admin-comment-body { font-size: 0.88rem; line-height: 1.5; color: var(--text-primary); white-space: pre-wrap; word-break: break-word; }
     .admin-comment-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 4px; }
     @media (max-width: 640px) {
-      body { padding: 12px 8px; }
-      .header { flex-direction: column; align-items: flex-start; gap: 12px; }
-      .header-actions { width: 100%; justify-content: flex-end; }
-      .editor-split { flex-direction: column; }
-      .preview-pane { display: none !important; }
+      body {
+        padding: max(10px, env(safe-area-inset-top)) max(10px, env(safe-area-inset-right)) max(20px, env(safe-area-inset-bottom)) max(10px, env(safe-area-inset-left));
+      }
+      .header {
+        padding: 10px 12px; margin-bottom: 12px; border-radius: var(--radius-md);
+        flex-direction: row; align-items: center; justify-content: space-between; gap: 8px;
+      }
+      .brand-logo { font-size: 20px; width: 34px; height: 34px; border-radius: var(--radius-sm); }
+      .brand-info h1 { font-size: 1rem; }
+      .brand-subtitle { font-size: 0.7rem; max-width: 120px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; display: block; }
+      .header-actions { width: auto; gap: 6px; }
+      .btn-sm { padding: 6px 10px; font-size: 0.78rem; }
+      .tabs { gap: 6px; margin-bottom: 14px; overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+      .tabs::-webkit-scrollbar { display: none; }
+      .tab-btn { padding: 9px 8px; font-size: 0.85rem; white-space: nowrap; flex-shrink: 0; }
+      .tab-sub { display: none; }
+      .tab-content { padding: 16px 12px; border-radius: var(--radius-md); }
+      .publish-form { gap: 16px; }
+      input[type="text"], input[type="password"], textarea { font-size: 16px; padding: 9px 12px; }
+      .label-with-toggle { flex-direction: column; align-items: flex-start; gap: 6px; }
+      .form-row { gap: 12px; }
+      .col-half { flex: 1 1 100%; min-width: 100%; }
+      .drop-zone { padding: 16px 10px; }
+      .upload-icon { font-size: 26px; margin-bottom: 4px; }
+      .drop-zone p { font-size: 0.82rem; }
+      .file-hint { font-size: 0.72rem; }
+      .image-preview-grid { grid-template-columns: repeat(auto-fill, minmax(85px, 1fr)); gap: 8px; }
+      .image-preview-thumb { height: 75px; }
+      .editor-header { flex-direction: column; align-items: flex-start; gap: 6px; }
+      .editor-actions { width: 100%; justify-content: flex-end; gap: 4px; }
+      .editor-split { flex-direction: column; gap: 10px; }
+      .preview-pane { max-height: 320px; }
+      .preview-pane.visible { display: flex; }
+      .align-end { width: 100%; justify-content: stretch; }
+      .btn-publish { width: 100%; justify-content: center; padding: 12px 16px; font-size: 0.95rem; }
+      .modal-card { width: 92%; padding: 20px 14px; border-radius: var(--radius-md); }
+      .comments-tab-header { flex-direction: column; align-items: flex-start !important; gap: 10px; }
+      .comments-tab-header button { width: 100%; justify-content: center; }
+      .admin-comment-card { padding: 12px 10px; }
     }
   </style>
 </head>
@@ -1088,13 +1123,13 @@ const HTML_PAGE = `<!DOCTYPE html>
 
     <div class="tabs">
       <button class="tab-btn active" data-tab="moment-tab">
-        <span class="tab-icon">💬</span> 随手记 (Moments)
+        <span class="tab-icon">💬</span> 随手记 <span class="tab-sub">(Moments)</span>
       </button>
       <button class="tab-btn" data-tab="post-tab">
-        <span class="tab-icon">📝</span> 长篇文章 (Posts)
+        <span class="tab-icon">📝</span> 长篇文章 <span class="tab-sub">(Posts)</span>
       </button>
       <button class="tab-btn" data-tab="comments-tab">
-        <span class="tab-icon">❤️</span> 互动管理 (Comments)
+        <span class="tab-icon">❤️</span> 互动管理 <span class="tab-sub">(Comments)</span>
       </button>
     </div>
 
@@ -1229,7 +1264,7 @@ const HTML_PAGE = `<!DOCTYPE html>
 
     <!-- 互动管理面板 -->
     <main id="comments-tab" class="tab-content">
-      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px;">
+      <div class="comments-tab-header" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px;">
         <div>
           <h2 style="font-size:1.15rem; font-weight:700; margin:0 0 4px 0;">💬 访客留言与点赞管理</h2>
           <span style="font-size:0.82rem; color:var(--text-secondary);">查看全站文章和动态的最新留言，支持一键屏蔽或清理垃圾评论</span>
@@ -1416,6 +1451,13 @@ const HTML_PAGE = `<!DOCTYPE html>
         }
       });
 
+      secretInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          secretSubmitBtn.click();
+        }
+      });
+
       tabButtons.forEach(btn => {
         btn.addEventListener('click', () => {
           tabButtons.forEach(b => b.classList.remove('active'));
@@ -1468,7 +1510,7 @@ const HTML_PAGE = `<!DOCTYPE html>
 
             card.innerHTML = 
               '<div class="admin-comment-header">' +
-                '<img src="' + escapeHtml(c.avatar || '') + '" class="admin-comment-avatar" alt="avatar" onerror="this.src=\'https://cravatar.cn/avatar/?d=mp\'"/>' +
+                '<img src="' + escapeHtml(c.avatar || '') + '" class="admin-comment-avatar" alt="avatar" onerror="this.onerror=null;this.src=&apos;https://cravatar.cn/avatar/?d=mp&apos;;"/>' +
                 '<div class="admin-comment-meta">' +
                   '<span class="admin-comment-author">' + escapeHtml(c.author) + '</span>' +
                   adminBadge +
@@ -1913,6 +1955,7 @@ const HTML_PAGE = `<!DOCTYPE html>
         verifySecret(adminSecret);
       } else {
         authModal.classList.add('active');
+        setTimeout(() => { if (secretInput && secretInput.focus) secretInput.focus(); }, 100);
       }
     })();
   </script>
