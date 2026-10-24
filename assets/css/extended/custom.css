@@ -2568,3 +2568,131 @@ html[data-theme="dark"] #theme-toggle .sun {
     padding: 16px;
   }
 }
+
+/* ==========================================================================
+   富文本书签卡片 (Paper Link Card)
+   ========================================================================== */
+.paper-linkcard-wrapper {
+  margin: 14px 0;
+  display: block;
+}
+
+.paper-linkcard {
+  display: flex;
+  align-items: stretch;
+  justify-content: space-between;
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  text-decoration: none !important;
+  color: inherit !important;
+  overflow: hidden;
+  transition: all 0.22s cubic-bezier(0.2, 0, 0, 1);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+}
+
+.paper-linkcard:hover {
+  transform: translateY(-2px);
+  border-color: var(--secondary);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
+}
+
+.paper-linkcard .linkcard-main {
+  flex: 1;
+  padding: 12px 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 4px;
+  min-width: 0;
+}
+
+.paper-linkcard .linkcard-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 0.74rem;
+  color: var(--tertiary);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+.paper-linkcard .linkcard-site {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.paper-linkcard .linkcard-icon {
+  flex-shrink: 0;
+  opacity: 0.8;
+}
+
+.paper-linkcard .linkcard-arrow {
+  font-size: 0.85rem;
+  line-height: 1;
+  transition: transform 0.2s ease;
+  color: var(--tertiary);
+}
+
+.paper-linkcard:hover .linkcard-arrow {
+  color: var(--primary);
+  transform: translate(2px, -2px);
+}
+
+.paper-linkcard .linkcard-title {
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--primary);
+  line-height: 1.4;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.paper-linkcard .linkcard-desc {
+  font-size: 0.8rem;
+  color: var(--secondary);
+  line-height: 1.45;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  word-break: break-word;
+}
+
+.paper-linkcard .linkcard-thumb-wrap {
+  width: 120px;
+  min-width: 100px;
+  max-width: 140px;
+  background: var(--theme);
+  border-left: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.paper-linkcard .linkcard-thumb {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.paper-linkcard:hover .linkcard-thumb {
+  transform: scale(1.05);
+}
+
+@media (max-width: 540px) {
+  .paper-linkcard .linkcard-thumb-wrap {
+    width: 80px;
+    min-width: 80px;
+  }
+  .paper-linkcard .linkcard-main {
+    padding: 10px 12px;
+  }
+}

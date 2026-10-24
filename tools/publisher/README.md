@@ -24,7 +24,10 @@
 4. **随手记 (Moments) 与文章 (Posts) 双模式切换**
    - **随手记**：快速发布碎碎念或生活点滴，配图自动存入 `static/images/moments/`，文档存入 `content/moments/`。
    - **长篇文章**：支持标题、摘要、分类、标签、草稿状态，自动存入 `content/posts/`，配图存入 `static/images/`。
-5. **安全与权限防护**
+5. **独占一行 URL 自动转换为精美书签卡片 (Telegram / Notion 风格)**
+   - 在随手记或长文编辑器中，独占一行粘贴 URL，发布时服务端会自动抓取目标网页的 OpenGraph 标题、描述与封面图，直接转换为静态短代码 `{{< linkcard ... >}}`。
+   - 100% 静态化保存入 Git 仓库，断网可读、永久保留，并完美适配 PaperMod 原生卡片样式。
+6. **安全与权限防护**
    - `ADMIN_SECRET` 访问口令验证：使用 `crypto/subtle.ConstantTimeCompare` 进行恒定时间比较，防御时序侧信道攻击。
    - 客户端从始至终无法接触 `GITHUB_TOKEN`，PAT 令牌只存在于服务端内存与环境变量中。
 
@@ -127,6 +130,25 @@
 
 ---
 
+## 🏗️ 架构分工与互动系统说明 (Go 原生版 vs Cloudflare Worker 版)
+
+本项目提供了两套发布器实现方案，分别针对不同的运行环境与场景设计：
+
+| 维度 | Go 原生发布器 (Docker / 本地) | Cloudflare Worker 边缘版 (Serverless) |
+| :--- | :--- | :--- |
+| **部署环境** | 本机电脑、家用 NAS (群晖/威联通)、私有内网或自建 VPS | Cloudflare 全球边缘网络 (Workers) |
+| **运行依赖** | 纯 Go 标准库，编译为单一二进制 (~15MB)，零外部依赖 | 单文件 JavaScript (`worker.js`)，无服务器运维 |
+| **内容发布** | ✅ 支持随手记、长文、图片 WebP 自动压缩、独占行 URL 自动抓取并转为卡片 | ✅ 支持随手记、长文、图片 WebP 自动压缩、独占行 URL 自动抓取并转为卡片 |
+| **全站访客点赞与留言互动** | ❌ **暂不提供**（由 Cloudflare D1 边缘端承载） | ✅ **原生内置**（绑定 Cloudflare D1 即开即用，提供高可用边缘 API） |
+| **互动管理后台** | ❌ 无 | ✅ 内置「❤️ 互动管理」面板（审核与一键删除留言） |
+
+### 为什么 Go 原生版本当前不内置互动系统？
+1. **网络拓扑与安全性考量**：博客面向全网开放，访客的点赞与留言请求来自全球公网。Go 原生发布器多部署在博主个人电脑或家庭内网 NAS 中，通常没有固定的公网 IP，也不适合直接对全网暴露接口以承受恶意扫描、DDoS 或爬虫冲击。
+2. **边缘无服务器优势**：Cloudflare Workers + D1 天然具备全球 Anycast 边缘路由、免费 10 万次/天调用额度与全天候 24/7 在线能力，作为全网访客互动的后端成本最低且最为稳定。
+3. **未来自建扩展路径**：若后续有完全私有化 VPS 自建需求（脱离 Cloudflare 托管），Go 原生发布器可进一步引入嵌入式 SQLite 引擎（如纯 Go 无 CGO 驱动），并开放 `/api/interactions/*` 接口以无缝承载全站互动服务。
+
+---
+
 ## 📂 代码结构
 
 ```text
@@ -136,7 +158,7 @@ tools/publisher/
 ├── .env.example                # 环境变量配置模板
 ├── publisher.webp              # 发布控制台界面展示截图
 ├── cloudflare/                 # Cloudflare Workers 免服务器边缘部署版本
-│   ├── worker.js               # 单文件轻量 Worker 源码 (内嵌完整 UI 与 Git API)
+│   ├── worker.js               # 单文件轻量 Worker 源码 (内嵌完整 UI、Git API 与 D1 互动后端)
 │   ├── wrangler.toml           # Wrangler CLI 部署配置
 │   └── README.md               # Cloudflare 控制台与 CLI 部署说明
 ├── go.mod                      # Go 纯标准库模块声明
@@ -148,7 +170,9 @@ tools/publisher/
 │   ├── config/
 │   │   └── config.go           # 环境变量读取与参数校验
 │   ├── generator/
-│   │   └── generator.go        # Hugo Front Matter 与 Markdown 渲染逻辑
+│   │   ├── generator.go        # Hugo Front Matter 与 Markdown 渲染逻辑
+│   │   ├── linkcard.go         # 纯标准库 OpenGraph 解析与独占 URL 书签卡片转换
+│   │   └── linkcard_test.go    # 独占 URL 匹配与清洗单元测试
 │   ├── github/
 │   │   └── client.go           # GitHub Git Data API (Blobs/Trees/Commits) 客户端
 │   └── api/

@@ -302,7 +302,10 @@ async function handlePublishMoment(request, env) {
     md += 'images: []\n';
   }
   md += '---\n\n';
-  md += content;
+
+  // 自动识别正文中独占一行的独立 URL，抓取元数据转换为静态书签卡片 (100% 静态保存到 Markdown)
+  const processedContent = await transformStandaloneUrlsToCards(content);
+  md += processedContent;
   md += '\n';
 
   const mdPath = `content/moments/${timeMeta.timestampPrefix}.md`;
@@ -396,7 +399,10 @@ async function handlePublishPost(request, env) {
     md += 'tags: []\n';
   }
   md += '---\n\n';
-  md += content;
+
+  // 自动识别正文中独占一行的独立 URL，抓取元数据转换为静态书签卡片 (100% 静态保存到 Markdown)
+  const processedContent = await transformStandaloneUrlsToCards(content);
+  md += processedContent;
   md += '\n';
 
   const cleanTitle = sanitizeFilename(title);
@@ -418,6 +424,142 @@ async function handlePublishPost(request, env) {
     md_path: mdPath,
     title: title
   });
+}
+
+// ----------------------------------------------------
+// 3.4 辅助工具 (自动识别独占一行的独立 URL，抓取元数据生成 100% 静态书签卡片)
+// ----------------------------------------------------
+
+async function fetchUrlMetadata(targetUrl) {
+  if (!targetUrl || typeof targetUrl !== 'string') return null;
+  targetUrl = targetUrl.trim();
+  if (!/^https?:\/\//i.test(targetUrl)) {
+    targetUrl = 'https://' + targetUrl;
+  }
+
+  let parsedHost = '';
+  try {
+    parsedHost = new URL(targetUrl).hostname;
+  } catch (e) {
+    return null;
+  }
+
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 5000);
+
+  try {
+    const resp = await fetch(targetUrl, {
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'
+      },
+      signal: controller.signal,
+      redirect: 'follow'
+    });
+    clearTimeout(timeoutId);
+
+    if (!resp.ok) {
+      return {
+        url: targetUrl,
+        title: parsedHost,
+        desc: '',
+        image: '',
+        site: parsedHost
+      };
+    }
+
+    const html = await resp.text();
+    const head = html.substring(0, 150000);
+
+    function getMeta(prop) {
+      const regex = new RegExp('<meta[^>]+(?:property|name)=["\']' + prop + '["\'][^>]+content=["\']([^"\']+)["\']', 'i');
+      const match = head.match(regex);
+      if (match) return match[1];
+      const revRegex = new RegExp('<meta[^>]+content=["\']([^"\']+)["\'][^>]+(?:property|name)=["\']' + prop + '["\']', 'i');
+      const revMatch = head.match(revRegex);
+      return revMatch ? revMatch[1] : '';
+    }
+
+    let title = getMeta('og:title') || getMeta('twitter:title');
+    if (!title) {
+      const titleMatch = head.match(/<title[^>]*>([^<]+)<\/title>/i);
+      title = titleMatch ? titleMatch[1].trim() : '';
+    }
+
+    let desc = getMeta('og:description') || getMeta('description') || getMeta('twitter:description');
+    let image = getMeta('og:image') || getMeta('twitter:image');
+    let site = getMeta('og:site_name') || parsedHost;
+
+    if (image && !/^https?:\/\//i.test(image)) {
+      try {
+        image = new URL(image, targetUrl).href;
+      } catch {}
+    }
+
+    function cleanStr(s) {
+      if (!s) return '';
+      return s
+        .replace(/&amp;/g, '&')
+        .replace(/&lt;/g, '<')
+        .replace(/&gt;/g, '>')
+        .replace(/&quot;/g, '"')
+        .replace(/&#39;/g, "'")
+        .replace(/\s+/g, ' ')
+        .trim();
+    }
+
+    title = cleanStr(title) || parsedHost;
+    desc = cleanStr(desc);
+    site = cleanStr(site) || parsedHost;
+
+    return {
+      url: targetUrl,
+      title,
+      desc,
+      image: image || '',
+      site
+    };
+  } catch (err) {
+    clearTimeout(timeoutId);
+    return {
+      url: targetUrl,
+      title: parsedHost,
+      desc: '',
+      image: '',
+      site: parsedHost
+    };
+  }
+}
+
+// 自动检测正文中独占一行的独立 URL，抓取元数据并转换为静态 Linkcard 短代码
+async function transformStandaloneUrlsToCards(content) {
+  if (!content || typeof content !== 'string') return content;
+  const lines = content.split('\n');
+  const urlRegex = /^https?:\/\/[^\s<>"'()]+$/;
+  let modified = false;
+
+  for (let i = 0; i < lines.length; i++) {
+    const trimmed = lines[i].trim();
+    if (urlRegex.test(trimmed)) {
+      try {
+        const meta = await fetchUrlMetadata(trimmed);
+        if (meta) {
+          const esc = s => (s || '').replace(/"/g, '&quot;');
+          let card = `{{< linkcard url="${meta.url}" title="${esc(meta.title)}"`;
+          if (meta.desc) card += ` desc="${esc(meta.desc)}"`;
+          if (meta.site) card += ` site="${esc(meta.site)}"`;
+          if (meta.image) card += ` image="${esc(meta.image)}"`;
+          card += ' >}}';
+          lines[i] = card;
+          modified = true;
+        }
+      } catch (e) {
+        console.warn('URL transform failed:', trimmed, e);
+      }
+    }
+  }
+
+  return modified ? lines.join('\n') : content;
 }
 
 // ----------------------------------------------------
@@ -1794,9 +1936,14 @@ export default {
       });
     }
 
-    // 静态前端界面
+    // 静态前端界面 (自适应感应：未配置 D1 时自动隐藏互动管理标签，保持纯净发布形态)
     if (path === '/' || path === '/index.html') {
-      return new Response(HTML_PAGE, {
+      const hasD1 = Boolean(env.DB);
+      let pageHtml = HTML_PAGE;
+      if (!hasD1) {
+        pageHtml = pageHtml.replace('data-tab="comments-tab"', 'data-tab="comments-tab" style="display:none;"');
+      }
+      return new Response(pageHtml, {
         headers: {
           'Content-Type': 'text/html; charset=utf-8',
           'Cache-Control': 'no-cache, no-store, must-revalidate'

@@ -84,7 +84,7 @@ func GeneratePost(req PostRequest, now time.Time) (path string, data []byte, err
 	}
 
 	buf.WriteString("---\n\n")
-	buf.WriteString(strings.TrimSpace(req.Content))
+	buf.WriteString(TransformStandaloneURLsToCards(strings.TrimSpace(req.Content)))
 	buf.WriteString("\n")
 
 	return repoPath, buf.Bytes(), nil
@@ -126,7 +126,7 @@ func GenerateMoment(req MomentRequest, imagePaths []string, defaultAuthor string
 	}
 
 	buf.WriteString("---\n\n")
-	buf.WriteString(content)
+	buf.WriteString(TransformStandaloneURLsToCards(content))
 	buf.WriteString("\n")
 
 	return repoPath, buf.Bytes(), nil

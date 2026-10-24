@@ -20,22 +20,12 @@
 3. **安全凭据防泄漏**
    - `GITHUB_TOKEN` 与 `ADMIN_SECRET` 存放在 Cloudflare 官方的加密环境变量（Secrets）中，任何访客及浏览器端无法刺探。
    - 口令校验使用 Web Crypto API 原生 `timingSafeEqual` 防御时序侧信道攻击。
-4. **一体化轻量互动中心 (Likes & Comments)**
-   - 绑定 Cloudflare D1 (免费 Serverless SQLite) 即可点亮全站文章与动态的免登录点赞与极简留言；
-   - 在发布台后台拥有专属「互动管理」标签页，实时查看访客留言并一键审核删除。
-
----
-
-## 📦 版本选择 (按需选择部署)
-
-本项目提供两个版本的 Worker 脚本供您自由选择：
-
-| 脚本文件 | 数据库依赖 | 包含功能 | 适用场景 |
-| :--- | :--- | :--- | :--- |
-| **[`worker-basic.js`](./worker-basic.js)** | **零依赖** (无需 D1) | 随手记发布、文章发布、Canvas 转 WebP、GitHub 原子提交 | 只需要快速免服务器在线发文章和动态，不想配置数据库 |
-| **[`worker-interactive.js`](./worker-interactive.js)**<br>*(即默认 `worker.js`)* | 可选 Cloudflare D1 | 包含上述全部发布功能 + **文章/动态免登录点赞 + 访客留言板 + 后台留言管理** | 希望访客能免登录互动交流，且所有互动数据由自己掌握 |
-
-> **提示**：如果使用 Wrangler 部署，可以在 `wrangler.toml` 中修改 `main = "worker-basic.js"` 或 `main = "worker-interactive.js"` 切换入口。
+4. **单文件自适应架构 (Self-Adaptive Architecture)**
+   - 仅需部署单一的 [`worker.js`](./worker.js) 文件；
+   - **未绑定 D1 数据库**时：自动运行为纯净免数据库的在线发布台，界面仅保留随手记与长文发布；
+   - **绑定 D1 数据库**时：自动激活全站文章与动态的点赞、免登录留言 API 以及后台「❤️ 互动管理」面板。
+5. **独占一行 URL 自动转换为书签卡片**
+   - 在随手记或长文中独占一行粘贴网址，发布时边缘端自动抓取 OpenGraph 元数据并 100% 静态化保存为 Notion / Telegram 风格的精美纸质书签卡片。
 
 ---
 

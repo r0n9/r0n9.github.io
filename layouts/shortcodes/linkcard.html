@@ -1,0 +1,37 @@
+{{- /* PaperMod 富文本书签卡片 (Link Card Shortcode) */ -}}
+{{- $url := .Get "url" | default (.Get 0) -}}
+{{- $title := .Get "title" | default (.Get 1) | default $url -}}
+{{- $desc := .Get "desc" | default (.Get "description") | default (.Get 2) -}}
+{{- $image := .Get "image" | default (.Get "cover") -}}
+{{- $site := .Get "site" -}}
+{{- if not $site }}
+  {{- with urls.Parse $url }}
+    {{- $site = .Host }}
+  {{- end }}
+{{- end }}
+<div class="paper-linkcard-wrapper">
+  <a class="paper-linkcard" href="{{ $url }}" target="_blank" rel="noopener noreferrer" title="{{ $title }} ↗">
+    <div class="linkcard-main">
+      <div class="linkcard-header">
+        <span class="linkcard-site">
+          <svg class="linkcard-icon" viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="2" y1="12" x2="22" y2="12"></line>
+            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+          </svg>
+          <span class="linkcard-hostname">{{ $site }}</span>
+        </span>
+        <span class="linkcard-arrow" aria-hidden="true">↗</span>
+      </div>
+      <div class="linkcard-title">{{ $title }}</div>
+      {{- with $desc }}
+      <div class="linkcard-desc">{{ . }}</div>
+      {{- end }}
+    </div>
+    {{- with $image }}
+    <div class="linkcard-thumb-wrap">
+      <img class="linkcard-thumb" src="{{ . }}" alt="{{ $title }}" loading="lazy" decoding="async" onerror="this.parentNode.style.display='none'" />
+    </div>
+    {{- end }}
+  </a>
+</div>
