@@ -26,10 +26,12 @@
             <div class="moment-author-info">
               <strong class="moment-author">{{ .Params.author | default site.Params.author | default "R0n9" }}</strong>
             </div>
-            <time datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}" class="moment-time">
-              <span class="moment-date">{{ .Date.Format "2006/01/02" }}</span>
-              <span class="moment-clock">{{ .Date.Format "15:04" }}</span>
-            </time>
+            <a href="{{ .RelPermalink }}" class="moment-time-link" title="查看动态详情">
+              <time datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}" class="moment-time">
+                <span class="moment-date">{{ .Date.Format "2006/01/02" }}</span>
+                <span class="moment-clock">{{ .Date.Format "15:04" }}</span>
+              </time>
+            </a>
           </header>
 
           <div class="moment-body app-prose">
@@ -64,7 +66,7 @@
           </div>
 
           {{- if ne $interactionApi "" }}
-          <div class="moment-actions" data-key="moment-{{ .Date.Format "20060102150405" }}">
+          <div class="moment-actions" data-key="{{ .RelPermalink }}">
             <button type="button" class="moment-action-btn moment-like-btn" title="点赞" aria-label="点赞">
               <svg class="action-icon heart-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                 <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>

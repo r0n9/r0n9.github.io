@@ -1,0 +1,14 @@
+{{- define "main" }}
+<script>
+  (function() {
+    var path = window.location.pathname;
+    // 兼容旧格式 /moment-20261023030722 自动重定向到 /moment/2026-10-23-030722/
+    var m = path.match(/^\/moment-(\d{4})(\d{2})(\d{2})(\d{2})(\d{2})(\d{2})\/?$/);
+    if (m) {
+      window.location.replace('/moment/' + m[1] + '-' + m[2] + '-' + m[3] + '-' + m[4] + m[5] + m[6] + '/');
+      return;
+    }
+  })();
+</script>
+<div class="not-found">404</div>
+{{- end }}{{/* end main */ -}}

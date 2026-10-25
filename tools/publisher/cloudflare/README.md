@@ -26,6 +26,8 @@
    - **绑定 D1 数据库**时：自动激活全站文章与动态的点赞、免登录留言 API 以及后台「❤️ 互动管理」面板。
 5. **独占一行 URL 自动转换为书签卡片**
    - 在随手记或长文中独占一行粘贴网址，发布时边缘端自动抓取 OpenGraph 元数据并 100% 静态化保存为 Notion / Telegram 风格的精美纸质书签卡片。
+6. **互动来源智能感知与记录**
+   - 访客在文章或动态进行点赞或留言时，边缘端自动记录访客真实 IP、所属地区（国家与城市）、操作系统（如 iOS / macOS / Windows / Android）及浏览器类型（如 Safari / Chrome / 微信），并在后台「❤️ 互动管理」面板分类展示留言与点赞明细。
 
 ---
 
@@ -44,10 +46,12 @@
    - 点击 **Add (添加)** -> 选择 **Secret** 类型：
      - 名称：`GITHUB_TOKEN`，填入您的 GitHub 访问令牌（需具备仓库 Contents 写权限）。
      - 名称：`ADMIN_SECRET`，填入您自定义的发布访问口令。
+     - 名称：`BARK_KEY`，*(可选)* 填入您的 Bark 设备 Key（如 `your_device_key`）或完整 URL（如 `https://api.day.app/your_device_key`）。配置后有新点赞或新留言将自动推送 iOS 提醒，未配置则不推送。
    - *(可选)* 添加普通 **Variable (文本变量)**：
      - `GITHUB_REPO` = `r0n9/r0n9.github.io`
      - `GITHUB_BRANCH` = `master`
      - `AUTHOR` = `R0n9`
+     - `SITE_URL` = `https://r0n9.github.io`（用于后台跳转与 Bark 通知链接）
 7. 点击保存。现在直接点击 Worker 的访问地址（如 `https://r0n9-publisher.<你的子域名>.workers.dev`），即可在全网任何设备上开启在线发布！
 
 ---
@@ -68,6 +72,10 @@
    
    npx wrangler secret put ADMIN_SECRET
    # 按提示输入您的发布台密码
+
+   # (可选) 配置 Bark 互动通知
+   npx wrangler secret put BARK_KEY
+   # 按提示输入您的 Bark Device Key 或完整 URL
    ```
 
 3. 一键发布到 Cloudflare 全球边缘网络：

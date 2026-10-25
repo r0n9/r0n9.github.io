@@ -3,6 +3,7 @@
 {{- partial "breadcrumbs.html" . }}
 
 <div class="page-content-wrapper">
+  {{- $interactionApi := site.Params.interactionApi | default "" }}
   <div class="post-back-container">
     <a href="/moments/" class="post-back-btn" aria-label="返回动态列表">
       <svg class="post-back-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -15,7 +16,7 @@
 
   <div class="moments-container" data-image-lightbox-root style="margin-top: 16px;">
     <ol class="moments-list">
-      <li class="moment-item" style="border-bottom: none; padding-top: 8px;">
+      <li class="moment-item moment-single-item" id="moment-{{ .Date.Format "20060102150405" }}" style="border-bottom: none; padding-top: 8px;">
         <article>
           <header class="moment-header">
             {{- $avatar := .Params.avatar | default site.Params.avatar | default "/images/avatar.webp" }}
@@ -59,6 +60,44 @@
             {{- end }}
             {{- end }}
           </div>
+
+          {{- if ne $interactionApi "" }}
+          <div class="moment-actions" data-key="{{ .RelPermalink }}">
+            <button type="button" class="moment-action-btn moment-like-btn" title="点赞" aria-label="点赞">
+              <svg class="action-icon heart-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+              </svg>
+              <span class="like-count">0</span>
+            </button>
+            <button type="button" class="moment-action-btn moment-comment-btn active" title="收起评论" aria-label="收起评论">
+              <svg class="action-icon comment-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+              </svg>
+              <span class="comment-count">0</span>
+            </button>
+          </div>
+
+          <div class="moment-comments-drawer" style="display:block;" aria-hidden="false">
+            <div class="drawer-comments-list">
+              <div class="drawer-loading">加载评论中...</div>
+            </div>
+            <form class="comment-form paper-form moment-comment-form">
+              <input type="text" name="hp_token" class="hp-input" tabindex="-1" autocomplete="off" style="display:none;" />
+              <div class="form-row">
+                <input type="text" name="author" class="form-input author-input" placeholder="称呼 (必填)" maxlength="20" required autocomplete="nickname" />
+                <input type="email" name="email" class="form-input email-input" placeholder="邮箱 (选填，获取头像/保密)" autocomplete="email" />
+              </div>
+              <div class="form-row">
+                <textarea name="content" class="form-textarea content-input" placeholder="留个短评..." rows="2" maxlength="300" required></textarea>
+              </div>
+              <div class="form-footer">
+                <span class="form-hint">纸质极简</span>
+                <button type="submit" class="comment-submit-btn">发送</button>
+              </div>
+              <div class="form-feedback" style="display:none;"></div>
+            </form>
+          </div>
+          {{- end }}
         </article>
       </li>
     </ol>
@@ -91,5 +130,13 @@
 
 {{- $lightboxJs := resources.Get "js/moments-lightbox.js" | resources.Minify | fingerprint }}
 <script defer src="{{ $lightboxJs.RelPermalink }}" integrity="{{ $lightboxJs.Data.Integrity }}"></script>
+
+{{- if ne $interactionApi "" }}
+<script>
+  window.__INTERACTION_API__ = {{ $interactionApi | jsonify | safeJS }};
+</script>
+{{- $interactionJs := resources.Get "js/interaction.js" | resources.Minify | fingerprint }}
+<script defer src="{{ $interactionJs.RelPermalink }}" integrity="{{ $interactionJs.Data.Integrity }}"></script>
+{{- end }}
 
 {{- end }}{{/* end main */}}

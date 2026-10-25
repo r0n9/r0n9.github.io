@@ -16,6 +16,7 @@ type Config struct {
 	GithubRepo   string
 	GithubBranch string
 	Author       string
+	SiteURL      string
 }
 
 // loadEnvFile 自动尝试加载 .env 文件（纯 Go 标准库，无外部依赖）
@@ -61,6 +62,7 @@ func Load() (*Config, error) {
 		Port:         strings.TrimSpace(os.Getenv("PORT")),
 		GithubBranch: strings.TrimSpace(os.Getenv("GITHUB_BRANCH")),
 		Author:       strings.TrimSpace(os.Getenv("AUTHOR")),
+		SiteURL:      strings.TrimRight(strings.TrimSpace(os.Getenv("SITE_URL")), "/"),
 	}
 
 	if cfg.Port == "" {
@@ -71,6 +73,9 @@ func Load() (*Config, error) {
 	}
 	if cfg.Author == "" {
 		cfg.Author = "R0n9"
+	}
+	if cfg.SiteURL == "" {
+		cfg.SiteURL = "https://r0n9.github.io"
 	}
 
 	repoFull := strings.TrimSpace(os.Getenv("GITHUB_REPO"))

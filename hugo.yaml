@@ -16,6 +16,7 @@ outputs:
 
 permalinks:
   posts: "/:year/:month/:day/:title/"
+  moments: "/moment/:filename/"
 
 taxonomies:
   category: categories

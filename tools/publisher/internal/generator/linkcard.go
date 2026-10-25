@@ -9,6 +9,7 @@ import (
 	"net/url"
 	"regexp"
 	"strings"
+	"sync"
 	"time"
 )
 
@@ -131,15 +132,35 @@ func fetchURLMetadata(rawURL string) *URLMetadata {
 func TransformStandaloneURLsToCards(content string) string {
 	lines := strings.Split(content, "\n")
 	modified := false
-
+	type candidate struct {
+		index int
+		url   string
+	}
+	var candidates []candidate
 	for i, line := range lines {
 		trimmed := strings.TrimSpace(line)
-		if standaloneURLRegex.MatchString(trimmed) {
-			meta := fetchURLMetadata(trimmed)
-			if meta != nil {
-				esc := func(s string) string {
-					return strings.ReplaceAll(s, `"`, `&quot;`)
+		if len(candidates) < 20 && standaloneURLRegex.MatchString(trimmed) {
+			candidates = append(candidates, candidate{index: i, url: trimmed})
+		}
+	}
+
+	for start := 0; start < len(candidates); start += 3 {
+		end := start + 3
+		if end > len(candidates) {
+			end = len(candidates)
+		}
+		var wg sync.WaitGroup
+		var mu sync.Mutex
+		for _, item := range candidates[start:end] {
+			item := item
+			wg.Add(1)
+			go func() {
+				defer wg.Done()
+				meta := fetchURLMetadata(item.url)
+				if meta == nil {
+					return
 				}
+				esc := func(s string) string { return strings.ReplaceAll(s, `"`, `&quot;`) }
 				var card strings.Builder
 				card.WriteString(fmt.Sprintf(`{{< linkcard url=%q title=%q`, meta.URL, esc(meta.Title)))
 				if meta.Desc != "" {
@@ -152,10 +173,13 @@ func TransformStandaloneURLsToCards(content string) string {
 					card.WriteString(fmt.Sprintf(` image=%q`, esc(meta.Image)))
 				}
 				card.WriteString(` >}}`)
-				lines[i] = card.String()
+				mu.Lock()
+				lines[item.index] = card.String()
 				modified = true
-			}
+				mu.Unlock()
+			}()
 		}
+		wg.Wait()
 	}
 
 	if modified {

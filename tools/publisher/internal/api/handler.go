@@ -21,6 +21,30 @@ type Server struct {
 	ghClient *github.Client
 }
 
+const (
+	maxRequestBytes = 32 << 20
+	maxImageBytes   = 10 << 20
+	maxImageCount   = 20
+	maxContentChars = 1_000_000
+)
+
+func chinaNow() time.Time {
+	loc, err := time.LoadLocation("Asia/Shanghai")
+	if err != nil {
+		return time.Now().UTC()
+	}
+	return time.Now().In(loc)
+}
+
+func allowedImageExtension(name string) bool {
+	switch strings.ToLower(filepath.Ext(name)) {
+	case ".png", ".jpg", ".jpeg", ".webp", ".gif", ".avif":
+		return true
+	default:
+		return false
+	}
+}
+
 // NewServer 创建 API 服务实例
 func NewServer(cfg *config.Config, ghClient *github.Client) *Server {
 	return &Server{
@@ -108,19 +132,23 @@ func (s *Server) HandlePublishMoment(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// 限制请求体大小 32MB
-	if err := r.ParseMultipartForm(32 << 20); err != nil {
+	r.Body = http.MaxBytesReader(w, r.Body, maxRequestBytes)
+	if err := r.ParseMultipartForm(maxRequestBytes); err != nil {
 		s.JSONError(w, http.StatusBadRequest, "解析表单数据失败: "+err.Error())
 		return
 	}
 
 	content := strings.TrimSpace(r.FormValue("content"))
+	if len([]rune(content)) > maxContentChars {
+		s.JSONError(w, http.StatusRequestEntityTooLarge, "动态正文不能超过 1,000,000 个字符")
+		return
+	}
 	author := strings.TrimSpace(r.FormValue("author"))
 	if author == "" {
 		author = s.cfg.Author
 	}
 
-	now := time.Now()
+	now := chinaNow()
 	timestampPrefix := now.Format("2006-01-02-150405")
 
 	var filesToCommit []github.FileToCommit
@@ -128,17 +156,28 @@ func (s *Server) HandlePublishMoment(w http.ResponseWriter, r *http.Request) {
 
 	// 处理上传的图片
 	formFiles := r.MultipartForm.File["images"]
+	if len(formFiles) > maxImageCount {
+		s.JSONError(w, http.StatusRequestEntityTooLarge, "最多上传 20 张图片")
+		return
+	}
 	for i, fileHeader := range formFiles {
+		if fileHeader.Size > maxImageBytes || !allowedImageExtension(fileHeader.Filename) {
+			s.JSONError(w, http.StatusUnsupportedMediaType, "仅支持不超过 10 MB 的 PNG、JPG、WEBP、GIF 或 AVIF 图片")
+			return
+		}
 		file, err := fileHeader.Open()
 		if err != nil {
 			s.JSONError(w, http.StatusInternalServerError, "打开上传文件失败: "+err.Error())
 			return
 		}
-		defer file.Close()
-
-		fileBytes, err := io.ReadAll(file)
+		fileBytes, err := io.ReadAll(io.LimitReader(file, maxImageBytes+1))
+		_ = file.Close()
 		if err != nil {
 			s.JSONError(w, http.StatusInternalServerError, "读取上传文件失败: "+err.Error())
+			return
+		}
+		if len(fileBytes) > maxImageBytes {
+			s.JSONError(w, http.StatusRequestEntityTooLarge, "单张图片不能超过 10 MB")
 			return
 		}
 
@@ -188,7 +227,7 @@ func (s *Server) HandlePublishMoment(w http.ResponseWriter, r *http.Request) {
 		"commit_url": commitURL,
 		"md_path":    mdPath,
 		"images":     webImagePaths,
-		"page_url":   "/moments/#moment-" + now.Format("20060102150405"),
+		"page_url":   s.cfg.SiteURL + "/moment/" + now.Format("2006-01-02-150405") + "/",
 	})
 }
 
@@ -199,7 +238,8 @@ func (s *Server) HandlePublishPost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if err := r.ParseMultipartForm(64 << 20); err != nil {
+	r.Body = http.MaxBytesReader(w, r.Body, maxRequestBytes)
+	if err := r.ParseMultipartForm(maxRequestBytes); err != nil {
 		s.JSONError(w, http.StatusBadRequest, "解析表单数据失败: "+err.Error())
 		return
 	}
@@ -207,6 +247,10 @@ func (s *Server) HandlePublishPost(w http.ResponseWriter, r *http.Request) {
 	title := strings.TrimSpace(r.FormValue("title"))
 	description := strings.TrimSpace(r.FormValue("description"))
 	content := strings.TrimSpace(r.FormValue("content"))
+	if len([]rune(title)) > 300 || len([]rune(description)) > 2_000 || len([]rune(content)) > maxContentChars {
+		s.JSONError(w, http.StatusRequestEntityTooLarge, "标题、摘要或正文长度超出限制")
+		return
+	}
 	draft := r.FormValue("draft") == "true"
 
 	rawCategories := strings.TrimSpace(r.FormValue("categories"))
@@ -231,24 +275,35 @@ func (s *Server) HandlePublishPost(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	now := time.Now()
+	now := chinaNow()
 	timestampPrefix := now.Format("2006-01-02-150405")
 
 	var filesToCommit []github.FileToCommit
 
 	// 处理文章附带上传的插图
 	formFiles := r.MultipartForm.File["images"]
+	if len(formFiles) > maxImageCount {
+		s.JSONError(w, http.StatusRequestEntityTooLarge, "最多上传 20 张图片")
+		return
+	}
 	for i, fileHeader := range formFiles {
+		if fileHeader.Size > maxImageBytes || !allowedImageExtension(fileHeader.Filename) {
+			s.JSONError(w, http.StatusUnsupportedMediaType, "仅支持不超过 10 MB 的 PNG、JPG、WEBP、GIF 或 AVIF 图片")
+			return
+		}
 		file, err := fileHeader.Open()
 		if err != nil {
 			s.JSONError(w, http.StatusInternalServerError, "打开上传文件失败: "+err.Error())
 			return
 		}
-		defer file.Close()
-
-		fileBytes, err := io.ReadAll(file)
+		fileBytes, err := io.ReadAll(io.LimitReader(file, maxImageBytes+1))
+		_ = file.Close()
 		if err != nil {
 			s.JSONError(w, http.StatusInternalServerError, "读取上传文件失败: "+err.Error())
+			return
+		}
+		if len(fileBytes) > maxImageBytes {
+			s.JSONError(w, http.StatusRequestEntityTooLarge, "单张图片不能超过 10 MB")
 			return
 		}
 

@@ -6,12 +6,14 @@ compatibility_date = "2024-01-01"
 GITHUB_REPO = "r0n9/r0n9.github.io"
 GITHUB_BRANCH = "master"
 AUTHOR = "R0n9"
+SITE_URL = "https://r0n9.github.io"
 
 # 敏感安全凭据（严禁明文写入本文件）：
 # 部署后请通过终端命令安全注入或在 Cloudflare 控制台 -> Settings -> Variables 添加：
 #
 # npx wrangler secret put GITHUB_TOKEN
 # npx wrangler secret put ADMIN_SECRET
+# npx wrangler secret put BARK_KEY  # (可选) Bark iOS 实时通知 Device Key 或完整 URL
 
 # Cloudflare D1 互动数据库绑定 (文章与动态的点赞与极简留言)：
 # 执行创建命令：npx wrangler d1 create blog-interaction

@@ -1757,6 +1757,21 @@ html[data-theme="dark"] #theme-toggle .sun {
   letter-spacing: -0.01em;
 }
 
+.moment-time-link {
+  margin-left: auto;
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: opacity 0.15s ease;
+}
+
+.moment-time-link:hover .moment-time {
+  color: var(--primary);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
 .moment-time {
   margin-left: auto;
   font-size: 0.82rem;
@@ -1766,6 +1781,7 @@ html[data-theme="dark"] #theme-toggle .sun {
   gap: 6px;
   font-variant-numeric: tabular-nums;
   letter-spacing: 0.01em;
+  transition: color 0.15s ease;
 }
 
 .moment-body {

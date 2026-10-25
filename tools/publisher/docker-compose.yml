@@ -17,5 +17,6 @@ services:
       - GITHUB_REPO=r0n9/r0n9.github.io
       - GITHUB_BRANCH=master
       - AUTHOR=R0n9
+      - SITE_URL=https://r0n9.github.io
       - PORT=13133
       - TZ=Asia/Shanghai

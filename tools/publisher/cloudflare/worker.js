@@ -1,13 +1,15 @@
 /**
  * R0n9's Blog Publisher - Cloudflare Worker Edition
  * 极简、免服务器、零运维的边缘博客在线发布服务
- * 
+ *
  * 环境变量 (通过 Cloudflare 控制台或 wrangler secret 设置)：
  * - GITHUB_TOKEN: 具备仓库 Contents 写入权限的 GitHub 访问令牌 (Secret)
  * - ADMIN_SECRET: Web 页面访问与发布管理口令 (Secret)
+ * - BARK_KEY: (可选) Bark iOS 实时通知推送 Device Key 或完整 URL (Secret/Variable)
  * - GITHUB_REPO: 目标仓库 (如 "r0n9/r0n9.github.io")
  * - GITHUB_BRANCH: 分支名 (默认 "master")
  * - AUTHOR: 默认署名作者 (默认 "R0n9")
+ * - SITE_URL: 博客公开地址 (默认 "https://r0n9.github.io")
  */
 
 // ----------------------------------------------------
@@ -22,6 +24,35 @@ function corsHeaders(request) {
     'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-Admin-Secret',
     'Access-Control-Max-Age': '86400'
   };
+}
+
+function getSiteUrl(env) {
+  return (env.SITE_URL || 'https://r0n9.github.io').replace(/\/+$/, '');
+}
+
+const MAX_UPLOAD_BYTES = 32 * 1024 * 1024;
+const MAX_IMAGE_BYTES = 10 * 1024 * 1024;
+const MAX_IMAGE_COUNT = 20;
+const MAX_CONTENT_CHARS = 1_000_000;
+const ALLOWED_IMAGE_EXTENSIONS = new Set(['.png', '.jpg', '.jpeg', '.webp', '.gif', '.avif']);
+
+function validateUploadRequest(request, maxBytes = MAX_UPLOAD_BYTES) {
+  const contentLength = Number(request.headers.get('Content-Length') || 0);
+  return !contentLength || contentLength <= maxBytes;
+}
+
+function getImageExtension(file) {
+  const dot = file.name.lastIndexOf('.');
+  const ext = dot >= 0 ? file.name.substring(dot).toLowerCase() : '';
+  if (ALLOWED_IMAGE_EXTENSIONS.has(ext)) return ext;
+  const typeExt = {
+    'image/png': '.png',
+    'image/jpeg': '.jpg',
+    'image/webp': '.webp',
+    'image/gif': '.gif',
+    'image/avif': '.avif'
+  }[file.type];
+  return typeExt || '';
 }
 
 function jsonResponse(data, status = 200, headers = {}, request = null) {
@@ -68,7 +99,11 @@ function extractAuthToken(request) {
   if (cookie) {
     const match = cookie.match(/admin_secret=([^;]+)/);
     if (match) {
-      return match[1].trim();
+      try {
+        return decodeURIComponent(match[1].trim());
+      } catch (_) {
+        return match[1].trim();
+      }
     }
   }
   return '';
@@ -236,8 +271,8 @@ async function handleAuthVerify(request, env) {
     branch,
     author
   }, 200, {
-    'Set-Cookie': `admin_secret=${encodeURIComponent(body.secret)}; Path=/; HttpOnly; SameSite=Lax; Max-Age=2592000`
-  });
+    'Set-Cookie': `admin_secret=${encodeURIComponent(body.secret)}; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=2592000`
+  }, request);
 }
 
 async function handlePublishMoment(request, env) {
@@ -247,10 +282,21 @@ async function handlePublishMoment(request, env) {
     return jsonError('口令未提供或不正确，无权访问', 401);
   }
 
+  if (!validateUploadRequest(request)) {
+    return jsonError('上传内容不能超过 32 MB', 413, request);
+  }
   const formData = await request.formData();
   const content = (formData.get('content') || '').toString().trim();
   const author = (formData.get('author') || env.AUTHOR || 'R0n9').toString().trim();
   const imageFiles = formData.getAll('images');
+
+  if (content.length > MAX_CONTENT_CHARS) {
+    return jsonError('动态正文不能超过 1,000,000 个字符', 413, request);
+  }
+
+  if (imageFiles.length > MAX_IMAGE_COUNT) {
+    return jsonError(`最多上传 ${MAX_IMAGE_COUNT} 张图片`, 413, request);
+  }
 
   if (!content && imageFiles.length === 0) {
     return jsonError('动态文字内容与配图不能均为空');
@@ -264,16 +310,19 @@ async function handlePublishMoment(request, env) {
   for (let i = 0; i < imageFiles.length; i++) {
     const file = imageFiles[i];
     if (!(file instanceof File) || file.size === 0) continue;
+    if (file.size > MAX_IMAGE_BYTES) {
+      return jsonError('单张图片不能超过 10 MB', 413, request);
+    }
+    const ext = getImageExtension(file);
+    if (!ext) {
+      return jsonError('仅支持 PNG、JPG、WEBP、GIF 和 AVIF 图片', 415, request);
+    }
 
     const arrayBuffer = await file.arrayBuffer();
     const base64Data = bufferToBase64(arrayBuffer);
 
-    let ext = '.png';
     const lastDot = file.name.lastIndexOf('.');
-    if (lastDot !== -1) {
-      ext = file.name.substring(lastDot);
-    }
-    const cleanName = sanitizeFilename(file.name.substring(0, lastDot !== -1 ? lastDot : undefined));
+    const cleanName = sanitizeFilename(lastDot >= 0 ? file.name.substring(0, lastDot) : file.name);
     const targetFilename = `${timeMeta.timestampPrefix}_${i + 1}_${cleanName}${ext}`;
     const repoImagePath = `static/images/moments/${targetFilename}`;
     const webImagePath = `/images/moments/${targetFilename}`;
@@ -323,7 +372,7 @@ async function handlePublishMoment(request, env) {
     commit_url: commitUrl,
     md_path: mdPath,
     images: webImagePaths,
-    page_url: `/moments/#moment-${timeMeta.momentHash}`
+    page_url: `/moment/${timeMeta.timestampPrefix}/`
   });
 }
 
@@ -334,6 +383,9 @@ async function handlePublishPost(request, env) {
     return jsonError('口令未提供或不正确，无权访问', 401);
   }
 
+  if (!validateUploadRequest(request)) {
+    return jsonError('上传内容不能超过 32 MB', 413, request);
+  }
   const formData = await request.formData();
   const title = (formData.get('title') || '').toString().trim();
   const description = (formData.get('description') || '').toString().trim();
@@ -342,6 +394,14 @@ async function handlePublishPost(request, env) {
   const draft = formData.get('draft') === 'true';
   const content = (formData.get('content') || '').toString().trim();
   const imageFiles = formData.getAll('images');
+
+  if (title.length > 300 || description.length > 2_000 || content.length > MAX_CONTENT_CHARS) {
+    return jsonError('标题、摘要或正文长度超出限制', 413, request);
+  }
+
+  if (imageFiles.length > MAX_IMAGE_COUNT) {
+    return jsonError(`最多上传 ${MAX_IMAGE_COUNT} 张图片`, 413, request);
+  }
 
   if (!title) {
     return jsonError('文章标题不能为空');
@@ -354,16 +414,19 @@ async function handlePublishPost(request, env) {
   for (let i = 0; i < imageFiles.length; i++) {
     const file = imageFiles[i];
     if (!(file instanceof File) || file.size === 0) continue;
+    if (file.size > MAX_IMAGE_BYTES) {
+      return jsonError('单张图片不能超过 10 MB', 413, request);
+    }
+    const ext = getImageExtension(file);
+    if (!ext) {
+      return jsonError('仅支持 PNG、JPG、WEBP、GIF 和 AVIF 图片', 415, request);
+    }
 
     const arrayBuffer = await file.arrayBuffer();
     const base64Data = bufferToBase64(arrayBuffer);
 
-    let ext = '.png';
     const lastDot = file.name.lastIndexOf('.');
-    if (lastDot !== -1) {
-      ext = file.name.substring(lastDot);
-    }
-    const cleanName = sanitizeFilename(file.name.substring(0, lastDot !== -1 ? lastDot : undefined));
+    const cleanName = sanitizeFilename(lastDot >= 0 ? file.name.substring(0, lastDot) : file.name);
     const targetFilename = `${timeMeta.timestampPrefix}_${i + 1}_${cleanName}${ext}`;
     const repoImagePath = `static/images/${targetFilename}`;
 
@@ -456,8 +519,6 @@ async function fetchUrlMetadata(targetUrl) {
       signal: controller.signal,
       redirect: 'follow'
     });
-    clearTimeout(timeoutId);
-
     if (!resp.ok) {
       return {
         url: targetUrl,
@@ -468,8 +529,36 @@ async function fetchUrlMetadata(targetUrl) {
       };
     }
 
-    const html = await resp.text();
-    const head = html.substring(0, 150000);
+    const maxBytes = 150 * 1024;
+    if (resp.headers.get('Content-Length') && Number(resp.headers.get('Content-Length')) > maxBytes) {
+      return { url: targetUrl, title: parsedHost, desc: '', image: '', site: parsedHost };
+    }
+    let head = '';
+    if (resp.body && typeof resp.body.getReader === 'function') {
+      const reader = resp.body.getReader();
+      const chunks = [];
+      let total = 0;
+      while (total < maxBytes) {
+        const part = await reader.read();
+        if (part.done) break;
+        const chunk = part.value;
+        const remaining = maxBytes - total;
+        const slice = chunk.byteLength > remaining ? chunk.slice(0, remaining) : chunk;
+        chunks.push(slice);
+        total += slice.byteLength;
+        if (slice.byteLength < chunk.byteLength) break;
+      }
+      const merged = new Uint8Array(total);
+      let offset = 0;
+      for (const chunk of chunks) {
+        merged.set(chunk, offset);
+        offset += chunk.byteLength;
+      }
+      head = new TextDecoder().decode(merged);
+    } else {
+      head = (await resp.text()).substring(0, maxBytes);
+    }
+    clearTimeout(timeoutId);
 
     function getMeta(prop) {
       const regex = new RegExp('<meta[^>]+(?:property|name)=["\']' + prop + '["\'][^>]+content=["\']([^"\']+)["\']', 'i');
@@ -538,25 +627,36 @@ async function transformStandaloneUrlsToCards(content) {
   const urlRegex = /^https?:\/\/[^\s<>"'()]+$/;
   let modified = false;
 
-  for (let i = 0; i < lines.length; i++) {
+  const candidates = [];
+  for (let i = 0; i < lines.length && candidates.length < 20; i++) {
     const trimmed = lines[i].trim();
     if (urlRegex.test(trimmed)) {
-      try {
-        const meta = await fetchUrlMetadata(trimmed);
-        if (meta) {
-          const esc = s => (s || '').replace(/"/g, '&quot;');
-          let card = `{{< linkcard url="${meta.url}" title="${esc(meta.title)}"`;
-          if (meta.desc) card += ` desc="${esc(meta.desc)}"`;
-          if (meta.site) card += ` site="${esc(meta.site)}"`;
-          if (meta.image) card += ` image="${esc(meta.image)}"`;
-          card += ' >}}';
-          lines[i] = card;
-          modified = true;
-        }
-      } catch (e) {
-        console.warn('URL transform failed:', trimmed, e);
-      }
+      candidates.push({ index: i, url: trimmed });
     }
+  }
+
+  for (let start = 0; start < candidates.length; start += 3) {
+    const batch = candidates.slice(start, start + 3);
+    await Promise.all(batch.map(async ({ index, url }) => {
+      try {
+        const meta = await fetchUrlMetadata(url);
+        if (!meta) return;
+        const esc = s => (s || '').replace(/"/g, '&quot;');
+        let card = `{{< linkcard url="${meta.url}" title="${esc(meta.title)}"`;
+        if (meta.desc) card += ` desc="${esc(meta.desc)}"`;
+        if (meta.site) card += ` site="${esc(meta.site)}"`;
+        if (meta.image) card += ` image="${esc(meta.image)}"`;
+        card += ' >}}';
+        lines[index] = card;
+        modified = true;
+      } catch (e) {
+        console.warn('URL transform failed:', url, e);
+      }
+    }));
+  }
+
+  if (candidates.length >= 20) {
+    console.warn('URL transform capped at 20 URLs per document');
   }
 
   return modified ? lines.join('\n') : content;
@@ -576,10 +676,22 @@ async function initDatabase(env) {
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         target_key TEXT NOT NULL,
         client_ip_hash TEXT NOT NULL,
+        ip TEXT,
+        ip_location TEXT,
+        user_agent TEXT,
+        os TEXT,
+        browser TEXT,
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
         UNIQUE(target_key, client_ip_hash)
       )`),
       env.DB.prepare(`CREATE INDEX IF NOT EXISTS idx_likes_target ON likes(target_key)`),
+      env.DB.prepare(`CREATE TABLE IF NOT EXISTS like_events (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        target_key TEXT NOT NULL,
+        client_ip_hash TEXT NOT NULL,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+      )`),
+      env.DB.prepare(`CREATE INDEX IF NOT EXISTS idx_like_events_client ON like_events(client_ip_hash, created_at)`),
       env.DB.prepare(`CREATE TABLE IF NOT EXISTS comments (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         target_key TEXT NOT NULL,
@@ -588,12 +700,45 @@ async function initDatabase(env) {
         avatar TEXT,
         content TEXT NOT NULL,
         ip_hash TEXT,
+        ip TEXT,
+        ip_location TEXT,
+        user_agent TEXT,
+        os TEXT,
+        browser TEXT,
         status INTEGER DEFAULT 1,
         is_admin INTEGER DEFAULT 0,
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP
       )`),
       env.DB.prepare(`CREATE INDEX IF NOT EXISTS idx_comments_target ON comments(target_key, status, created_at)`)
     ]);
+
+    // 自动平滑升级已有数据库表结构 (如已存在字段则捕获忽略)
+    const newCols = ['ip', 'ip_location', 'user_agent', 'os', 'browser'];
+    for (const col of newCols) {
+      try { await env.DB.prepare(`ALTER TABLE comments ADD COLUMN ${col} TEXT`).run(); } catch (err) {
+        if (!String(err?.message || err).toLowerCase().includes('duplicate column')) console.error(`Failed to add comments.${col}:`, err);
+      }
+      try { await env.DB.prepare(`ALTER TABLE likes ADD COLUMN ${col} TEXT`).run(); } catch (err) {
+        if (!String(err?.message || err).toLowerCase().includes('duplicate column')) console.error(`Failed to add likes.${col}:`, err);
+      }
+    }
+
+    // 自动平滑迁移历史动态 target_key (如 moment-20261023030722 -> /moment/2026-10-23-030722/)
+    try {
+      await env.DB.prepare(`
+        UPDATE OR IGNORE likes
+        SET target_key = '/moment/' || substr(target_key, 8, 4) || '-' || substr(target_key, 12, 2) || '-' || substr(target_key, 14, 2) || '-' || substr(target_key, 16, 6) || '/'
+        WHERE target_key LIKE 'moment-%' AND length(target_key) = 21
+      `).run();
+      await env.DB.prepare(`
+        UPDATE comments
+        SET target_key = '/moment/' || substr(target_key, 8, 4) || '-' || substr(target_key, 12, 2) || '-' || substr(target_key, 14, 2) || '-' || substr(target_key, 16, 6) || '/'
+        WHERE target_key LIKE 'moment-%' AND length(target_key) = 21
+      `).run();
+    } catch (err) {
+      console.error('Failed to migrate historical interaction keys:', err);
+    }
+
     isDbInit = true;
     return true;
   } catch (err) {
@@ -610,6 +755,113 @@ async function sha256Hex(str) {
 async function getIpHash(request) {
   const ip = request.headers.get('CF-Connecting-IP') || request.headers.get('X-Forwarded-For') || '127.0.0.1';
   return await sha256Hex(ip + '_blog_interaction_salt');
+}
+
+// 解析访客来源客户端元数据 (IP、地理位置、操作系统、浏览器)
+function parseClientInfo(request) {
+  const ip = request.headers.get('CF-Connecting-IP') ||
+             request.headers.get('X-Forwarded-For') ||
+             '127.0.0.1';
+
+  const cf = request.cf || {};
+  const country = cf.country || '';
+  const city = cf.city || '';
+  let ipLocation = '';
+  if (city && country) {
+    ipLocation = country + ' · ' + city;
+  } else if (country) {
+    ipLocation = country;
+  }
+
+  const ua = request.headers.get('User-Agent') || '';
+
+  let os = '其他系统';
+  if (/iPhone/i.test(ua)) os = 'iOS (iPhone)';
+  else if (/iPad/i.test(ua)) os = 'iPadOS';
+  else if (/Macintosh|Mac OS X/i.test(ua)) os = 'macOS';
+  else if (/Android/i.test(ua)) os = 'Android';
+  else if (/Windows NT 10\.0/i.test(ua)) os = 'Windows 10/11';
+  else if (/Windows NT 6\.3/i.test(ua)) os = 'Windows 8.1';
+  else if (/Windows NT 6\.1/i.test(ua)) os = 'Windows 7';
+  else if (/Windows NT/i.test(ua)) os = 'Windows';
+  else if (/HarmonyOS/i.test(ua)) os = 'HarmonyOS';
+  else if (/Linux/i.test(ua)) os = 'Linux';
+
+  let browser = '其他浏览器';
+  if (/MicroMessenger/i.test(ua)) browser = '微信内嵌 (WeChat)';
+  else if (/QQBrowser/i.test(ua)) browser = 'QQ 浏览器';
+  else if (/Edg/i.test(ua)) browser = 'Edge';
+  else if (/Chrome|CriOS/i.test(ua)) browser = 'Chrome';
+  else if (/Safari/i.test(ua) && !/Chrome|CriOS/i.test(ua)) browser = 'Safari';
+  else if (/Firefox|FxiOS/i.test(ua)) browser = 'Firefox';
+  else if (/OPR/i.test(ua)) browser = 'Opera';
+
+  return { ip, ipLocation, os, browser, ua };
+}
+
+// URL 安全反转义解码 (escape / percent-encoding -> 可读中文字符)
+function safeDecodeURI(str) {
+  if (!str || typeof str !== 'string') return '';
+  try {
+    return decodeURIComponent(str);
+  } catch (_) {
+    try {
+      return decodeURI(str);
+    } catch (_) {
+      return str;
+    }
+  }
+}
+
+// 规范化目标标识 target_key (兼容旧版 moment-20261023030722 自动转换为 /moment/2026-10-23-030722/)
+function normalizeTargetKey(key) {
+  if (!key || typeof key !== 'string') return '';
+  key = key.trim();
+  const m = key.match(/^moment-(\d{4})(\d{2})(\d{2})(\d{2})(\d{2})(\d{2})$/);
+  if (m) {
+    return `/moment/${m[1]}-${m[2]}-${m[3]}-${m[4]}${m[5]}${m[6]}/`;
+  }
+  return key;
+}
+
+// ----------------------------------------------------
+// 3.6 Bark iOS 实时通知推送 (可选环境变量: BARK_KEY 或 BARK_URL)
+// ----------------------------------------------------
+
+async function sendBarkNotification(env, { title, body, group = '博客互动', url = '' }) {
+  const rawKey = (env.BARK_KEY || env.BARK_URL || '').trim();
+  if (!rawKey) return; // 未配置通知凭据，静默跳过
+
+  let endpoint = rawKey;
+  if (!endpoint.startsWith('http://') && !endpoint.startsWith('https://')) {
+    endpoint = 'https://api.day.app/' + endpoint;
+  }
+  endpoint = endpoint.replace(/\/+$/, '');
+
+  const payload = {
+    title: title,
+    body: body,
+    group: group,
+    icon: `${getSiteUrl(env)}/favicon.ico`,
+    url: url
+  };
+
+  try {
+    const resp = await fetch(endpoint, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json; charset=utf-8'
+      },
+      body: JSON.stringify(payload)
+    });
+    // 若 POST 异常，自动降级尝试 GET 请求
+    if (!resp.ok && resp.status !== 400) {
+      const getUrl = `${endpoint}/${encodeURIComponent(title)}/${encodeURIComponent(body)}?group=${encodeURIComponent(group)}&url=${encodeURIComponent(url)}`;
+      await fetch(getUrl).catch(() => {});
+    }
+  } catch (err) {
+    console.error('Failed to send Bark notification:', err);
+  }
 }
 
 async function generateAvatar(email) {
@@ -635,43 +887,64 @@ async function handleGetInteractionsStats(request, env) {
   if (!keysParam) {
     return jsonResponse({ ok: true, stats: {} }, 200, {}, request);
   }
-  const keys = keysParam.split(',').map(k => k.trim()).filter(Boolean);
-  if (keys.length === 0) {
+  const rawKeys = keysParam.split(',').map(k => k.trim()).filter(Boolean);
+  if (rawKeys.length === 0) {
     return jsonResponse({ ok: true, stats: {} }, 200, {}, request);
   }
   const ipHash = await getIpHash(request);
 
+  // 建立 rawKey 与 normalizedKey 的双向映射，兼容新老历史记录
+  const keyMap = new Map();
+  const queryKeysSet = new Set();
+  rawKeys.forEach(rk => {
+    const nk = normalizeTargetKey(rk);
+    if (!keyMap.has(nk)) keyMap.set(nk, new Set());
+    keyMap.get(nk).add(rk);
+    queryKeysSet.add(rk);
+    queryKeysSet.add(nk);
+  });
+  const queryKeys = Array.from(queryKeysSet);
+
   const stats = {};
-  keys.forEach(k => {
+  rawKeys.forEach(k => {
     stats[k] = { likes: 0, comments: 0, liked: false };
   });
 
-  const placeholders = keys.map(() => '?').join(',');
+  const placeholders = queryKeys.map(() => '?').join(',');
   const likesStmt = env.DB.prepare(
     `SELECT target_key, COUNT(*) as count FROM likes WHERE target_key IN (${placeholders}) GROUP BY target_key`
-  ).bind(...keys);
+  ).bind(...queryKeys);
   const userLikesStmt = env.DB.prepare(
     `SELECT target_key FROM likes WHERE client_ip_hash = ? AND target_key IN (${placeholders})`
-  ).bind(ipHash, ...keys);
+  ).bind(ipHash, ...queryKeys);
   const commentsStmt = env.DB.prepare(
     `SELECT target_key, COUNT(*) as count FROM comments WHERE status = 1 AND target_key IN (${placeholders}) GROUP BY target_key`
-  ).bind(...keys);
+  ).bind(...queryKeys);
 
   const [likesRes, userLikesRes, commentsRes] = await env.DB.batch([likesStmt, userLikesStmt, commentsStmt]);
 
   if (likesRes && likesRes.results) {
     likesRes.results.forEach(row => {
-      if (stats[row.target_key]) stats[row.target_key].likes = row.count || 0;
+      const matchedRaws = keyMap.get(normalizeTargetKey(row.target_key)) || [row.target_key];
+      matchedRaws.forEach(rk => {
+        if (stats[rk]) stats[rk].likes = Math.max(stats[rk].likes, row.count || 0);
+      });
     });
   }
   if (userLikesRes && userLikesRes.results) {
     userLikesRes.results.forEach(row => {
-      if (stats[row.target_key]) stats[row.target_key].liked = true;
+      const matchedRaws = keyMap.get(normalizeTargetKey(row.target_key)) || [row.target_key];
+      matchedRaws.forEach(rk => {
+        if (stats[rk]) stats[rk].liked = true;
+      });
     });
   }
   if (commentsRes && commentsRes.results) {
     commentsRes.results.forEach(row => {
-      if (stats[row.target_key]) stats[row.target_key].comments = row.count || 0;
+      const matchedRaws = keyMap.get(normalizeTargetKey(row.target_key)) || [row.target_key];
+      matchedRaws.forEach(rk => {
+        if (stats[rk]) stats[rk].comments = Math.max(stats[rk].comments, row.count || 0);
+      });
     });
   }
 
@@ -684,21 +957,38 @@ async function handleGetInteractionsComments(request, env) {
   }
   await initDatabase(env);
   const url = new URL(request.url);
-  const key = url.searchParams.get('key');
-  if (!key) {
+  const rawKey = url.searchParams.get('key');
+  if (!rawKey) {
     return jsonError('缺少 key 参数', 400, request);
   }
-  const stmt = env.DB.prepare(
-    `SELECT id, target_key, author, avatar, content, is_admin, created_at 
-     FROM comments 
-     WHERE target_key = ? AND status = 1 
-     ORDER BY id ASC`
-  ).bind(key);
+  const key = normalizeTargetKey(rawKey);
+  const requestedLimit = Number(url.searchParams.get('limit') || 100);
+  const limit = Math.min(Math.max(Number.isFinite(requestedLimit) ? requestedLimit : 100, 1), 100);
+  const after = Number(url.searchParams.get('after') || 0);
+  const stmt = after > 0
+    ? env.DB.prepare(
+      `SELECT id, target_key, author, avatar, content, is_admin, created_at
+       FROM comments
+       WHERE (target_key = ? OR target_key = ?) AND status = 1 AND id > ?
+       ORDER BY id ASC LIMIT ?`
+    ).bind(key, rawKey, after, limit)
+    : env.DB.prepare(
+      `SELECT id, target_key, author, avatar, content, is_admin, created_at
+       FROM comments
+       WHERE (target_key = ? OR target_key = ?) AND status = 1
+       ORDER BY id ASC LIMIT ?`
+    ).bind(key, rawKey, limit);
   const { results } = await stmt.all();
-  return jsonResponse({ ok: true, comments: results || [] }, 200, {}, request);
+  const rows = results || [];
+  return jsonResponse({
+    ok: true,
+    comments: rows,
+    has_more: rows.length === limit,
+    next_after: rows.length === limit ? rows[rows.length - 1].id : null
+  }, 200, {}, request);
 }
 
-async function handleInteractionsLike(request, env) {
+async function handleInteractionsLike(request, env, ctx) {
   if (!env.DB) {
     return jsonError('数据库未绑定 (D1 DB is not configured)', 500, request);
   }
@@ -709,31 +999,77 @@ async function handleInteractionsLike(request, env) {
   } catch {
     return jsonError('无效的 JSON 请求体', 400, request);
   }
-  const { key } = body || {};
-  if (!key || typeof key !== 'string') {
+  const { key: rawKey, liked: requestedLiked } = body || {};
+  if (!rawKey || typeof rawKey !== 'string') {
     return jsonError('缺少有效的 key 参数', 400, request);
   }
+  const key = normalizeTargetKey(rawKey);
   const ipHash = await getIpHash(request);
+  const clientInfo = parseClientInfo(request);
 
-  const checkStmt = env.DB.prepare('SELECT id FROM likes WHERE target_key = ? AND client_ip_hash = ?').bind(key, ipHash);
-  const existing = await checkStmt.first();
+  const recentEvent = await env.DB.prepare(
+    "SELECT COUNT(*) AS count FROM like_events WHERE client_ip_hash = ? AND created_at > datetime('now', '-1 minute')"
+  ).bind(ipHash).first();
+  if (recentEvent && recentEvent.count >= 10) {
+    return jsonError('操作过于频繁，请稍后再试', 429, request);
+  }
+  await env.DB.prepare('INSERT INTO like_events (target_key, client_ip_hash) VALUES (?, ?)').bind(key, ipHash).run();
+  await env.DB.prepare("DELETE FROM like_events WHERE created_at < datetime('now', '-10 minutes')").run();
 
-  let liked = false;
-  if (existing) {
-    await env.DB.prepare('DELETE FROM likes WHERE target_key = ? AND client_ip_hash = ?').bind(key, ipHash).run();
-    liked = false;
+  let liked;
+  if (typeof requestedLiked === 'boolean') {
+    liked = requestedLiked;
+    if (liked) {
+      await env.DB.prepare(
+        `INSERT OR IGNORE INTO likes (target_key, client_ip_hash, ip, ip_location, user_agent, os, browser)
+         VALUES (?, ?, ?, ?, ?, ?, ?)`
+      ).bind(key, ipHash, clientInfo.ip, clientInfo.ipLocation, clientInfo.ua, clientInfo.os, clientInfo.browser).run();
+    } else {
+      await env.DB.prepare('DELETE FROM likes WHERE (target_key = ? OR target_key = ?) AND client_ip_hash = ?').bind(key, rawKey, ipHash).run();
+    }
   } else {
-    await env.DB.prepare('INSERT INTO likes (target_key, client_ip_hash) VALUES (?, ?)').bind(key, ipHash).run();
-    liked = true;
+    const existing = await env.DB.prepare('SELECT id FROM likes WHERE (target_key = ? OR target_key = ?) AND client_ip_hash = ?').bind(key, rawKey, ipHash).first();
+    liked = !existing;
+    if (liked) {
+      await env.DB.prepare(
+        `INSERT OR IGNORE INTO likes (target_key, client_ip_hash, ip_location, ip, user_agent, os, browser)
+         VALUES (?, ?, ?, ?, ?, ?, ?)`
+      ).bind(key, ipHash, clientInfo.ipLocation, clientInfo.ip, clientInfo.ua, clientInfo.os, clientInfo.browser).run();
+    } else {
+      await env.DB.prepare('DELETE FROM likes WHERE (target_key = ? OR target_key = ?) AND client_ip_hash = ?').bind(key, rawKey, ipHash).run();
+    }
   }
 
-  const countRow = await env.DB.prepare('SELECT COUNT(*) as count FROM likes WHERE target_key = ?').bind(key).first();
+  const countRow = await env.DB.prepare('SELECT COUNT(*) as count FROM likes WHERE target_key = ? OR target_key = ?').bind(key, rawKey).first();
   const likes = countRow ? countRow.count : 0;
+
+  if (liked) {
+    const isMoment = key.startsWith('/moment/');
+    const targetLabel = isMoment ? '【动态】' : '【文章】';
+    const decodedKey = safeDecodeURI(key);
+    const pageUrl = `${getSiteUrl(env)}${key.startsWith('/') ? key : '/' + key}`;
+
+    const title = isMoment
+      ? `❤️ 动态收到新点赞: ${decodedKey}`
+      : `❤️ 博客文章收到新点赞: ${decodedKey}`;
+
+    const notifyPromise = sendBarkNotification(env, {
+      title: title,
+      body: `${targetLabel}${key}\n【当前获赞】${likes} 次\n【来源】${clientInfo.ip} (${clientInfo.ipLocation || '未知地区'}) · ${clientInfo.os} · ${clientInfo.browser}`,
+      group: '博客互动',
+      url: pageUrl
+    });
+    if (ctx && typeof ctx.waitUntil === 'function') {
+      ctx.waitUntil(notifyPromise);
+    } else {
+      notifyPromise.catch(() => {});
+    }
+  }
 
   return jsonResponse({ ok: true, likes, liked }, 200, {}, request);
 }
 
-async function handleInteractionsComment(request, env) {
+async function handleInteractionsComment(request, env, ctx) {
   if (!env.DB) {
     return jsonError('数据库未绑定 (D1 DB is not configured)', 500, request);
   }
@@ -744,13 +1080,14 @@ async function handleInteractionsComment(request, env) {
   } catch {
     return jsonError('无效的 JSON 请求体', 400, request);
   }
-  const { key, author, email, content, hp_token } = body || {};
+  const { key: rawKey, author, email, content, hp_token } = body || {};
   if (hp_token) {
     return jsonResponse({ ok: true, comment: { id: 0, author: author || '访客', content: content || '' } }, 200, {}, request);
   }
-  if (!key || typeof key !== 'string') {
+  if (!rawKey || typeof rawKey !== 'string') {
     return jsonError('目标页面参数无效', 400, request);
   }
+  const key = normalizeTargetKey(rawKey);
   const trimmedAuthor = (author || '').trim();
   if (!trimmedAuthor || trimmedAuthor.length > 20) {
     return jsonError('请填写称呼 (1-20字)', 400, request);
@@ -761,6 +1098,7 @@ async function handleInteractionsComment(request, env) {
   }
 
   const ipHash = await getIpHash(request);
+  const clientInfo = parseClientInfo(request);
 
   const recentComment = await env.DB.prepare(
     "SELECT id FROM comments WHERE ip_hash = ? AND created_at > datetime('now', '-20 seconds') LIMIT 1"
@@ -780,9 +1118,13 @@ async function handleInteractionsComment(request, env) {
   const avatar = await generateAvatar(email);
 
   const insertResult = await env.DB.prepare(
-    `INSERT INTO comments (target_key, author, email, avatar, content, ip_hash, status, is_admin)
-     VALUES (?, ?, ?, ?, ?, ?, 1, ?)`
-  ).bind(key, finalAuthor, (email || '').trim(), avatar, trimmedContent, ipHash, isAdmin).run();
+    `INSERT INTO comments (target_key, author, email, avatar, content, ip_hash, ip, ip_location, user_agent, os, browser, status, is_admin)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1, ?)`
+  ).bind(
+    key, finalAuthor, (email || '').trim(), avatar, trimmedContent, ipHash,
+    clientInfo.ip, clientInfo.ipLocation, clientInfo.ua, clientInfo.os, clientInfo.browser,
+    isAdmin
+  ).run();
 
   const newId = insertResult.meta ? insertResult.meta.last_row_id : null;
   const newComment = {
@@ -791,9 +1133,34 @@ async function handleInteractionsComment(request, env) {
     author: finalAuthor,
     avatar,
     content: trimmedContent,
+    ip: clientInfo.ip,
+    ip_location: clientInfo.ipLocation,
+    os: clientInfo.os,
+    browser: clientInfo.browser,
     is_admin: isAdmin === 1,
     created_at: new Date().toISOString().replace('T', ' ').substring(0, 19)
   };
+
+  const isMoment = key.startsWith('/moment/');
+  const targetLabel = isMoment ? '【动态】' : '【文章】';
+  const decodedKey = safeDecodeURI(key);
+  const pageUrl = `${getSiteUrl(env)}${key.startsWith('/') ? key : '/' + key}`;
+
+  const title = isMoment
+    ? `💬 动态新留言: ${decodedKey} (${finalAuthor})`
+    : `💬 博客文章新留言: ${decodedKey} (${finalAuthor})`;
+
+  const notifyPromise = sendBarkNotification(env, {
+    title: title,
+    body: `${targetLabel}${key}\n【内容】${trimmedContent}\n【来源】${clientInfo.ip} (${clientInfo.ipLocation || '未知地区'}) · ${clientInfo.os} · ${clientInfo.browser}`,
+    group: '博客互动',
+    url: pageUrl
+  });
+  if (ctx && typeof ctx.waitUntil === 'function') {
+    ctx.waitUntil(notifyPromise);
+  } else {
+    notifyPromise.catch(() => {});
+  }
 
   return jsonResponse({ ok: true, comment: newComment }, 200, {}, request);
 }
@@ -808,13 +1175,32 @@ async function handleAdminGetComments(request, env) {
   }
   await initDatabase(env);
   const stmt = env.DB.prepare(
-    `SELECT id, target_key, author, email, avatar, content, ip_hash, status, is_admin, created_at 
-     FROM comments 
-     ORDER BY id DESC 
-     LIMIT 50`
+    `SELECT id, target_key, author, email, avatar, content, ip_hash, ip, ip_location, user_agent, os, browser, status, is_admin, created_at
+     FROM comments
+     ORDER BY id DESC
+     LIMIT 100`
   );
   const { results } = await stmt.all();
   return jsonResponse({ ok: true, comments: results || [] }, 200, {}, request);
+}
+
+async function handleAdminGetLikes(request, env) {
+  const token = extractAuthToken(request);
+  if (!token || !env.ADMIN_SECRET || !(await verifySecret(token, env.ADMIN_SECRET))) {
+    return jsonError('口令无效或已过期，请重新登录', 401, request);
+  }
+  if (!env.DB) {
+    return jsonResponse({ ok: true, likes: [], message: 'D1 not configured' }, 200, {}, request);
+  }
+  await initDatabase(env);
+  const stmt = env.DB.prepare(
+    `SELECT id, target_key, client_ip_hash, ip, ip_location, user_agent, os, browser, created_at
+     FROM likes
+     ORDER BY id DESC
+     LIMIT 100`
+  );
+  const { results } = await stmt.all();
+  return jsonResponse({ ok: true, likes: results || [] }, 200, {}, request);
 }
 
 async function handleAdminDeleteComment(request, env, commentId) {
@@ -1049,19 +1435,38 @@ const HTML_PAGE = `<!DOCTYPE html>
       background-color: var(--bg-hover);
       border: 1px solid var(--border-color);
       border-radius: var(--radius-md);
-      padding: 14px 16px;
+      padding: 12px 14px;
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 7px;
     }
-    .admin-comment-header { display: flex; align-items: center; gap: 10px; }
-    .admin-comment-avatar { width: 28px; height: 28px; border-radius: 50%; object-fit: cover; background: var(--border-color); }
-    .admin-comment-meta { display: flex; align-items: center; gap: 8px; flex: 1; font-size: 0.85rem; flex-wrap: wrap; }
+    .admin-like-card { padding: 9px 12px; gap: 5px; }
+    .admin-comment-header { display: flex; align-items: center; gap: 8px; }
+    .admin-comment-avatar { width: 26px; height: 26px; border-radius: 50%; object-fit: cover; background: var(--border-color); flex-shrink: 0; }
+    .admin-comment-meta { display: flex; align-items: center; gap: 6px; flex: 1; font-size: 0.82rem; flex-wrap: wrap; }
     .admin-comment-author { font-weight: 600; color: var(--text-primary); }
-    .admin-comment-target { font-family: var(--font-mono); font-size: 0.75rem; background: var(--bg-card); border: 1px solid var(--border-color); padding: 2px 6px; border-radius: 4px; color: var(--accent-color); }
-    .admin-comment-time { font-size: 0.75rem; color: var(--text-secondary); margin-left: auto; }
-    .admin-comment-body { font-size: 0.88rem; line-height: 1.5; color: var(--text-primary); white-space: pre-wrap; word-break: break-word; }
-    .admin-comment-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 4px; }
+    .admin-comment-target { font-family: var(--font-mono); font-size: 0.72rem; background: var(--bg-card); border: 1px solid var(--border-color); padding: 2px 6px; border-radius: 4px; color: var(--accent-color); max-width: 220px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .admin-comment-time { font-size: 0.72rem; color: var(--text-secondary); margin-left: auto; }
+    .admin-comment-body {
+      font-size: 0.86rem; line-height: 1.5; color: var(--text-primary); white-space: pre-wrap; word-break: break-word;
+      background-color: var(--bg-card); padding: 8px 10px; border-radius: var(--radius-sm); border: 1px solid var(--border-color);
+    }
+    .admin-comment-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 2px; }
+    .subtabs { display: flex; gap: 8px; margin-bottom: 14px; border-bottom: 1px solid var(--border-color); padding-bottom: 8px; }
+    .subtab-btn {
+      padding: 6px 14px; font-size: 0.84rem; font-weight: 600; border-radius: var(--radius-sm);
+      border: 1px solid var(--border-color); background: var(--bg-hover); color: var(--text-secondary);
+      cursor: pointer; transition: all 0.2s ease; display: inline-flex; align-items: center; justify-content: center;
+    }
+    .subtab-btn:hover { color: var(--text-primary); border-color: var(--border-focus); }
+    .subtab-btn.active { background: var(--accent-color); border-color: var(--accent-color); color: #ffffff; }
+    .client-meta-row { display: flex; flex-wrap: wrap; gap: 5px; margin: 3px 0; }
+    .client-meta-badge {
+      display: inline-flex; align-items: center; gap: 3px; font-size: 0.73rem;
+      padding: 2px 6px; background-color: var(--bg-card); border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm); color: var(--text-secondary);
+    }
+    #admin-comments-list, #admin-likes-list { display: flex; flex-direction: column; gap: 10px; }
     @media (max-width: 640px) {
       body {
         padding: max(10px, env(safe-area-inset-top)) max(10px, env(safe-area-inset-right)) max(20px, env(safe-area-inset-bottom)) max(10px, env(safe-area-inset-left));
@@ -1079,8 +1484,8 @@ const HTML_PAGE = `<!DOCTYPE html>
       .tabs::-webkit-scrollbar { display: none; }
       .tab-btn { padding: 9px 8px; font-size: 0.85rem; white-space: nowrap; flex-shrink: 0; }
       .tab-sub { display: none; }
-      .tab-content { padding: 16px 12px; border-radius: var(--radius-md); }
-      .publish-form { gap: 16px; }
+      .tab-content { padding: 14px 10px; border-radius: var(--radius-md); }
+      .publish-form { gap: 14px; }
       input[type="text"], input[type="password"], textarea { font-size: 16px; padding: 9px 12px; }
       .label-with-toggle { flex-direction: column; align-items: flex-start; gap: 6px; }
       .form-row { gap: 12px; }
@@ -1099,9 +1504,24 @@ const HTML_PAGE = `<!DOCTYPE html>
       .align-end { width: 100%; justify-content: stretch; }
       .btn-publish { width: 100%; justify-content: center; padding: 12px 16px; font-size: 0.95rem; }
       .modal-card { width: 92%; padding: 20px 14px; border-radius: var(--radius-md); }
-      .comments-tab-header { flex-direction: column; align-items: flex-start !important; gap: 10px; }
-      .comments-tab-header button { width: 100%; justify-content: center; }
-      .admin-comment-card { padding: 12px 10px; }
+      .comments-tab-header { margin-bottom: 12px !important; gap: 8px; }
+      .comments-tab-header h2 { font-size: 1rem !important; }
+      .comments-tab-header span { font-size: 0.74rem !important; }
+      .subtabs { gap: 6px; margin-bottom: 10px; padding-bottom: 6px; }
+      .subtab-btn { flex: 1; padding: 7px 4px; font-size: 0.78rem; text-align: center; justify-content: center; }
+      .admin-comment-card { padding: 9px 10px; gap: 5px; border-radius: var(--radius-sm); }
+      .admin-like-card { padding: 7px 9px; gap: 4px; }
+      .admin-comment-avatar { width: 22px; height: 22px; }
+      .admin-comment-meta { font-size: 0.74rem; gap: 4px; }
+      .admin-comment-author { font-size: 0.78rem; }
+      .admin-comment-target { max-width: 120px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 0.68rem; padding: 1px 4px; }
+      .admin-comment-time { font-size: 0.68rem; }
+      .admin-comment-body { font-size: 0.82rem; line-height: 1.4; padding: 6px 8px; margin-top: 2px; }
+      .client-meta-row { gap: 3px; margin: 2px 0 3px 0; }
+      .client-meta-badge { font-size: 0.67rem; padding: 1px 5px; border-radius: 3px; gap: 2px; }
+      .admin-comment-actions { margin-top: 2px; }
+      .admin-comment-actions .btn-xs { padding: 2px 6px; font-size: 0.72rem; }
+      #admin-comments-list, #admin-likes-list { gap: 6px; }
     }
   </style>
 </head>
@@ -1264,19 +1684,31 @@ const HTML_PAGE = `<!DOCTYPE html>
 
     <!-- 互动管理面板 -->
     <main id="comments-tab" class="tab-content">
-      <div class="comments-tab-header" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px;">
+      <div class="comments-tab-header" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
         <div>
-          <h2 style="font-size:1.15rem; font-weight:700; margin:0 0 4px 0;">💬 访客留言与点赞管理</h2>
-          <span style="font-size:0.82rem; color:var(--text-secondary);">查看全站文章和动态的最新留言，支持一键屏蔽或清理垃圾评论</span>
+          <h2 style="font-size:1.05rem; font-weight:700; margin:0 0 2px 0;">💬 访客留言与点赞管理</h2>
+          <span style="font-size:0.78rem; color:var(--text-secondary);">全站留言与点赞明细，记录 IP、地区与设备系统</span>
         </div>
-        <button type="button" class="btn btn-secondary btn-sm" id="refresh-comments-btn">🔄 刷新列表</button>
+        <button type="button" class="btn btn-secondary btn-sm" id="refresh-comments-btn">🔄 刷新</button>
+      </div>
+
+      <div class="subtabs">
+        <button type="button" class="subtab-btn active" id="subtab-comments-btn">💬 访客留言 (<span id="comments-count">0</span>)</button>
+        <button type="button" class="subtab-btn" id="subtab-likes-btn">❤️ 点赞记录 (<span id="likes-count">0</span>)</button>
       </div>
 
       <div id="admin-comments-container">
         <div id="admin-comments-loading" style="text-align:center; padding:32px; color:var(--text-secondary); font-size:0.9rem;">
-          点击“刷新列表”或切换标签载入最新留言...
+          点击“刷新数据”或切换标签载入最新留言...
         </div>
         <div id="admin-comments-list" style="display:flex; flex-direction:column; gap:12px;"></div>
+      </div>
+
+      <div id="admin-likes-container" style="display:none;">
+        <div id="admin-likes-loading" style="text-align:center; padding:32px; color:var(--text-secondary); font-size:0.9rem;">
+          正在载入最新点赞记录...
+        </div>
+        <div id="admin-likes-list" style="display:flex; flex-direction:column; gap:12px;"></div>
       </div>
     </main>
 
@@ -1466,14 +1898,45 @@ const HTML_PAGE = `<!DOCTYPE html>
           activeTab = btn.getAttribute('data-tab');
           document.getElementById(activeTab).classList.add('active');
           if (activeTab === 'comments-tab') {
-            loadAdminComments();
+            if (currentInteractionTab === 'comments') {
+              loadAdminComments();
+            } else {
+              loadAdminLikes();
+            }
           }
         });
       });
 
+      let currentInteractionTab = 'comments';
+      const subtabCommentsBtn = document.getElementById('subtab-comments-btn');
+      const subtabLikesBtn = document.getElementById('subtab-likes-btn');
+      const commentsContainer = document.getElementById('admin-comments-container');
+      const likesContainer = document.getElementById('admin-likes-container');
+
+      if (subtabCommentsBtn && subtabLikesBtn) {
+        subtabCommentsBtn.addEventListener('click', () => {
+          currentInteractionTab = 'comments';
+          subtabCommentsBtn.classList.add('active');
+          subtabLikesBtn.classList.remove('active');
+          commentsContainer.style.display = 'block';
+          likesContainer.style.display = 'none';
+          loadAdminComments();
+        });
+
+        subtabLikesBtn.addEventListener('click', () => {
+          currentInteractionTab = 'likes';
+          subtabLikesBtn.classList.add('active');
+          subtabCommentsBtn.classList.remove('active');
+          likesContainer.style.display = 'block';
+          commentsContainer.style.display = 'none';
+          loadAdminLikes();
+        });
+      }
+
       async function loadAdminComments() {
         const loadingEl = document.getElementById('admin-comments-loading');
         const listEl = document.getElementById('admin-comments-list');
+        const countEl = document.getElementById('comments-count');
         loadingEl.style.display = 'block';
         loadingEl.textContent = '正在获取最新留言...';
         listEl.innerHTML = '';
@@ -1491,13 +1954,16 @@ const HTML_PAGE = `<!DOCTYPE html>
             return;
           }
 
-          if (!data.comments || data.comments.length === 0) {
+          const comments = data.comments || [];
+          if (countEl) countEl.textContent = comments.length;
+
+          if (comments.length === 0) {
             loadingEl.style.display = 'block';
             loadingEl.textContent = '暂无访客留言 (DB 连接正常)';
             return;
           }
 
-          data.comments.forEach(c => {
+          comments.forEach(c => {
             const card = document.createElement('div');
             card.className = 'admin-comment-card';
             card.id = 'admin-comment-' + c.id;
@@ -1505,20 +1971,30 @@ const HTML_PAGE = `<!DOCTYPE html>
 
             const adminBadge = c.is_admin ? '<span style="font-size:0.7rem; background:var(--accent-color); color:#fff; padding:1px 5px; border-radius:3px;">博主</span>' : '';
             const emailTag = c.email ? '<span style="font-size:0.75rem; color:var(--text-secondary);">&lt;' + escapeHtml(c.email) + '&gt;</span>' : '';
-            const actionBtn = !isHidden ? '<button type="button" class="btn btn-xs btn-danger delete-comment-btn" data-id="' + c.id + '">🗑️ 删除留言</button>' : '<span style="font-size:0.75rem; color:var(--text-secondary);">已隐藏/删除</span>';
+            const actionBtn = !isHidden ? '<button type="button" class="btn btn-xs btn-danger delete-comment-btn" data-id="' + c.id + '">🗑️ 删除</button>' : '<span style="font-size:0.75rem; color:var(--text-secondary);">已隐藏/删除</span>';
             const bodyStyle = isHidden ? 'text-decoration:line-through; opacity:0.6;' : '';
 
-            card.innerHTML = 
+            const ipBadge = c.ip ? '<span class="client-meta-badge" title="访客 IP">🌐 ' + escapeHtml(c.ip) + (c.ip_location ? ' · ' + escapeHtml(c.ip_location) : '') + '</span>' : '';
+            const osBadge = c.os ? '<span class="client-meta-badge" title="操作系统">💻 ' + escapeHtml(c.os) + '</span>' : '';
+            const browserBadge = c.browser ? '<span class="client-meta-badge" title="浏览器">🧭 ' + escapeHtml(c.browser) + '</span>' : '';
+            const metaRow = (ipBadge || osBadge || browserBadge) ? '<div class="client-meta-row">' + ipBadge + osBadge + browserBadge + '</div>' : '';
+
+            const decodedTarget = safeDecodeURI(c.target_key);
+            const targetUrl = c.target_key.startsWith('/') ? ('https://r0n9.github.io' + c.target_key) : ('https://r0n9.github.io/' + c.target_key);
+            const targetLink = '<a href="' + escapeHtml(targetUrl) + '" target="_blank" rel="noopener" class="admin-comment-target" title="新窗口打开: ' + escapeHtml(decodedTarget) + '">' + escapeHtml(decodedTarget) + ' ↗</a>';
+
+            card.innerHTML =
               '<div class="admin-comment-header">' +
                 '<img src="' + escapeHtml(c.avatar || '') + '" class="admin-comment-avatar" alt="avatar" onerror="this.onerror=null;this.src=&apos;https://cravatar.cn/avatar/?d=mp&apos;;"/>' +
                 '<div class="admin-comment-meta">' +
                   '<span class="admin-comment-author">' + escapeHtml(c.author) + '</span>' +
                   adminBadge +
-                  '<span class="admin-comment-target">' + escapeHtml(c.target_key) + '</span>' +
+                  targetLink +
                   emailTag +
                   '<span class="admin-comment-time">' + escapeHtml(c.created_at || '') + '</span>' +
                 '</div>' +
               '</div>' +
+              metaRow +
               '<div class="admin-comment-body" style="' + bodyStyle + '">' +
                 escapeHtml(c.content) +
               '</div>' +
@@ -1561,7 +2037,77 @@ const HTML_PAGE = `<!DOCTYPE html>
         }
       }
 
-      document.getElementById('refresh-comments-btn').addEventListener('click', loadAdminComments);
+      async function loadAdminLikes() {
+        const loadingEl = document.getElementById('admin-likes-loading');
+        const listEl = document.getElementById('admin-likes-list');
+        const countEl = document.getElementById('likes-count');
+        loadingEl.style.display = 'block';
+        loadingEl.textContent = '正在获取最新点赞...';
+        listEl.innerHTML = '';
+
+        try {
+          const res = await fetch('/api/admin/likes', {
+            headers: { 'Authorization': 'Bearer ' + adminSecret }
+          });
+          const data = await res.json();
+          loadingEl.style.display = 'none';
+
+          if (!data.ok) {
+            loadingEl.style.display = 'block';
+            loadingEl.textContent = '获取失败: ' + (data.error || '未知错误');
+            return;
+          }
+
+          const likes = data.likes || [];
+          if (countEl) countEl.textContent = likes.length;
+
+          if (likes.length === 0) {
+            loadingEl.style.display = 'block';
+            loadingEl.textContent = '暂无访客点赞记录 (DB 连接正常)';
+            return;
+          }
+
+          likes.forEach(l => {
+            const card = document.createElement('div');
+            card.className = 'admin-comment-card admin-like-card';
+
+            const ipBadge = l.ip ? '<span class="client-meta-badge" title="访客 IP">🌐 ' + escapeHtml(l.ip) + (l.ip_location ? ' · ' + escapeHtml(l.ip_location) : '') + '</span>' : '';
+            const osBadge = l.os ? '<span class="client-meta-badge" title="操作系统">💻 ' + escapeHtml(l.os) + '</span>' : '';
+            const browserBadge = l.browser ? '<span class="client-meta-badge" title="浏览器">🧭 ' + escapeHtml(l.browser) + '</span>' : '';
+            const metaRow = (ipBadge || osBadge || browserBadge) ? '<div class="client-meta-row">' + ipBadge + osBadge + browserBadge + '</div>' : '<div class="client-meta-row"><span class="client-meta-badge" style="opacity:0.6;">无来源详情</span></div>';
+
+            const decodedTarget = safeDecodeURI(l.target_key);
+            const targetUrl = l.target_key.startsWith('/') ? ('https://r0n9.github.io' + l.target_key) : ('https://r0n9.github.io/' + l.target_key);
+            const targetLink = '<a href="' + escapeHtml(targetUrl) + '" target="_blank" rel="noopener" class="admin-comment-target" title="新窗口打开: ' + escapeHtml(decodedTarget) + '">' + escapeHtml(decodedTarget) + ' ↗</a>';
+
+            card.innerHTML =
+              '<div class="admin-comment-header">' +
+                '<div style="width:22px; height:22px; border-radius:50%; background:rgba(207,34,46,0.12); display:flex; align-items:center; justify-content:center; font-size:0.8rem; flex-shrink:0;">❤️</div>' +
+                '<div class="admin-comment-meta">' +
+                  '<span class="admin-comment-author" style="color:var(--danger-color);">访客点赞</span>' +
+                  targetLink +
+                  '<span class="admin-comment-time">' + escapeHtml(l.created_at || '') + '</span>' +
+                '</div>' +
+              '</div>' +
+              metaRow;
+            listEl.appendChild(card);
+          });
+        } catch (err) {
+          loadingEl.style.display = 'block';
+          loadingEl.textContent = '请求异常: ' + err.message;
+        }
+      }
+
+      const refreshCommentsBtn = document.getElementById('refresh-comments-btn');
+      if (refreshCommentsBtn) {
+        refreshCommentsBtn.addEventListener('click', () => {
+          if (currentInteractionTab === 'comments') {
+            loadAdminComments();
+          } else {
+            loadAdminLikes();
+          }
+        });
+      }
 
       function formatFileSize(bytes) {
         if (!bytes || bytes < 1024) return (bytes || 0) + ' B';
@@ -1763,6 +2309,13 @@ const HTML_PAGE = `<!DOCTYPE html>
 
       function escapeHtml(text) {
         return text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+      }
+
+      function safeDecodeURI(str) {
+        if (!str || typeof str !== 'string') return '';
+        try { return decodeURIComponent(str); } catch (_) {
+          try { return decodeURI(str); } catch (_) { return str; }
+        }
       }
 
       function simpleMarkdownToHtml(md) {
@@ -1982,7 +2535,7 @@ export default {
     // 静态前端界面 (自适应感应：未配置 D1 时自动隐藏互动管理标签，保持纯净发布形态)
     if (path === '/' || path === '/index.html') {
       const hasD1 = Boolean(env.DB);
-      let pageHtml = HTML_PAGE;
+      let pageHtml = HTML_PAGE.replaceAll('https://r0n9.github.io', getSiteUrl(env));
       if (!hasD1) {
         pageHtml = pageHtml.replace('data-tab="comments-tab"', 'data-tab="comments-tab" style="display:none;"');
       }
@@ -2004,15 +2557,18 @@ export default {
         return await handleGetInteractionsComments(request, env);
       }
       if (path === '/api/interactions/like' && request.method === 'POST') {
-        return await handleInteractionsLike(request, env);
+        return await handleInteractionsLike(request, env, ctx);
       }
       if (path === '/api/interactions/comment' && request.method === 'POST') {
-        return await handleInteractionsComment(request, env);
+        return await handleInteractionsComment(request, env, ctx);
       }
 
       // 2. 管理员互动管理 API
       if (path === '/api/admin/comments' && request.method === 'GET') {
         return await handleAdminGetComments(request, env);
+      }
+      if (path === '/api/admin/likes' && request.method === 'GET') {
+        return await handleAdminGetLikes(request, env);
       }
       const deleteMatch = path.match(/^\/api\/admin\/comments\/(\d+)$/);
       if (deleteMatch && request.method === 'DELETE') {

@@ -86,6 +86,7 @@
         });
       })
       .catch(function(err) {
+        toFetch.forEach(function(k) { fetchedKeys.delete(k); });
         console.warn('[interaction] stats fetch failed:', err);
       });
   }
@@ -118,6 +119,8 @@
     var isLiked = btn.classList.contains('liked');
     var countEl = wrap.querySelector('.like-count, #postLikeCount');
     var currentCount = parseInt(countEl ? countEl.textContent : '0', 10) || 0;
+    var previousLiked = isLiked;
+    var previousCount = currentCount;
 
     // 乐观 UI 更新
     if (isLiked) {
@@ -130,28 +133,42 @@
       localStorage.setItem(STORAGE_PREFIX + key, '1');
     }
 
+    btn.disabled = true;
+
     fetch(API_BASE + '/api/interactions/like', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ key: key })
+      body: JSON.stringify({ key: key, liked: !isLiked })
     })
       .then(function(res) { return res.json(); })
       .then(function(data) {
-        if (data && data.ok) {
-          if (countEl && typeof data.likes === 'number') {
-            countEl.textContent = data.likes;
-          }
-          if (data.liked) {
-            btn.classList.add('liked');
-            localStorage.setItem(STORAGE_PREFIX + key, '1');
-          } else {
-            btn.classList.remove('liked');
-            localStorage.removeItem(STORAGE_PREFIX + key);
-          }
+        if (!data || !data.ok) {
+          throw new Error((data && data.error) || '点赞请求失败');
+        }
+        if (countEl && typeof data.likes === 'number') {
+          countEl.textContent = data.likes;
+        }
+        if (data.liked) {
+          btn.classList.add('liked');
+          localStorage.setItem(STORAGE_PREFIX + key, '1');
+        } else {
+          btn.classList.remove('liked');
+          localStorage.removeItem(STORAGE_PREFIX + key);
         }
       })
       .catch(function(err) {
+        if (previousLiked) {
+          btn.classList.add('liked');
+          localStorage.setItem(STORAGE_PREFIX + key, '1');
+        } else {
+          btn.classList.remove('liked');
+          localStorage.removeItem(STORAGE_PREFIX + key);
+        }
+        if (countEl) countEl.textContent = previousCount;
         console.error('[interaction] like error:', err);
+      })
+      .finally(function() {
+        btn.disabled = false;
       });
   }
 
@@ -396,6 +413,29 @@
 
     // 扫描并批量获取统计数据
     scanAndFetchStats();
+
+    // 自动加载默认展开的动态评论 (如单条动态独立详情页)
+    var openDrawers = document.querySelectorAll('.moment-comments-drawer:not([style*="display: none"]):not([style*="display:none"])');
+    openDrawers.forEach(function(drawer) {
+      var item = drawer.closest('.moment-item');
+      if (!item) return;
+      var actionsWrap = item.querySelector('[data-key]');
+      if (!actionsWrap) return;
+      var key = actionsWrap.getAttribute('data-key');
+      var listEl = drawer.querySelector('.drawer-comments-list');
+      var formEl = drawer.querySelector('.moment-comment-form');
+      var countEl = item.querySelector('.comment-count');
+      if (listEl && !drawer._loaded) {
+        loadComments(key, listEl);
+        drawer._loaded = true;
+        if (formEl) {
+          setupCommentForm(formEl, key, listEl, function(increment) {
+            var c = parseInt(countEl ? countEl.textContent : '0', 10) || 0;
+            if (countEl) countEl.textContent = c + increment;
+          });
+        }
+      }
+    });
 
     // 监听动态流瀑布流追加 (Infinite Scroll 适配)
     var momentsList = document.getElementById('momentsList');
