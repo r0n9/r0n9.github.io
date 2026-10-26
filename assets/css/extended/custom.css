@@ -21,9 +21,18 @@
   --code-bg: #f4f4f5;
   --code-block-bg: #18181b;
   --border: #e8e8ec;
+
+  /* Gemini Ambient Glow - Light Mode */
+  --gemini-glow-base: #a6c8ff;
+  --gemini-glow-mid: #c3d9ff;
+  --gemini-glow-bloom: #ffffff;
+  --gemini-glow-opacity: 0.35;
+  --gemini-bloom-opacity: 0.4;
 }
 
-:root[data-theme="dark"] {
+:root[data-theme="dark"],
+html[data-theme="dark"],
+body.dark {
   /* Dark Mode: Deep Obsidian Ink & Soft Reading White */
   --theme: #121214;
   --entry: #18181b;
@@ -36,6 +45,23 @@
   --code-bg: #1c1c20;
   --code-block-bg: #09090b;
   --border: #27272a;
+
+  /* Gemini Ambient Glow - Dark Mode (Signature #1f3b9b blue aura) */
+  --gemini-glow-base: #1f3b9b;
+  --gemini-glow-mid: #2544ad;
+  --gemini-glow-bloom: #000000;
+  --gemini-glow-opacity: 0.85;
+  --gemini-bloom-opacity: 0.5;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]):not(.theme-light) {
+    --gemini-glow-base: #1f3b9b;
+    --gemini-glow-mid: #2544ad;
+    --gemini-glow-bloom: #000000;
+    --gemini-glow-opacity: 0.85;
+    --gemini-bloom-opacity: 0.5;
+  }
 }
 
 /* Eliminate disjointed grey list background */
@@ -51,6 +77,9 @@ body, .list {
 .header {
   border-bottom: 1px solid var(--border);
   background: var(--theme);
+  background: color-mix(in srgb, var(--theme) 85%, transparent);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
 }
 
 .header-nav {
@@ -2711,4 +2740,119 @@ html[data-theme="dark"] #theme-toggle .sun {
   .paper-linkcard .linkcard-main {
     padding: 10px 12px;
   }
+}
+
+/* ==========================================================================
+   Gemini Ambient Glow (Gemini 官方同款深邃背景光晕)
+   ========================================================================== */
+.gemini-glow {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.gemini-glow::before,
+.gemini-glow::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 42%;
+  transform: translate(-50%, -50%);
+  width: 202.18%;
+  aspect-ratio: 1.4338;
+  max-width: 1601px;
+  -webkit-mask-image: url("/images/glow_mask.svg");
+  mask-image: url("/images/glow_mask.svg");
+  -webkit-mask-size: 100% 200%;
+  mask-size: 100% 200%;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  pointer-events: none;
+}
+
+/* 主体深邃蓝光晕 */
+.gemini-glow::before {
+  -webkit-mask-position: 0 0;
+  mask-position: 0 0;
+  background: radial-gradient(
+    ellipse 42% 100% at 66% 81%,
+    var(--gemini-glow-base) 0%,
+    var(--gemini-glow-mid) 50%,
+    var(--gemini-glow-base) 100%
+  );
+  opacity: var(--gemini-glow-opacity);
+  transition: opacity 0.4s ease;
+  animation: gemini-glow-grow 1.2s cubic-bezier(0.2, 0, 0, 1) both;
+}
+
+/* Bloom 高光/泛光层 */
+.gemini-glow::after {
+  -webkit-mask-position: 0 100%;
+  mask-position: 0 100%;
+  background: var(--gemini-glow-bloom);
+  opacity: var(--gemini-bloom-opacity);
+  transition: opacity 0.4s ease;
+  animation: gemini-glow-bloom-grow 1.2s cubic-bezier(0.2, 0, 0, 1) both;
+}
+
+@keyframes gemini-glow-grow {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.7);
+  }
+  100% {
+    opacity: var(--gemini-glow-opacity);
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+@keyframes gemini-glow-bloom-grow {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.7);
+  }
+  100% {
+    opacity: var(--gemini-bloom-opacity);
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gemini-glow::before,
+  .gemini-glow::after {
+    animation: none;
+  }
+}
+
+/* 移动端定位适配 */
+@media screen and (max-width: 959.98px) {
+  .gemini-glow::before {
+    position: fixed;
+    top: auto;
+    bottom: -445px;
+    left: calc(50% + 45px);
+    width: 1484px;
+    max-width: none;
+    transform: translateX(-50%);
+  }
+  .gemini-glow::after {
+    position: fixed;
+    top: auto;
+    bottom: -412px;
+    left: calc(50% - 26px);
+    width: 1484px;
+    max-width: none;
+    transform: translateX(-50%) rotate(15.37deg);
+  }
+}
+
+/* 保证主要内容层级在光晕上方 */
+.header,
+.main,
+.footer,
+.top-link {
+  position: relative;
+  z-index: 1;
 }
