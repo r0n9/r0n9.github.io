@@ -22,12 +22,12 @@
   --code-block-bg: #18181b;
   --border: #e8e8ec;
 
-  /* Gemini Ambient Glow - Light Mode */
-  --gemini-glow-base: #a6c8ff;
-  --gemini-glow-mid: #c3d9ff;
+  /* Gemini Ambient Glow - Light Mode (Airy, subtle celestial blue aura) */
+  --gemini-glow-base: #b8d4ff;
+  --gemini-glow-mid: #d2e3ff;
   --gemini-glow-bloom: #ffffff;
-  --gemini-glow-opacity: 0.35;
-  --gemini-bloom-opacity: 0.4;
+  --gemini-glow-opacity: 0.24;
+  --gemini-bloom-opacity: 0.32;
 }
 
 :root[data-theme="dark"],
@@ -46,21 +46,21 @@ body.dark {
   --code-block-bg: #09090b;
   --border: #27272a;
 
-  /* Gemini Ambient Glow - Dark Mode (Signature #1f3b9b blue aura) */
-  --gemini-glow-base: #1f3b9b;
-  --gemini-glow-mid: #2544ad;
-  --gemini-glow-bloom: #000000;
-  --gemini-glow-opacity: 0.85;
-  --gemini-bloom-opacity: 0.5;
+  /* Gemini Ambient Glow - Dark Mode (Deep cosmic twilight blue & soft luminous core) */
+  --gemini-glow-base: #122258;
+  --gemini-glow-mid: #1a358c;
+  --gemini-glow-bloom: #4f80f6;
+  --gemini-glow-opacity: 0.36;
+  --gemini-bloom-opacity: 0.16;
 }
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]):not(.theme-light) {
-    --gemini-glow-base: #1f3b9b;
-    --gemini-glow-mid: #2544ad;
-    --gemini-glow-bloom: #000000;
-    --gemini-glow-opacity: 0.85;
-    --gemini-bloom-opacity: 0.5;
+    --gemini-glow-base: #122258;
+    --gemini-glow-mid: #1a358c;
+    --gemini-glow-bloom: #4f80f6;
+    --gemini-glow-opacity: 0.36;
+    --gemini-bloom-opacity: 0.16;
   }
 }
 
@@ -2758,11 +2758,11 @@ html[data-theme="dark"] #theme-toggle .sun {
   content: "";
   position: absolute;
   left: 50%;
-  top: 42%;
+  top: 44%;
   transform: translate(-50%, -50%);
-  width: 202.18%;
+  width: 240%;
   aspect-ratio: 1.4338;
-  max-width: 1601px;
+  max-width: 2500px;
   -webkit-mask-image: url("/images/glow_mask.svg");
   mask-image: url("/images/glow_mask.svg");
   -webkit-mask-size: 100% 200%;
@@ -2770,6 +2770,7 @@ html[data-theme="dark"] #theme-toggle .sun {
   -webkit-mask-repeat: no-repeat;
   mask-repeat: no-repeat;
   pointer-events: none;
+  filter: blur(28px);
 }
 
 /* 主体深邃蓝光晕 */
@@ -2777,14 +2778,14 @@ html[data-theme="dark"] #theme-toggle .sun {
   -webkit-mask-position: 0 0;
   mask-position: 0 0;
   background: radial-gradient(
-    ellipse 42% 100% at 66% 81%,
-    var(--gemini-glow-base) 0%,
-    var(--gemini-glow-mid) 50%,
+    ellipse 65% 85% at 50% 50%,
+    var(--gemini-glow-mid) 0%,
+    var(--gemini-glow-base) 55%,
     var(--gemini-glow-base) 100%
   );
   opacity: var(--gemini-glow-opacity);
-  transition: opacity 0.4s ease;
-  animation: gemini-glow-grow 1.2s cubic-bezier(0.2, 0, 0, 1) both;
+  transition: opacity 0.5s ease;
+  animation: gemini-glow-grow 0.8s ease-out both;
 }
 
 /* Bloom 高光/泛光层 */
@@ -2793,29 +2794,25 @@ html[data-theme="dark"] #theme-toggle .sun {
   mask-position: 0 100%;
   background: var(--gemini-glow-bloom);
   opacity: var(--gemini-bloom-opacity);
-  transition: opacity 0.4s ease;
-  animation: gemini-glow-bloom-grow 1.2s cubic-bezier(0.2, 0, 0, 1) both;
+  transition: opacity 0.5s ease;
+  animation: gemini-glow-bloom-grow 0.8s ease-out both;
 }
 
 @keyframes gemini-glow-grow {
   0% {
     opacity: 0;
-    transform: translate(-50%, -50%) scale(0.7);
   }
   100% {
     opacity: var(--gemini-glow-opacity);
-    transform: translate(-50%, -50%) scale(1);
   }
 }
 
 @keyframes gemini-glow-bloom-grow {
   0% {
     opacity: 0;
-    transform: translate(-50%, -50%) scale(0.7);
   }
   100% {
     opacity: var(--gemini-bloom-opacity);
-    transform: translate(-50%, -50%) scale(1);
   }
 }
 
@@ -2826,33 +2823,110 @@ html[data-theme="dark"] #theme-toggle .sun {
   }
 }
 
-/* 移动端定位适配 */
+/* 移动端定位适配：居中自然弥散，不遮挡阅读 */
 @media screen and (max-width: 959.98px) {
-  .gemini-glow::before {
-    position: fixed;
-    top: auto;
-    bottom: -445px;
-    left: calc(50% + 45px);
-    width: 1484px;
-    max-width: none;
-    transform: translateX(-50%);
-  }
+  .gemini-glow::before,
   .gemini-glow::after {
-    position: fixed;
-    top: auto;
-    bottom: -412px;
-    left: calc(50% - 26px);
-    width: 1484px;
-    max-width: none;
-    transform: translateX(-50%) rotate(15.37deg);
+    top: 38%;
+    width: 280%;
+    min-width: 780px;
+    transform: translate(-50%, -50%);
+    filter: blur(16px);
   }
 }
 
 /* 保证主要内容层级在光晕上方 */
 .header,
 .main,
-.footer,
-.top-link {
+.footer {
   position: relative;
   z-index: 1;
+}
+
+/* ==========================================================================
+   Back to Top Button (返回顶部悬浮按钮精致重构)
+   ========================================================================== */
+.top-link {
+  position: fixed !important;
+  bottom: 2rem;
+  right: 2rem;
+  z-index: 99 !important;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--entry);
+  background: color-mix(in srgb, var(--entry) 85%, transparent);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--border);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  color: var(--secondary);
+  cursor: pointer;
+  outline: none;
+  transition: opacity 0.25s ease, visibility 0.25s ease, transform 0.2s cubic-bezier(0.2, 0, 0, 1), color 0.15s ease, border-color 0.15s ease, box-shadow 0.2s ease;
+}
+
+:root[data-theme="dark"] .top-link,
+html[data-theme="dark"] .top-link,
+body.dark .top-link {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+}
+
+.top-link svg {
+  width: 18px;
+  height: 18px;
+  stroke: currentColor;
+  stroke-width: 2.2;
+  transition: transform 0.2s cubic-bezier(0.2, 0, 0, 1);
+  filter: none !important;
+}
+
+.top-link:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+}
+
+:root[data-theme="dark"] .top-link:hover,
+html[data-theme="dark"] .top-link:hover,
+body.dark .top-link:hover {
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.55);
+}
+
+.top-link:hover svg {
+  transform: translateY(-2px);
+}
+
+.top-link:active {
+  transform: scale(0.92);
+}
+
+.top-link.hidden {
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(8px);
+}
+
+/* 覆盖 PaperMod 移动端对 top-link 的 translateY(-5rem) 负位移 */
+@media screen and (max-width: 900px) {
+  .list .top-link,
+  .top-link {
+    transform: none;
+    bottom: 1.5rem;
+    right: 1.25rem;
+  }
+  .list .top-link:hover,
+  .top-link:hover {
+    transform: translateY(-2px);
+  }
+  .list .top-link.hidden,
+  .top-link.hidden {
+    transform: translateY(8px);
+  }
 }
