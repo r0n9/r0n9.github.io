@@ -2758,7 +2758,7 @@ html[data-theme="dark"] #theme-toggle .sun {
   content: "";
   position: absolute;
   left: 50%;
-  top: 44%;
+  top: calc(50% + 30px);
   transform: translate(-50%, -50%);
   width: 240%;
   aspect-ratio: 1.4338;
@@ -2827,7 +2827,7 @@ html[data-theme="dark"] #theme-toggle .sun {
 @media screen and (max-width: 959.98px) {
   .gemini-glow::before,
   .gemini-glow::after {
-    top: 38%;
+    top: calc(50% + 25px);
     width: 280%;
     min-width: 780px;
     transform: translate(-50%, -50%);
@@ -2841,6 +2841,12 @@ html[data-theme="dark"] #theme-toggle .sun {
 .footer {
   position: relative;
   z-index: 1;
+}
+
+/* 文章详情页面去除背景光晕，确保纯净专注的长文阅读环境 */
+body.page-post-single .gemini-glow,
+body:has(.post-single) .gemini-glow {
+  display: none !important;
 }
 
 /* ==========================================================================

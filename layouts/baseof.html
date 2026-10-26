@@ -16,12 +16,17 @@
   {{- partial "head.html" . }}
 </head>
 
+{{- $isPostSingle := and .IsPage (or (eq .Type "posts") (eq .Section "posts")) }}
 {{- if (or (ne .Kind `page` ) (eq .Layout `archives`) (eq .Layout `search`)) }}
 <body class="list" id="top">
+{{- else if $isPostSingle }}
+<body class="page-post-single" id="top">
 {{- else }}
 <body id="top">
 {{- end }}
+  {{- if not $isPostSingle }}
   <div class="gemini-glow" aria-hidden="true"></div>
+  {{- end }}
   {{ partialCached "header.html" . .Page -}}
   <main class="main">
     {{- block "main" . }}{{ end }}
