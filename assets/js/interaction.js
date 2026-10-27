@@ -264,9 +264,10 @@
         localStorage.setItem(EMAIL_KEY, email);
       }
 
+      var textEl = submitBtn ? (submitBtn.querySelector('.btn-text') || submitBtn) : null;
       if (submitBtn) {
         submitBtn.disabled = true;
-        submitBtn.textContent = '发送中...';
+        if (textEl) textEl.textContent = '发送中...';
       }
       if (feedbackEl) {
         feedbackEl.style.display = 'none';
@@ -288,7 +289,7 @@
         .then(function(data) {
           if (submitBtn) {
             submitBtn.disabled = false;
-            submitBtn.textContent = '发表留言';
+            if (textEl) textEl.textContent = '发送';
           }
           if (data && data.ok && data.comment) {
             // 清理并渲染
@@ -323,7 +324,7 @@
         .catch(function(err) {
           if (submitBtn) {
             submitBtn.disabled = false;
-            submitBtn.textContent = '发表留言';
+            if (textEl) textEl.textContent = '发送';
           }
           if (feedbackEl) {
             feedbackEl.textContent = '网络错误: ' + err.message;
@@ -349,6 +350,21 @@
         });
       }
 
+      var postCommentBtn = postWrap.querySelector('.post-comment-btn');
+      if (postCommentBtn) {
+        postCommentBtn.addEventListener('click', function(e) {
+          e.preventDefault();
+          var target = document.getElementById('postCommentsContainer');
+          if (target) {
+            target.scrollIntoView({ behavior: 'smooth' });
+            var textarea = target.querySelector('textarea');
+            if (textarea) {
+              setTimeout(function() { textarea.focus(); }, 350);
+            }
+          }
+        });
+      }
+
       var postCommentsList = document.getElementById('postCommentsList');
       var postCommentForm = document.getElementById('postCommentForm');
       var postCommentsBadge = document.getElementById('postCommentsBadge');
@@ -356,8 +372,15 @@
       if (postCommentForm && postCommentsList) {
         loadComments(postKey, postCommentsList);
         setupCommentForm(postCommentForm, postKey, postCommentsList, function(increment) {
-          var curr = parseInt((postCommentsBadge.textContent || '').replace(/\D/g, '') || '0', 10);
-          postCommentsBadge.textContent = '(' + (curr + increment) + ')';
+          if (postCommentsBadge) {
+            var curr = parseInt((postCommentsBadge.textContent || '').replace(/\D/g, '') || '0', 10);
+            postCommentsBadge.textContent = '(' + (curr + increment) + ')';
+          }
+          var countEls = postWrap.querySelectorAll('.comment-count');
+          countEls.forEach(function(el) {
+            var c = parseInt(el.textContent || '0', 10) || 0;
+            el.textContent = c + increment;
+          });
         });
       }
     }

@@ -2190,74 +2190,96 @@ html[data-theme="dark"] #theme-toggle .sun {
    博客轻量互动系统 (Paper 纸质美学点赞与极简留言板)
    ========================================================================== */
 
-/* 1. 文章页文末点赞胶囊 */
+/* ==========================================================================
+   博客轻量互动系统 (AstroPaper 极简纸质美学点赞与留言流)
+   ========================================================================== */
+
+/* 1. 文章与动态互动操作栏：极简纸质美学 (点赞与评论计数样式统一) */
 .post-interaction-wrap {
-  margin-top: 48px;
-  padding-top: 24px;
+  margin-top: 56px;
+  padding-top: 28px;
   border-top: 1px dashed var(--border);
 }
 
-.post-like-container {
+.post-actions {
   display: flex;
-  justify-content: center;
   align-items: center;
-  margin-bottom: 36px;
+  gap: 16px;
+  margin-bottom: 28px;
 }
 
-.post-like-btn {
+.moment-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 14px;
+  padding-top: 10px;
+  border-top: 1px dashed var(--border);
+}
+
+.post-action-btn,
+.moment-action-btn {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
-  padding: 8px 22px;
-  background: var(--code-bg);
-  border: 1px solid var(--border);
-  border-radius: 30px;
-  color: var(--primary);
-  font-size: 0.95rem;
+  gap: 5px;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  color: var(--secondary);
+  font-size: 0.82rem;
   font-family: inherit;
-  font-weight: 500;
   cursor: pointer;
-  transition: all 0.22s cubic-bezier(0.2, 0, 0, 1);
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+  padding: 0;
+  border-radius: 0;
+  text-decoration: none;
+  transition: color 0.15s ease;
   user-select: none;
 }
 
-.post-like-btn:hover {
-  transform: translateY(-1px);
-  border-color: var(--secondary);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+.post-action-btn:hover,
+.moment-action-btn:hover {
+  color: var(--accent);
+  text-decoration: underline dashed;
+  text-underline-offset: 3px;
+  background: transparent;
 }
 
-.post-like-btn .like-heart-icon {
-  color: var(--secondary);
-  transition: transform 0.2s ease, color 0.2s ease;
+.post-action-btn.active,
+.moment-action-btn.active {
+  color: var(--accent);
+  text-decoration: underline dashed;
+  text-underline-offset: 3px;
+  background: transparent;
 }
 
-.post-like-btn:hover .like-heart-icon {
+.post-like-btn.liked,
+.moment-like-btn.liked {
   color: #e0245e;
-  transform: scale(1.1);
 }
 
-.post-like-btn.liked {
-  border-color: rgba(224, 36, 94, 0.3);
-  background: rgba(224, 36, 94, 0.05);
-  color: #e0245e;
-}
-
-.post-like-btn.liked .like-heart-icon {
+.post-like-btn.liked .heart-icon,
+.moment-like-btn.liked .heart-icon {
   fill: #e0245e;
   color: #e0245e;
   animation: heartPulse 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
-.like-divider {
-  opacity: 0.3;
-  font-weight: 300;
+.post-action-btn .action-icon,
+.moment-action-btn .action-icon {
+  line-height: 1;
+  transition: transform 0.15s ease;
 }
 
-.like-count {
+.post-action-btn:hover .action-icon,
+.moment-action-btn:hover .action-icon {
+  transform: scale(1.15);
+}
+
+.like-count,
+.comment-count {
   font-variant-numeric: tabular-nums;
-  font-weight: 600;
+  font-weight: 550;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
 }
 
 @keyframes heartPulse {
@@ -2266,85 +2288,62 @@ html[data-theme="dark"] #theme-toggle .sun {
   100% { transform: scale(1.15); }
 }
 
-/* 2. 访客留言板 (文章页与抽屉通用) */
+/* 2. 纸质访客留言流 (AstroPaper 纯粹扁平流式排版：无卡片、无阴影、极简虚线切分) */
 .post-comments-container {
-  background: var(--code-bg);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 24px;
-}
-
-.comments-header {
-  margin-bottom: 20px;
-  padding-bottom: 12px;
-  border-bottom: 1px dashed var(--border);
-}
-
-.comments-title {
-  margin: 0;
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: var(--primary);
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.comments-badge {
-  font-size: 0.85rem;
-  font-weight: normal;
-  color: var(--tertiary);
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  padding: 0;
+  box-shadow: none;
+  border-top: 1px dashed var(--border);
+  padding-top: 8px;
 }
 
 .comments-list {
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  margin-bottom: 24px;
+  gap: 0;
+  margin-bottom: 32px;
 }
 
 .comments-loading,
 .comments-notice,
-.comments-empty-notice {
+.comments-empty-notice,
+.comments-placeholder {
   text-align: center;
   padding: 24px 0;
-  font-size: 0.88rem;
+  font-size: 0.86rem;
   color: var(--tertiary);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
 }
 
 .comments-notice.error {
-  color: #e0245e;
+  color: #dc2626;
+  padding: 8px 0;
 }
 
 .comment-item {
   display: flex;
-  gap: 12px;
-  padding-bottom: 16px;
+  gap: 14px;
+  padding: 16px 0;
   border-bottom: 1px dashed var(--border);
-  animation: fadeIn 0.25s ease-out;
-}
-
-.comment-item:last-child {
-  border-bottom: none;
-  padding-bottom: 0;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(4px); }
-  to { opacity: 1; transform: translateY(0); }
+  animation: fadeIn 0.2s ease-out;
 }
 
 .comment-avatar {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  border-radius: 4px;
   object-fit: cover;
   background: var(--border);
+  border: none;
+  box-shadow: none;
   flex-shrink: 0;
 }
 
 .comment-main {
   flex: 1;
+  min-width: 0;
   display: flex;
   flex-direction: column;
   gap: 4px;
@@ -2355,6 +2354,7 @@ html[data-theme="dark"] #theme-toggle .sun {
   align-items: center;
   gap: 8px;
   font-size: 0.84rem;
+  line-height: 1.4;
 }
 
 .comment-author {
@@ -2363,38 +2363,39 @@ html[data-theme="dark"] #theme-toggle .sun {
 }
 
 .comment-badge-admin {
-  font-size: 0.7rem;
-  background: var(--primary);
-  color: var(--theme);
-  padding: 1px 6px;
-  border-radius: 4px;
-  font-weight: 600;
+  font-size: 0.68rem;
+  color: var(--accent);
+  border: 1px dashed var(--accent);
+  padding: 0 4px;
+  border-radius: 2px;
+  font-weight: 500;
   letter-spacing: 0.02em;
 }
 
 .comment-time {
-  font-size: 0.75rem;
+  font-size: 0.76rem;
   color: var(--tertiary);
   margin-left: auto;
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
 }
 
 .comment-content {
-  font-size: 0.9rem;
-  line-height: 1.6;
+  font-size: 0.92rem;
+  line-height: 1.65;
   color: var(--content);
   word-break: break-word;
 }
 
-/* 3. 纸质留言表单 (Paper Form) */
+/* 3. 极简纸质留言表单 (AstroPaper 扁平无边框表单) */
 .paper-form {
   display: flex;
   flex-direction: column;
   gap: 12px;
-  background: var(--theme);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 16px;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  padding: 0;
+  box-shadow: none;
 }
 
 .paper-form .form-row {
@@ -2410,176 +2411,174 @@ html[data-theme="dark"] #theme-toggle .sun {
 .paper-form .form-textarea {
   width: 100%;
   padding: 8px 12px;
-  background: var(--code-bg);
+  background: transparent;
   border: 1px solid var(--border);
-  border-radius: var(--radius);
+  border-radius: 4px;
   color: var(--primary);
   font-family: inherit;
   font-size: 0.88rem;
   box-sizing: border-box;
   outline: none;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: none;
+  transition: border-color 0.15s ease;
+}
+
+.paper-form .form-input::placeholder,
+.paper-form .form-textarea::placeholder {
+  color: var(--tertiary);
+  font-size: 0.85rem;
 }
 
 .paper-form .form-input:focus,
 .paper-form .form-textarea:focus {
-  border-color: var(--primary);
-  box-shadow: 0 0 0 2px rgba(128, 128, 128, 0.15);
+  border-color: var(--accent);
 }
 
 .paper-form .form-textarea {
   resize: vertical;
-  min-height: 70px;
+  min-height: 76px;
+  line-height: 1.6;
 }
 
 .paper-form .form-footer {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: center;
   margin-top: 4px;
 }
 
-.paper-form .form-hint {
-  font-size: 0.76rem;
-  color: var(--tertiary);
-}
-
-.paper-form .comment-submit-btn {
-  background: var(--primary);
-  color: var(--theme);
-  border: none;
-  border-radius: var(--radius);
-  padding: 6px 16px;
-  font-size: 0.85rem;
-  font-weight: 500;
-  font-family: inherit;
-  cursor: pointer;
-  transition: opacity 0.2s ease, transform 0.15s ease;
-}
-
-.paper-form .comment-submit-btn:hover {
-  opacity: 0.9;
-  transform: translateY(-1px);
-}
-
-.paper-form .comment-submit-btn:active {
-  transform: translateY(0);
-}
-
-.paper-form .comment-submit-btn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-.form-feedback {
-  padding: 8px 12px;
-  border-radius: var(--radius);
-  font-size: 0.82rem;
-  margin-top: 6px;
-}
-
-.form-feedback.success {
-  background: rgba(34, 197, 94, 0.1);
-  color: #16a34a;
-  border: 1px solid rgba(34, 197, 94, 0.2);
-}
-
-.form-feedback.error {
-  background: rgba(239, 68, 68, 0.1);
-  color: #dc2626;
-  border: 1px solid rgba(239, 68, 68, 0.2);
-}
-
-/* 4. 动态页瀑布流互动栏 (Moments Actions & Collapsible Drawer) */
-.moment-actions {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-top: 14px;
-  padding-top: 10px;
-  border-top: 1px dashed var(--border);
-}
-
-.moment-action-btn {
+/* 签字落款风格按钮：彻底去除方框与背景，优雅的钢笔斜体落款 */
+.comment-submit-btn {
   display: inline-flex;
   align-items: center;
   gap: 6px;
   background: transparent;
-  border: 1px solid transparent;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  padding: 4px 0;
   color: var(--secondary);
-  font-size: 0.82rem;
+  font-size: 0.92rem;
+  font-weight: 550;
+  font-style: italic;
   font-family: inherit;
+  letter-spacing: 0.08em;
   cursor: pointer;
-  padding: 4px 10px;
-  border-radius: var(--radius);
-  transition: all 0.2s cubic-bezier(0.2, 0, 0, 1);
+  outline: none;
+  transition: color 0.15s ease;
   user-select: none;
 }
 
-.moment-action-btn:hover {
-  color: var(--primary);
-  background: var(--code-bg);
-  border-color: var(--border);
+.comment-submit-btn .submit-pen-icon {
+  stroke-width: 2.2;
+  transition: transform 0.2s cubic-bezier(0.2, 0, 0, 1), color 0.15s ease;
 }
 
-.moment-action-btn.active {
-  color: var(--primary);
-  background: var(--code-bg);
-  border-color: var(--border);
+.comment-submit-btn:hover {
+  color: var(--accent);
+  text-decoration: underline dashed;
+  text-underline-offset: 4px;
 }
 
-.moment-like-btn.liked {
-  color: #e0245e;
+.comment-submit-btn:hover .submit-pen-icon {
+  transform: rotate(-15deg) translateY(-1px);
+  color: var(--accent);
 }
 
-.moment-like-btn.liked .heart-icon {
-  fill: #e0245e;
-  color: #e0245e;
-  animation: heartPulse 0.3s ease;
+.comment-submit-btn:active {
+  transform: scale(0.95);
+  opacity: 0.8;
 }
 
-.moment-action-btn .action-icon {
-  line-height: 1;
-  transition: transform 0.2s ease;
+.comment-submit-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+  text-decoration: none;
+  color: var(--tertiary);
+  font-style: normal;
+  transform: none;
 }
 
-.moment-action-btn:hover .action-icon {
-  transform: scale(1.1);
+.comment-submit-btn:disabled .submit-pen-icon {
+  transform: none;
 }
 
+.form-feedback {
+  padding: 6px 0;
+  font-size: 0.82rem;
+  margin-top: 4px;
+  animation: fadeIn 0.2s ease-out;
+}
+
+.form-feedback.success {
+  color: #16a34a;
+}
+
+.form-feedback.error {
+  color: #dc2626;
+}
+
+/* 4. 随手记内嵌纯粹流式评论抽屉（无卡片背景与外边框，全平铺展开） */
 .moment-comments-drawer {
   margin-top: 12px;
-  padding: 14px 16px;
-  background: var(--code-bg);
-  border-radius: var(--radius);
-  border: 1px solid var(--border);
-  animation: drawerSlideDown 0.22s ease-out;
-}
-
-@keyframes drawerSlideDown {
-  from { opacity: 0; transform: translateY(-6px); }
-  to { opacity: 1; transform: translateY(0); }
+  padding: 8px 0 0 0;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  border-top: 1px dashed var(--border);
+  animation: none;
 }
 
 .drawer-comments-list {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 0;
   max-height: 280px;
   overflow-y: auto;
   margin-bottom: 12px;
+  padding-right: 4px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+}
+
+.drawer-comments-list .comment-item {
+  gap: 10px;
+  padding: 10px 0;
+  border-bottom: 1px dashed var(--border);
+}
+
+.drawer-comments-list .comment-avatar {
+  width: 26px;
+  height: 26px;
+  border-radius: 3px;
+}
+
+.drawer-comments-list .comment-author {
+  font-size: 0.82rem;
+}
+
+.drawer-comments-list .comment-content {
+  font-size: 0.86rem;
+  line-height: 1.55;
 }
 
 .drawer-loading {
   text-align: center;
   padding: 12px 0;
-  font-size: 0.82rem;
+  font-size: 0.8rem;
   color: var(--tertiary);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
 }
 
+/* 随手记内嵌无卡片表单 */
 .moment-comment-form {
-  padding: 12px;
+  padding: 10px 0 0 0;
+  background: transparent;
+  border: none;
+  box-shadow: none;
   gap: 8px;
+  border-top: 1px dashed var(--border);
 }
 
 .moment-comment-form .form-row {
@@ -2590,17 +2589,23 @@ html[data-theme="dark"] #theme-toggle .sun {
 .moment-comment-form .form-input {
   font-size: 0.82rem;
   padding: 6px 10px;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+}
+
+.moment-comment-form .form-input:focus,
+.moment-comment-form .form-textarea:focus {
+  border-color: var(--accent);
 }
 
 .moment-comment-form .form-textarea {
   font-size: 0.82rem;
   padding: 6px 10px;
-  min-height: 50px;
-}
-
-.moment-comment-form .comment-submit-btn {
-  padding: 4px 12px;
-  font-size: 0.8rem;
+  min-height: 52px;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 4px;
 }
 
 @media (max-width: 600px) {
@@ -2610,7 +2615,7 @@ html[data-theme="dark"] #theme-toggle .sun {
     gap: 8px;
   }
   .post-comments-container {
-    padding: 16px;
+    padding: 0;
   }
 }
 

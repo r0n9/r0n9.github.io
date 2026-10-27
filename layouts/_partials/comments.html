@@ -2,27 +2,24 @@
 {{- $interactionApi := site.Params.interactionApi | default "" }}
 {{- if and .Site.Params.comments (ne .Params.comments false) (ne $interactionApi "") }}
 <div class="post-interaction-wrap" id="postInteractionWrap" data-key="{{ .RelPermalink }}">
-  {{- /* 1. 文末纸质点赞胶囊 */ -}}
-  <div class="post-like-container">
-    <button type="button" class="post-like-btn" id="postLikeBtn" aria-label="点赞文章" title="喜欢这篇文章">
-      <svg class="like-heart-icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+  {{- /* 1. 文末互动操作栏（点赞与评论计数，样式与动态详情完全一致） */ -}}
+  <div class="post-actions">
+    <button type="button" class="post-action-btn post-like-btn" id="postLikeBtn" title="点赞" aria-label="点赞">
+      <svg class="action-icon heart-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
         <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
       </svg>
-      <span class="like-label">喜欢</span>
-      <span class="like-divider">|</span>
       <span class="like-count" id="postLikeCount">0</span>
     </button>
+    <a href="#postCommentsContainer" class="post-action-btn post-comment-btn" title="查看评论" aria-label="查看评论">
+      <svg class="action-icon comment-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+      </svg>
+      <span class="comment-count" id="postCommentsCount">0</span>
+    </a>
   </div>
 
   {{- /* 2. 纸质访客留言板 */ -}}
   <div class="post-comments-container" id="postCommentsContainer">
-    <div class="comments-header">
-      <h3 class="comments-title">
-        <span>💬 交流与留言</span>
-        <span class="comments-badge" id="postCommentsBadge">(0)</span>
-      </h3>
-    </div>
-
     <div class="comments-list" id="postCommentsList">
       <div class="comments-placeholder">正在加载留言...</div>
     </div>
@@ -41,8 +38,12 @@
         <textarea name="content" class="form-textarea content-input" placeholder="留下您的想法或探讨交流..." rows="3" maxlength="500" required></textarea>
       </div>
       <div class="form-footer">
-        <span class="form-hint">纸质极简 · 免登录</span>
-        <button type="submit" class="comment-submit-btn" id="postCommentSubmitBtn">发表留言</button>
+        <button type="submit" class="comment-submit-btn" id="postCommentSubmitBtn" aria-label="发送留言">
+          <svg class="submit-pen-icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
+          </svg>
+          <span class="btn-text">发送</span>
+        </button>
       </div>
       <div class="form-feedback" id="postCommentFeedback" style="display:none;"></div>
     </form>
