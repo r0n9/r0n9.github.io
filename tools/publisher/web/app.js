@@ -201,6 +201,21 @@
         ctx.imageSmoothingQuality = 'high';
         ctx.drawImage(img, 0, 0, width, height);
 
+        const lastDot = file.name.lastIndexOf('.');
+        const baseName = lastDot !== -1 ? file.name.substring(0, lastDot) : file.name;
+
+        const buildResultFile = (outBlob, ext, mimeType) => {
+          const newName = `${baseName}.${ext}`;
+          const finalFile = new File([outBlob], newName, { type: mimeType });
+          const ratio = file.size > outBlob.size ? Math.round(((file.size - outBlob.size) / file.size) * 100) : 0;
+          finalFile._meta = {
+            origSize: file.size,
+            compressedSize: outBlob.size,
+            ratio: ratio
+          };
+          resolve(finalFile);
+        };
+
         canvas.toBlob((blob) => {
           if (!blob) {
             file._meta = { origSize: file.size, compressedSize: file.size, ratio: 0 };
@@ -208,20 +223,39 @@
             return;
           }
 
-          // 构造 WebP 文件名
-          const lastDot = file.name.lastIndexOf('.');
-          const baseName = lastDot !== -1 ? file.name.substring(0, lastDot) : file.name;
-          const newName = `${baseName}.webp`;
-          const webpFile = new File([blob], newName, { type: 'image/webp' });
+          // 浏览器若不支持 WebP 编码 (如 iOS/macOS Safari 静默降级为 image/png)
+          if (blob.type !== 'image/webp') {
+            let hasAlpha = false;
+            try {
+              const imgData = ctx.getImageData(0, 0, width, height).data;
+              for (let i = 3; i < imgData.length; i += 32) {
+                if (imgData[i] < 250) {
+                  hasAlpha = true;
+                  break;
+                }
+              }
+            } catch (e) {
+              // 忽略跨域等异常
+            }
 
-          const ratio = file.size > blob.size ? Math.round(((file.size - blob.size) / file.size) * 100) : 0;
-          webpFile._meta = {
-            origSize: file.size,
-            compressedSize: blob.size,
-            ratio: ratio
-          };
+            if (!hasAlpha) {
+              // 无透明通道的实景照片，自动降级为高压缩比 JPEG，避免无损 PNG 导致几 MB 的体积膨胀
+              canvas.toBlob((jpegBlob) => {
+                if (jpegBlob) {
+                  buildResultFile(jpegBlob, 'jpg', 'image/jpeg');
+                } else {
+                  buildResultFile(blob, 'png', 'image/png');
+                }
+              }, 'image/jpeg', quality);
+              return;
+            }
 
-          resolve(webpFile);
+            // 含透明通道，保留 PNG
+            buildResultFile(blob, 'png', 'image/png');
+            return;
+          }
+
+          buildResultFile(blob, 'webp', 'image/webp');
         }, 'image/webp', quality);
       };
 
