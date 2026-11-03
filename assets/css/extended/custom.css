@@ -22,12 +22,21 @@
   --code-block-bg: #18181b;
   --border: #e8e8ec;
 
-  /* Gemini Ambient Glow - Light Mode (Airy, subtle celestial blue aura) */
-  --gemini-glow-base: #b8d4ff;
-  --gemini-glow-mid: #d2e3ff;
-  --gemini-glow-bloom: #ffffff;
-  --gemini-glow-opacity: 0.24;
-  --gemini-bloom-opacity: 0.32;
+  /* Gemini Ambient Glow - Light Mode (Airy, gentle celestial blue wash - 柔和通透，克制自然) */
+  --gemini-glow-base: #9dc2fa;
+  --gemini-glow-mid: #c0d9fd;
+  --gemini-glow-bloom: #72a7f8;
+  --gemini-glow-opacity: 0.35;
+  --gemini-bloom-opacity: 0.22;
+}
+
+html[data-theme="light"],
+body.light {
+  --gemini-glow-base: #9dc2fa;
+  --gemini-glow-mid: #c0d9fd;
+  --gemini-glow-bloom: #72a7f8;
+  --gemini-glow-opacity: 0.35;
+  --gemini-bloom-opacity: 0.22;
 }
 
 :root[data-theme="dark"],
@@ -73,13 +82,13 @@ body, .list {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* --- 2. Header & Navigation (极细线条美学顶栏) --- */
+/* --- 2. Header & Navigation (极细线条美学顶栏 - 半透明毛玻璃透光) --- */
 .header {
-  border-bottom: 1px solid var(--border);
+  border-bottom: 1px solid color-mix(in srgb, var(--border) 70%, transparent);
   background: var(--theme);
-  background: color-mix(in srgb, var(--theme) 85%, transparent);
-  -webkit-backdrop-filter: blur(12px);
-  backdrop-filter: blur(12px);
+  background: color-mix(in srgb, var(--theme) 70%, transparent);
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
 }
 
 .header-nav {
@@ -2748,7 +2757,7 @@ html[data-theme="dark"] #theme-toggle .sun {
 }
 
 /* ==========================================================================
-   Gemini Ambient Glow (Gemini 官方同款深邃背景光晕)
+   Gemini Ambient Glow (Gemini 官方同款深邃背景光晕 - 呼吸浮动与视差衰减升级)
    ========================================================================== */
 .gemini-glow {
   position: fixed;
@@ -2756,6 +2765,11 @@ html[data-theme="dark"] #theme-toggle .sun {
   z-index: 0;
   overflow: hidden;
   pointer-events: none;
+  /* 滚动视差与衰减驱动 */
+  transform: translate3d(0, var(--glow-parallax-y, 0px), 0) scale(var(--glow-decay-scale, 1));
+  opacity: var(--glow-decay-opacity, 1);
+  transition: opacity 0.3s ease-out, transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+  will-change: transform, opacity;
 }
 
 .gemini-glow::before,
@@ -2763,7 +2777,7 @@ html[data-theme="dark"] #theme-toggle .sun {
   content: "";
   position: absolute;
   left: 50%;
-  top: calc(50% + 30px);
+  top: calc(34% + 10px);
   transform: translate(-50%, -50%);
   width: 240%;
   aspect-ratio: 1.4338;
@@ -2778,7 +2792,7 @@ html[data-theme="dark"] #theme-toggle .sun {
   filter: blur(28px);
 }
 
-/* 主体深邃蓝光晕 */
+/* 主体深邃蓝光晕：18s 缓和星云呼吸漂浮 */
 .gemini-glow::before {
   -webkit-mask-position: 0 0;
   mask-position: 0 0;
@@ -2790,53 +2804,80 @@ html[data-theme="dark"] #theme-toggle .sun {
   );
   opacity: var(--gemini-glow-opacity);
   transition: opacity 0.5s ease;
-  animation: gemini-glow-grow 0.8s ease-out both;
+  animation: gemini-nebula-float 18s ease-in-out infinite alternate;
 }
 
-/* Bloom 高光/泛光层 */
+/* Bloom 高光/泛光层：11s 异频灵动微光折射 */
 .gemini-glow::after {
   -webkit-mask-position: 0 100%;
   mask-position: 0 100%;
   background: var(--gemini-glow-bloom);
   opacity: var(--gemini-bloom-opacity);
   transition: opacity 0.5s ease;
-  animation: gemini-glow-bloom-grow 0.8s ease-out both;
+  animation: gemini-bloom-shimmer 11s ease-in-out infinite alternate;
 }
 
-@keyframes gemini-glow-grow {
+/* 呼吸动画：底晕微移与轻度扩张 */
+@keyframes gemini-nebula-float {
   0% {
-    opacity: 0;
+    transform: translate(-50%, -50%) scale(1) rotate(0deg);
+    opacity: var(--gemini-glow-opacity);
+  }
+  35% {
+    transform: translate(-49.3%, -51.2%) scale(1.025) rotate(0.6deg);
+    opacity: calc(var(--gemini-glow-opacity) * 1.08);
+  }
+  70% {
+    transform: translate(-50.7%, -49.2%) scale(0.985) rotate(-0.5deg);
+    opacity: calc(var(--gemini-glow-opacity) * 0.94);
   }
   100% {
+    transform: translate(-49.6%, -50.7%) scale(1.018) rotate(0.4deg);
     opacity: var(--gemini-glow-opacity);
   }
 }
 
-@keyframes gemini-glow-bloom-grow {
+/* 呼吸动画：高光核微光波动与角度折射 */
+@keyframes gemini-bloom-shimmer {
   0% {
-    opacity: 0;
+    transform: translate(-50%, -50%) scale(1) rotate(0deg);
+    opacity: var(--gemini-bloom-opacity);
+  }
+  40% {
+    transform: translate(-50.5%, -49.2%) scale(1.035) rotate(-0.8deg);
+    opacity: calc(var(--gemini-bloom-opacity) * 1.15);
+  }
+  75% {
+    transform: translate(-49.4%, -50.6%) scale(0.975) rotate(0.6deg);
+    opacity: calc(var(--gemini-bloom-opacity) * 0.88);
   }
   100% {
+    transform: translate(-50.2%, -49.8%) scale(1.01) rotate(-0.3deg);
     opacity: var(--gemini-bloom-opacity);
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .gemini-glow {
+    transform: none !important;
+    opacity: 1 !important;
+    transition: none !important;
+  }
   .gemini-glow::before,
   .gemini-glow::after {
-    animation: none;
+    animation: none !important;
+    transform: translate(-50%, -50%) !important;
   }
 }
 
-/* 移动端定位适配：居中自然弥散，不遮挡阅读 */
+/* 移动端定位适配：顶部自然漫射，融入导航栏 */
 @media screen and (max-width: 959.98px) {
   .gemini-glow::before,
   .gemini-glow::after {
-    top: calc(50% + 25px);
+    top: calc(30% + 10px);
     width: 280%;
     min-width: 780px;
-    transform: translate(-50%, -50%);
-    filter: blur(16px);
+    filter: blur(18px);
   }
 }
 
@@ -2846,12 +2887,6 @@ html[data-theme="dark"] #theme-toggle .sun {
 .footer {
   position: relative;
   z-index: 1;
-}
-
-/* 文章详情页面去除背景光晕，确保纯净专注的长文阅读环境 */
-body.page-post-single .gemini-glow,
-body:has(.post-single) .gemini-glow {
-  display: none !important;
 }
 
 /* ==========================================================================

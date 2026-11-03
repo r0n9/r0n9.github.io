@@ -24,9 +24,7 @@
 {{- else }}
 <body id="top">
 {{- end }}
-  {{- if not $isPostSingle }}
   <div class="gemini-glow" aria-hidden="true"></div>
-  {{- end }}
   {{ partialCached "header.html" . .Page -}}
   <main class="main">
     {{- block "main" . }}{{ end }}
